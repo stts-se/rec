@@ -41,7 +41,7 @@ type processResponse struct {
 	Confidence        float32 `json:"confidence"`
 	RecognitionResult string  `json:"recognition_result"`
 	RecordingID       string  `json:"recording_id"`
-	ErrorMessage      string  `json:"error_message"`
+	Message           string  `json:"message"`
 }
 
 func process(w http.ResponseWriter, r *http.Request) {
@@ -49,8 +49,9 @@ func process(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		msg := fmt.Sprintf("failed to read request body : %v", err)
-		res.ErrorMessage = msg
 		log.Println(msg)
+		// or return JSON response with error message?
+		//res.Message = msg
 		http.Error(w, msg, http.StatusBadRequest)
 		return
 	}
@@ -59,8 +60,9 @@ func process(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(body, &input)
 	if err != nil {
 		msg := fmt.Sprintf("failed to unmarshal incoming JSON : %v", err)
-		res.ErrorMessage = msg
 		log.Println(msg)
+		// or return JSON response with error message?
+		//res.Message = msg
 		http.Error(w, msg, http.StatusBadRequest)
 		return
 	}
@@ -71,8 +73,9 @@ func process(w http.ResponseWriter, r *http.Request) {
 	audio, err = base64.StdEncoding.DecodeString(input.Audio.Data)
 	if err != nil {
 		msg := fmt.Sprintf("failed audio base64 decoding : %v", err)
-		res.ErrorMessage = msg
 		log.Println(msg)
+		// or return JSON response with error message?
+		//res.Message = msg
 		http.Error(w, msg, http.StatusBadRequest)
 		return
 	}
@@ -103,8 +106,9 @@ func process(w http.ResponseWriter, r *http.Request) {
 	err = ioutil.WriteFile(outFile, audio, 0644)
 	if err != nil {
 		msg := fmt.Sprintf("failed to write audio file : %v", err)
-		res.ErrorMessage = msg
 		log.Println(msg)
+		// or return JSON response with error message?
+		//res.Message = msg
 		http.Error(w, msg, http.StatusBadRequest)
 		return
 	}
@@ -119,8 +123,9 @@ func process(w http.ResponseWriter, r *http.Request) {
 	resJSON, err := json.Marshal(res)
 	if err != nil {
 		msg := fmt.Sprintf("failed to marshal response : %v", err)
-		res.ErrorMessage = msg
 		log.Println(msg)
+		// or return JSON response with error message?
+		//res.Message = msg
 		http.Error(w, msg, http.StatusBadRequest)
 		return
 	}

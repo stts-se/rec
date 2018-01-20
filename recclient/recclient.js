@@ -40,7 +40,7 @@ var canvasCtx = canvas.getContext("2d");
 
 var intendedWidth = document.querySelector('.wrapper').clientWidth;
 
-canvas.setAttribute('width',intendedWidth);
+canvas.setAttribute('width',intendedWidth / 2);
 
 //var visualSelect = document.getElementById("visual");
 
@@ -100,6 +100,8 @@ window.onload = function () {
     
     stopButton = document.getElementById('stop');
     stopButton.addEventListener('click', stopRecording);
+    stopButton.disabled = true;
+    
     sendButton = document.getElementById('send');
     sendButton.addEventListener('click', sendBlob);
     sendButton.disabled = true;

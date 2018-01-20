@@ -1,4 +1,93 @@
+// See:
+// https://developer.mozilla.org/en-US/docs/Web/API/MediaStream_Recording_API 
+// https://mozdevs.github.io/MediaRecorder-examples/record-live-audio.html
+// https://github.com/mdn/voice-change-o-matic
+
 'use strict'
+
+// //
+// //
+//
+// https://github.com/mdn/voice-change-o-matic/blob/gh-pages/scripts/app.js:
+//
+// fork getUserMedia for multiple browser versions, for those
+// that need prefixes
+
+navigator.getUserMedia = (navigator.getUserMedia ||
+                          navigator.webkitGetUserMedia ||
+                          navigator.mozGetUserMedia ||
+                          navigator.msGetUserMedia);
+
+
+// set up forked web audio context, for multiple browsers
+// window. is needed otherwise Safari explodes
+
+var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+var source;
+var stream;
+
+//set up the different audio nodes we will use for the app
+
+var analyser = audioCtx.createAnalyser();
+analyser.minDecibels = -90;
+analyser.maxDecibels = -10;
+analyser.smoothingTimeConstant = 0.85;
+
+// set up canvas context for visualizer
+
+var canvas = document.querySelector('.visualizer');
+var canvasCtx = canvas.getContext("2d");
+
+var intendedWidth = document.querySelector('.wrapper').clientWidth;
+
+canvas.setAttribute('width',intendedWidth);
+
+//var visualSelect = document.getElementById("visual");
+
+var drawVisual;
+
+function visualize() {
+  var WIDTH = canvas.width;
+  var HEIGHT = canvas.height;
+
+
+    analyser.fftSize = 256;
+    var bufferLengthAlt = analyser.frequencyBinCount;
+    console.log(bufferLengthAlt);
+    var dataArrayAlt = new Uint8Array(bufferLengthAlt);
+
+    canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+
+    var draw = function() {
+      drawVisual = requestAnimationFrame(draw);
+
+      analyser.getByteFrequencyData(dataArrayAlt);
+
+      canvasCtx.fillStyle = 'rgb(0, 0, 0)';
+      canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+
+      var barWidth = (WIDTH / bufferLengthAlt) * 2.5;
+      var barHeight;
+      var x = 0;
+
+      for(var i = 0; i < bufferLengthAlt; i++) {
+        barHeight = dataArrayAlt[i];
+
+        canvasCtx.fillStyle = 'rgb(' + (barHeight+100) + ',50,50)';
+        canvasCtx.fillRect(x,HEIGHT-barHeight/2,barWidth,barHeight/2);
+
+        x += barWidth + 1;
+      }
+    };
+
+    draw();
+
+}
+
+
+// //
+// //
+
 let recButton, stopButton, sendButton;
 let baseURL = window.location.origin;
 var currentBlob;
@@ -16,12 +105,15 @@ window.onload = function () {
     sendButton.disabled = true;
 	
     navigator.mediaDevices.getUserMedia({'audio': true, video: false}).then(function(stream) {
-	
-		
+	source = audioCtx.createMediaStreamSource(stream);
+        source.connect(analyser);
+	visualize();	
 	recorder = new MediaRecorder(stream);
 	recorder.addEventListener('dataavailable', function (evt) {
 	    updateAudio(evt.data); 
 	});
+	
+	// ??
 	recorder.onstop = function(evt) {}
     });
 };    

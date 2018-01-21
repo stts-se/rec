@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -44,6 +45,65 @@ type processResponse struct {
 	Message           string  `json:"message"`
 }
 
+func writeAudioFile(audioDir string, rec processInput) error {
+	dirPath := filepath.Join(audioDir, rec.UserName)
+	_, err := os.Stat(dirPath)
+	if os.IsNotExist(err) { // First file to save for rec.Username
+		os.MkdirAll(dirPath, os.ModePerm)
+	}
+
+	var ext string
+	for _, e := range []string{"webm", "wav", "ogg", "mp3"} {
+		if strings.Contains(rec.Audio.FileType, e) {
+			ext = e
+			break
+		}
+	}
+
+	outFile := rec.RecordingID // filePath.Join(dirPath, rec.RecordingID + ". " + ext) "/tmp/nilz"
+	if ext != "" {
+		outFile = outFile + "." + ext
+	} else {
+		if rec.Audio.FileType == "" {
+			log.Print("INPUT AUDIO FILE HAS NO ASSOCIATED FILE TYPE")
+			// TODO Return error?
+		} else {
+			log.Printf("INPUT AUDIO FILE HAS UNKNOWN FILE TYPE '%s'\n", rec.Audio.FileType)
+			// TODO Return error?
+		}
+	}
+
+	outFilePath := filepath.Join(dirPath, outFile)
+	if _, err = os.Stat(outFilePath); !os.IsNotExist(err) {
+		os.Remove(outFilePath)
+	}
+
+	var audio []byte
+	audio, err = base64.StdEncoding.DecodeString(rec.Audio.Data)
+	if err != nil {
+		msg := fmt.Sprintf("failed audio base64 decoding : %v", err)
+		log.Println(msg)
+		// or return JSON response with error message?
+		//res.Message = msg
+		//http.Error(w, msg, http.StatusBadRequest)
+		return fmt.Errorf("%s : %v", msg, err)
+	}
+
+	err = ioutil.WriteFile(outFilePath, audio, 0644)
+	if err != nil {
+		msg := fmt.Sprintf("failed to write audio file : %v", err)
+		log.Println(msg)
+		// or return JSON response with error message?
+		//res.Message = msg
+		//http.Error(w, msg, http.StatusBadRequest)
+		return fmt.Errorf("%s : %v", msg, err)
+	}
+	log.Printf("AUDIO LEN: %d\n", len(audio))
+	log.Printf("WROTE FILE: %s\n", outFile)
+
+	return nil
+}
+
 func process(w http.ResponseWriter, r *http.Request) {
 	res := processResponse{}
 	body, err := ioutil.ReadAll(r.Body)
@@ -69,52 +129,13 @@ func process(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("GOT username: %s\ttext: %s\t recording id: %s\n", input.UserName, input.Text, input.RecordingID)
 
-	var audio []byte
-	audio, err = base64.StdEncoding.DecodeString(input.Audio.Data)
+	err = writeAudioFile(audioDir, input)
 	if err != nil {
-		msg := fmt.Sprintf("failed audio base64 decoding : %v", err)
-		log.Println(msg)
-		// or return JSON response with error message?
-		//res.Message = msg
-		http.Error(w, msg, http.StatusBadRequest)
+		msg := fmt.Sprintf("failed writing audio file : %v", err)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusInternalServerError)
 		return
 	}
-
-	var ext string
-	for _, e := range []string{"webm", "wav", "ogg", "mp3"} {
-		if strings.Contains(input.Audio.FileType, e) {
-			ext = e
-			break
-		}
-	}
-
-	outFile := "/tmp/nilz"
-	if ext != "" {
-		outFile = outFile + "." + ext
-	} else {
-		if input.Audio.FileType == "" {
-			log.Print("INPUT AUDIO FILE HAS NO ASSOCIATED FILE TYPE")
-		} else {
-			log.Printf("INPUT AUDIO FILE HAS UNKNOWN FILE TYPE '%s'\n", input.Audio.FileType)
-		}
-	}
-
-	if _, err = os.Stat(outFile); !os.IsNotExist(err) {
-		os.Remove(outFile)
-	}
-
-	err = ioutil.WriteFile(outFile, audio, 0644)
-	if err != nil {
-		msg := fmt.Sprintf("failed to write audio file : %v", err)
-		log.Println(msg)
-		// or return JSON response with error message?
-		//res.Message = msg
-		http.Error(w, msg, http.StatusBadRequest)
-		return
-	}
-	log.Printf("AUDIO LEN: %d\n", len(audio))
-	log.Printf("WROTE FILE: %s\n", outFile)
-
 	// TODO Create reasonable response
 
 	res.Ok = true
@@ -132,7 +153,17 @@ func process(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(w, "%s\n", string(resJSON))
 }
+
+var audioDir string
+
 func main() {
+
+	audioDir = "audio_dir"
+	_, sErr := os.Stat(audioDir)
+	if os.IsNotExist(sErr) {
+		os.Mkdir(audioDir, os.ModePerm)
+	}
+
 	p := "9993"
 	r := mux.NewRouter()
 	r.StrictSlash(false)

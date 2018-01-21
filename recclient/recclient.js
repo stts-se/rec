@@ -149,10 +149,10 @@ function sendBlob() {
     reader.addEventListener("loadend", function() {
 	let rez = reader.result //contains the contents of blob as a typed array
 	let payload = {
-	    username : "Mimmi Pigg",
+	    username : document.getElementById("username").value,
 	    audio : { file_type : currentBlob.type, data: btoa(rez)},
 	    text : document.getElementById("text").value,//"fonclbt",
-	    recording_id : "666"
+	    recording_id : document.getElementById("recording_id").value
 	};
 	
 	sendJSON(payload);

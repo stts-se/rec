@@ -86,7 +86,7 @@ function sendBlob() {
 	let payload = {
 	    username : document.getElementById("username").value,
 	    audio : { file_type : currentBlob.type, data: btoa(rez)},
-	    text : document.getElementById("text").value,//"fonclbt",
+	    text : document.getElementById("text").value,
 	    recording_id : document.getElementById("recording_id").value
 	};
 	
@@ -105,6 +105,7 @@ function sendJSON(payload) {
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
    
     // TODO error handling
+    
     
     xhr.onloadend = function () {
      	// done

@@ -131,7 +131,7 @@ func generateDoc(w http.ResponseWriter, r *http.Request) {
 			item{Desc: "Input JSON to POST request to /rec/process/:", Example: s1},
 			item{Desc: "Sample JSON:", Example: s2},
 			item{Desc: "", Example: "__________________________________________________"},
-			item{Desc: "The JSON returned by a successful POST request to /rec/process: ", Example: s3},
+			item{Desc: "The JSON returned by a successful POST request to /rec/process/: ", Example: s3},
 		},
 	}
 

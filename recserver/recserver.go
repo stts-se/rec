@@ -20,7 +20,7 @@ const docTemplate = `
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="UTF-8">
+               <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>{{.Title}}</title>
 	</head>
 	<body>
@@ -265,11 +265,11 @@ func main() {
 
 	p := "9993"
 	r := mux.NewRouter()
-	r.StrictSlash(false)
+	r.StrictSlash(true)
 	r.PathPrefix("/recclient/").Handler(http.StripPrefix("/recclient/", http.FileServer(http.Dir("../recclient"))))
 	r.HandleFunc("/", index)
 	r.HandleFunc("/process/", process).Methods("POST")
-	r.HandleFunc("/doc", generateDoc).Methods("POST", "GET")
+	r.HandleFunc("/doc/", generateDoc).Methods("POST", "GET")
 
 	srv := &http.Server{
 		Handler: r,

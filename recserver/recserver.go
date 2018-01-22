@@ -218,6 +218,33 @@ func writeAudioFile(audioDir string, rec processInput) error {
 	return nil
 }
 
+func checkProcessInput(input processInput) error {
+	var errMsg []string
+
+	if strings.TrimSpace(input.UserName) == "" {
+		errMsg = append(errMsg, "no value for 'username'")
+	}
+	if strings.TrimSpace(input.Text) == "" {
+		errMsg = append(errMsg, "no value for 'text'")
+	}
+	if strings.TrimSpace(input.RecordingID) == "" {
+		errMsg = append(errMsg, "no value for 'recording_id'")
+	}
+
+	if len(input.Audio.Data) == 0 {
+		errMsg = append(errMsg, "no 'audio.data'")
+	}
+	if strings.TrimSpace(input.Audio.FileType) == "" {
+		errMsg = append(errMsg, "no value for 'audio.file_type'")
+	}
+
+	if len(errMsg) > 0 {
+		return fmt.Errorf("missing values in input JSON: %s", strings.Join(errMsg, " : "))
+	}
+
+	return nil
+}
+
 func process(w http.ResponseWriter, r *http.Request) {
 	res := processResponse{}
 	body, err := ioutil.ReadAll(r.Body)
@@ -237,6 +264,14 @@ func process(w http.ResponseWriter, r *http.Request) {
 		log.Println(msg)
 		// or return JSON response with error message?
 		//res.Message = msg
+		http.Error(w, msg, http.StatusBadRequest)
+		return
+	}
+
+	err = checkProcessInput(input)
+	if err != nil {
+		msg := fmt.Sprintf("incoming JSON was incomplete: %v", err)
+		log.Println(msg)
 		http.Error(w, msg, http.StatusBadRequest)
 		return
 	}

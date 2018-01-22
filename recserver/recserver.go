@@ -54,7 +54,7 @@ func prettyMarshal(thing interface{}) ([]byte, error) {
 }
 
 func generateDoc(w http.ResponseWriter, r *http.Request) {
-	title := "Description of /process: POST input and output JSON"
+	title := "rec doc"
 	processIn := processInput{
 		UserName: "string",
 		Audio: audio{
@@ -119,8 +119,10 @@ func generateDoc(w http.ResponseWriter, r *http.Request) {
 	d := tplData{
 		Title: title,
 		Items: []item{
-			item{Desc: "/process input JSON to POST request", Example: s1},
-			item{Desc: "/process sample JSON input", Example: s2}},
+			item{Desc: "/rec/process/ input JSON to POST request", Example: s1},
+			item{Desc: "/rec/process/ sample JSON input", Example: s2},
+			item{Desc: "", Example: "__________________________________________________"},
+		},
 	}
 
 	t.Execute(w, d)

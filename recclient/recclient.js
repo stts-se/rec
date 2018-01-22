@@ -19,74 +19,9 @@ navigator.getUserMedia = (navigator.getUserMedia ||
                           navigator.msGetUserMedia);
 
 
-// set up forked web audio context, for multiple browsers
-// window. is needed otherwise Safari explodes
-
-var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-var source;
-var stream;
-
-//set up the different audio nodes we will use for the app
-
-var analyser = audioCtx.createAnalyser();
-analyser.minDecibels = -90;
-analyser.maxDecibels = -10;
-analyser.smoothingTimeConstant = 0.85;
-
-// set up canvas context for visualizer
-
-var canvas = document.querySelector('.visualizer');
-var canvasCtx = canvas.getContext("2d");
-
-var intendedWidth = document.querySelector('.wrapper').clientWidth;
-
-canvas.setAttribute('width',intendedWidth / 2);
-
-//var visualSelect = document.getElementById("visual");
-
-var drawVisual;
-
-function visualize() {
-  var WIDTH = canvas.width;
-  var HEIGHT = canvas.height;
-
-
-    analyser.fftSize = 256;
-    var bufferLengthAlt = analyser.frequencyBinCount;
-    console.log(bufferLengthAlt);
-    var dataArrayAlt = new Uint8Array(bufferLengthAlt);
-
-    canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
-
-    var draw = function() {
-      drawVisual = requestAnimationFrame(draw);
-
-      analyser.getByteFrequencyData(dataArrayAlt);
-
-      canvasCtx.fillStyle = 'rgb(0, 0, 0)';
-      canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
-
-      var barWidth = (WIDTH / bufferLengthAlt) * 2.5;
-      var barHeight;
-      var x = 0;
-
-      for(var i = 0; i < bufferLengthAlt; i++) {
-        barHeight = dataArrayAlt[i];
-
-        canvasCtx.fillStyle = 'rgb(' + (barHeight+100) + ',50,50)';
-        canvasCtx.fillRect(x,HEIGHT-barHeight/2,barWidth,barHeight/2);
-
-        x += barWidth + 1;
-      }
-    };
-
-    draw();
-
-}
-
-
 // //
 // //
+
 
 let recButton, stopButton, sendButton;
 let baseURL = window.location.origin;
@@ -222,3 +157,78 @@ function updateAudio(blob) {
     
     //sendButton.disabled = false;
 };
+
+
+// //
+// //
+//
+// https://github.com/mdn/voice-change-o-matic/blob/gh-pages/scripts/app.js:
+//
+// set up forked web audio context, for multiple browsers
+// window. is needed otherwise Safari explodes
+
+var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+var source;
+var stream;
+
+//set up the different audio nodes we will use for the app
+
+var analyser = audioCtx.createAnalyser();
+analyser.minDecibels = -90;
+analyser.maxDecibels = -10;
+analyser.smoothingTimeConstant = 0.85;
+
+// set up canvas context for visualizer
+
+var canvas = document.querySelector('.visualizer');
+var canvasCtx = canvas.getContext("2d");
+
+var intendedWidth = document.querySelector('.wrapper').clientWidth;
+
+canvas.setAttribute('width',intendedWidth / 2);
+
+//var visualSelect = document.getElementById("visual");
+
+var drawVisual;
+
+function visualize() {
+    var WIDTH = canvas.width;
+    var HEIGHT = canvas.height;
+    
+    
+    analyser.fftSize = 256;
+    var bufferLengthAlt = analyser.frequencyBinCount;
+    console.log(bufferLengthAlt);
+    var dataArrayAlt = new Uint8Array(bufferLengthAlt);
+    
+    canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+    
+    var draw = function() {
+	drawVisual = requestAnimationFrame(draw);
+	
+	analyser.getByteFrequencyData(dataArrayAlt);
+	
+	canvasCtx.fillStyle = 'rgb(0, 0, 0)';
+	canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+	
+	var barWidth = (WIDTH / bufferLengthAlt) * 2.5;
+	var barHeight;
+	var x = 0;
+	
+	// Only draw frequency bars when recording
+	// When recording, the stop button is enabled 
+	if (stopButton.disabled === false) { 
+	    for(var i = 0; i < bufferLengthAlt; i++) {
+		barHeight = dataArrayAlt[i];
+		
+		canvasCtx.fillStyle = 'rgb(' + (barHeight+100) + ',50,50)';
+		canvasCtx.fillRect(x,HEIGHT-barHeight/2,barWidth,barHeight/2);
+		
+		x += barWidth + 1;
+	    }
+	};
+    };
+    
+    draw(); 
+}
+

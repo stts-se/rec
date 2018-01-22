@@ -24,7 +24,7 @@ navigator.getUserMedia = (navigator.getUserMedia ||
 
 
 let recButton, stopButton, sendButton;
-let baseURL = window.location.origin;
+let baseURL = window.location.origin +"/rec";
 var currentBlob;
 var recorder;
 

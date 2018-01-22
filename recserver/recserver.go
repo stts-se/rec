@@ -91,6 +91,15 @@ func generateDoc(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// processResp := processResponse{
+	// 	Ok:                true,
+	// 	Confidence:        0.0,
+	// 	RecognitionResult: "string",
+	// 	RecordingID:       "string",
+	// 	Message:           "string",
+	// }
+	//prettyResponse, err := :prettyMarshal(processResp)
+
 	t, err := template.New("webpage").Parse(docTemplate)
 	if err != nil {
 		msg := fmt.Sprintf("failed to parse doc template : %v", err)
@@ -101,6 +110,10 @@ func generateDoc(w http.ResponseWriter, r *http.Request) {
 
 	s1 := string(prettyJSON)
 	s2 := string(prettySampleJSON)
+
+	//s3 := string(prettyResp)
+	//_ = s3
+
 	//log.Println(s1)
 	//log.Println(s2)
 	d := tplData{
@@ -266,10 +279,10 @@ func main() {
 	p := "9993"
 	r := mux.NewRouter()
 	r.StrictSlash(true)
-	r.PathPrefix("/recclient/").Handler(http.StripPrefix("/recclient/", http.FileServer(http.Dir("../recclient"))))
-	r.HandleFunc("/", index)
-	r.HandleFunc("/process/", process).Methods("POST")
-	r.HandleFunc("/doc/", generateDoc).Methods("POST", "GET")
+	r.PathPrefix("/rec/recclient/").Handler(http.StripPrefix("/rec/recclient/", http.FileServer(http.Dir("../recclient"))))
+	r.HandleFunc("/rec/", index)
+	r.HandleFunc("/rec/process/", process).Methods("POST")
+	r.HandleFunc("/rec/doc/", generateDoc).Methods("POST", "GET")
 
 	srv := &http.Server{
 		Handler: r,

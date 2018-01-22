@@ -10,3 +10,11 @@ cd rec/recserver
 go get
 
 go run *.go
+
+(or 
+ 
+  go build; ./recserver 
+ 
+ or
+ 
+  go install; recserver)

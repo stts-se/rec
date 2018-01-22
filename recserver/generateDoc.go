@@ -111,6 +111,8 @@ func generateDoc(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	s00 := `Available server request URLs
+               (auto generated from the router, so not all of them make any sense to call):`
 	s0 := strings.Join(walkedURLs, "\n")
 
 	s1 := string(prettyJSON)
@@ -124,12 +126,12 @@ func generateDoc(w http.ResponseWriter, r *http.Request) {
 	d := tplData{
 		Title: title,
 		Items: []item{
-			item{Desc: "Available server request URLs", Example: s0},
+			item{Desc: s00, Example: s0},
 			item{Desc: "", Example: "__________________________________________________"},
-			item{Desc: "/rec/process/ input JSON to POST request", Example: s1},
-			item{Desc: "/rec/process/ sample JSON input", Example: s2},
+			item{Desc: "Input JSON to POST request to /rec/process/:", Example: s1},
+			item{Desc: "Sample JSON:", Example: s2},
 			item{Desc: "", Example: "__________________________________________________"},
-			item{Desc: "The JSON returned by a successful POST request to /rec/process:", Example: s3},
+			item{Desc: "The JSON returned by a successful POST request to /rec/process: ", Example: s3},
 		},
 	}
 

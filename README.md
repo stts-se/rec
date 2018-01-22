@@ -9,6 +9,10 @@ cd rec/recserver
 
 go get
 
+__________________________
+
+To compile and run the server:
+
 go run *.go
 
 (or go build; ./recserver or go install; recserver)

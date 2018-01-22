@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -13,6 +15,103 @@ import (
 	"strings"
 	"time"
 )
+
+const docTemplate = `
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>{{.Title}}</title>
+	</head>
+	<body>
+		{{range .Items}}<p><div>{{ .Desc }}</div><pre>{{ .Example }}</pre></p>{{else}}<div><strong>no rows</strong></div>{{end}}
+	</body>
+</html>`
+
+type item struct {
+	Desc    string
+	Example string
+}
+type tplData struct {
+	Title string
+	Items []item
+}
+
+func prettyMarshal(thing interface{}) ([]byte, error) {
+	var res []byte
+
+	j, err := json.Marshal(thing)
+	if err != nil {
+		return res, err
+	}
+	var prettyJSON bytes.Buffer
+	err = json.Indent(&prettyJSON, j, "", "\t")
+	if err != nil {
+		return res, err
+	}
+	res = prettyJSON.Bytes()
+	return res, nil
+}
+
+func generateDoc(w http.ResponseWriter, r *http.Request) {
+	title := "Description of /process: POST input and output JSON"
+	processIn := processInput{
+		UserName: "string",
+		Audio: audio{
+			FileType: "string",
+			Data:     "string of base64 encoded data",
+		},
+		Text:        "string",
+		RecordingID: "string",
+	}
+
+	processInSample := processInput{
+		UserName: "user0001",
+		Audio: audio{
+			FileType: "audio/webm",
+			Data:     "GkXfo59ChoEBQ ...",
+		},
+		Text:        "text to be spoken",
+		RecordingID: "utterance_0001",
+	}
+
+	prettyJSON, err := prettyMarshal(processIn)
+	if err != nil {
+		msg := fmt.Sprintf("failed to pretty marshal : %v", err)
+		log.Println(msg)
+		http.Error(w, msg, http.StatusInternalServerError)
+		return
+	}
+
+	prettySampleJSON, err := prettyMarshal(processInSample)
+	if err != nil {
+		msg := fmt.Sprintf("failed to pretty marshal : %v", err)
+		log.Println(msg)
+		http.Error(w, msg, http.StatusInternalServerError)
+		return
+	}
+
+	t, err := template.New("webpage").Parse(docTemplate)
+	if err != nil {
+		msg := fmt.Sprintf("failed to parse doc template : %v", err)
+		log.Println(msg)
+		http.Error(w, msg, http.StatusInternalServerError)
+		return
+	}
+
+	s1 := string(prettyJSON)
+	s2 := string(prettySampleJSON)
+	//log.Println(s1)
+	//log.Println(s2)
+	d := tplData{
+		Title: title,
+		Items: []item{
+			item{Desc: "/process input JSON to POST request", Example: s1},
+			item{Desc: "/process sample JSON input", Example: s2}},
+	}
+
+	t.Execute(w, d)
+}
 
 func index(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "../recclient/index.html")
@@ -169,7 +268,9 @@ func main() {
 	r.StrictSlash(false)
 	r.PathPrefix("/recclient/").Handler(http.StripPrefix("/recclient/", http.FileServer(http.Dir("../recclient"))))
 	r.HandleFunc("/", index)
-	r.HandleFunc("/process/", process).Methods("POST", "GET")
+	r.HandleFunc("/process/", process).Methods("POST")
+	r.HandleFunc("/doc", generateDoc).Methods("POST", "GET")
+
 	srv := &http.Server{
 		Handler: r,
 		Addr:    "127.0.0.1:" + p,

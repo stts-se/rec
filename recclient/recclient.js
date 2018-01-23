@@ -62,6 +62,8 @@ window.onload = function () {
     
 };    
 function startRecording() {
+
+    // TODO set max recording time limit
     
     recButton.disabled = true;
     stopButton.disabled = false;

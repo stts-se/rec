@@ -209,12 +209,67 @@ func process(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%s\n", string(resJSON))
 }
 
+type audioResponse struct {
+	FileType string `json:"file_type"`
+	Data     string `json:"data"`
+	Message  string `json:"message"`
+}
+
+func getAudio(w http.ResponseWriter, r *http.Request) {
+	var res audioResponse
+	vars := mux.Vars(r)
+	userName := vars["username"]
+	utteranceID := vars["utterance_id"]
+	_, err := os.Stat(filepath.Join(audioDir, userName))
+	if os.IsNotExist(err) {
+		msg := fmt.Sprintf("get_audio: no audio for user '%s'", userName)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusBadRequest)
+		return
+	}
+
+	audioFile := filepath.Join(audioDir, userName, utteranceID+".wav")
+	_, err = os.Stat(audioFile)
+	if os.IsNotExist(err) {
+		msg := fmt.Sprintf("get_audio: no audio for utterance '%s'", utteranceID)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusBadRequest)
+		return
+	}
+
+	bytes, err := ioutil.ReadFile(audioFile)
+	if err != nil {
+		msg := fmt.Sprintf("get_audio: failed to read audio file : %v", err)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusInternalServerError)
+		return
+	}
+
+	data := base64.StdEncoding.EncodeToString(bytes)
+
+	res.FileType = "audio/wav"
+	res.Data = data
+
+	resJSON, err := prettyMarshal(res)
+	if err != nil {
+		msg := fmt.Sprintf("get_audio: failed to create JSON from struct : %v", res)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Fprintf(w, "%s\n", string(resJSON))
+}
+
 var audioDir string
 
 // This is filled in by main, listing the URLs handled by the router
 var walkedURLs []string
 
 func main() {
+
+	// TODO return text prompt etc as well
 
 	//TODO Check Go ffmpeg, or similar, bindings instead of
 	// external call
@@ -240,7 +295,10 @@ func main() {
 	r.HandleFunc("/rec/", index)
 	r.HandleFunc("/rec/process/", process).Methods("POST")
 	// generateDoc is definied in file generateDoc.go
-	r.HandleFunc("/rec/doc/", generateDoc).Methods("POST", "GET")
+	r.HandleFunc("/rec/doc/", generateDoc).Methods("GET")
+
+	// TODO Should this rather be a POST request?
+	r.HandleFunc("/rec/get_audio/{username}/{utterance_id}", getAudio).Methods("GET")
 
 	// List route URLs to use as simple on-line documentation
 	r.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {

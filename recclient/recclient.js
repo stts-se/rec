@@ -23,7 +23,7 @@ navigator.getUserMedia = (navigator.getUserMedia ||
 // //
 
 
-let recButton, stopButton, sendButton;
+let recButton, stopButton, sendButton, getAudioButton;
 let baseURL = window.location.origin +"/rec";
 var currentBlob;
 var recorder;
@@ -40,7 +40,12 @@ window.onload = function () {
     sendButton = document.getElementById('send');
     sendButton.addEventListener('click', sendBlob);
     sendButton.disabled = true;
-	
+
+    getAudioButton = document.getElementById('get_audio');
+    getAudioButton.addEventListener('click', getAudio);
+    
+
+    
     navigator.mediaDevices.getUserMedia({'audio': true, video: false}).then(function(stream) {
 	source = audioCtx.createMediaStreamSource(stream);
         source.connect(analyser);
@@ -53,6 +58,8 @@ window.onload = function () {
 	// ??
 	recorder.onstop = function(evt) {}
     });
+
+    
 };    
 function startRecording() {
     
@@ -159,6 +166,49 @@ function updateAudio(blob) {
     //sendButton.disabled = false;
 };
 
+
+function getAudio() {
+
+    console.log("getAudio()");
+    
+    let userName = document.getElementById('username2').value;
+    let utteranceID = document.getElementById('recording_id2').value;
+    let audio = document.getElementById('audio_from_server');
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", baseURL + "/get_audio/" + userName + "/" + utteranceID, true);
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+   
+
+    // TODO error handling
+    
+    
+    xhr.onloadend = function () {
+     	// done
+	console.log("STATUS: "+ xhr.statusText);
+	let resp = JSON.parse(xhr.response);
+
+	console.log("TODO: CHECK FILE TYPE: " + resp.file_type);
+	
+	// https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript#16245768
+	let byteCharacters = atob(resp.data);  
+
+	var byteNumbers = new Array(byteCharacters.length);
+	for (var i = 0; i < byteCharacters.length; i++) {
+	    byteNumbers[i] = byteCharacters.charCodeAt(i);
+	}
+	var byteArray = new Uint8Array(byteNumbers);
+	
+	let blob = new Blob([byteArray], {'type' : "audio/wav"});
+	audio.src = URL.createObjectURL(blob);
+    };
+
+    
+    
+    xhr.send();
+
+    
+}
 
 // //
 // //

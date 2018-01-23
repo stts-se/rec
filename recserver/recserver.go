@@ -118,7 +118,7 @@ func writeAudioFile(audioDir string, rec processInput) error {
 			log.Print(msg)
 			return fmt.Errorf(msg)
 		} // Woohoo, file converted into wav
-		log.Print("Converted saved file into wav: %v", outFilePathWav)
+		log.Printf("Converted saved file into wav: %s", outFilePathWav)
 	}
 
 	return nil

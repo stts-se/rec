@@ -201,6 +201,7 @@ function getAudio() {
 	
 	let blob = new Blob([byteArray], {'type' : "audio/wav"});
 	audio.src = URL.createObjectURL(blob);
+	audio.play();
     };
 
     

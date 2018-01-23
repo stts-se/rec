@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
@@ -54,6 +55,12 @@ func writeAudioFile(audioDir string, rec processInput) error {
 		os.MkdirAll(dirPath, os.ModePerm)
 	}
 
+	if strings.TrimSpace(rec.Audio.FileType) == "" {
+		msg := fmt.Sprintf("input audio for '%s' has no associated file type", rec.RecordingID)
+		log.Print(msg)
+		return fmt.Errorf(msg)
+	}
+
 	var ext string
 	for _, e := range []string{"webm", "wav", "ogg", "mp3"} {
 		if strings.Contains(rec.Audio.FileType, e) {
@@ -62,17 +69,15 @@ func writeAudioFile(audioDir string, rec processInput) error {
 		}
 	}
 
+	if ext == "" {
+		msg := fmt.Sprintf("unknown file type for '%s': %s", rec.RecordingID, rec.Audio.FileType)
+		log.Print(msg)
+		return fmt.Errorf(msg)
+	}
+
 	outFile := rec.RecordingID // filePath.Join(dirPath, rec.RecordingID + ". " + ext) "/tmp/nilz"
 	if ext != "" {
 		outFile = outFile + "." + ext
-	} else {
-		if rec.Audio.FileType == "" {
-			log.Print("INPUT AUDIO FILE HAS NO ASSOCIATED FILE TYPE")
-			// TODO Return error?
-		} else {
-			log.Printf("INPUT AUDIO FILE HAS UNKNOWN FILE TYPE '%s'\n", rec.Audio.FileType)
-			// TODO Return error?
-		}
 	}
 
 	outFilePath := filepath.Join(dirPath, outFile)
@@ -198,6 +203,18 @@ var walkedURLs []string
 
 func main() {
 
+	//TODO Check Go ffmpeg, or similar, bindings instead of
+	// external call
+
+	// Test that external ffmpeg command is found, or exit
+	cmd := "ffmpeg"
+	_, pErr := exec.LookPath(cmd)
+	if pErr != nil {
+
+		log.Printf("Exiting. Failed to find external command '%s'. Try installing it.\n", cmd)
+		os.Exit(0)
+	}
+
 	audioDir = "audio_dir"
 	_, sErr := os.Stat(audioDir)
 	if os.IsNotExist(sErr) {
@@ -211,7 +228,6 @@ func main() {
 	r.HandleFunc("/rec/process/", process).Methods("POST")
 	// generateDoc is definied in file generateDoc.go
 	r.HandleFunc("/rec/doc/", generateDoc).Methods("POST", "GET")
-	r.PathPrefix("/rec/recclient/").Handler(http.StripPrefix("/rec/recclient/", http.FileServer(http.Dir("../recclient"))))
 
 	// List route URLs to use as simple on-line documentation
 	r.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
@@ -222,6 +238,11 @@ func main() {
 		walkedURLs = append(walkedURLs, t)
 		return nil
 	})
+
+	// Add paths that don't need to be in the generated
+	// documentation afte the r.Walk above
+
+	r.PathPrefix("/rec/recclient/").Handler(http.StripPrefix("/rec/recclient/", http.FileServer(http.Dir("../recclient"))))
 
 	srv := &http.Server{
 		Handler: r,

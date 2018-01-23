@@ -108,6 +108,19 @@ func writeAudioFile(audioDir string, rec processInput) error {
 	log.Printf("AUDIO LEN: %d\n", len(audio))
 	log.Printf("WROTE FILE: %s\n", outFile)
 
+	// Conver to wav, while we're at it:
+	if ext != "wav" {
+		outFilePathWav := filepath.Join(dirPath, rec.RecordingID+".wav")
+		// ffmpegConvert function is defined in ffmpegConvert.go
+		err = ffmpegConvert(outFilePath, outFilePathWav, false)
+		if err != nil {
+			msg := fmt.Sprintf("writeAudioFile failed converting file : %v", err)
+			log.Print(msg)
+			return fmt.Errorf(msg)
+		} // Woohoo, file converted into wav
+		log.Print("Converted saved file into wav: %v", outFilePathWav)
+	}
+
 	return nil
 }
 

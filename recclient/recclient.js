@@ -186,6 +186,7 @@ function getAudio() {
     xhr.onloadend = function () {
      	// done
 	console.log("STATUS: "+ xhr.statusText);
+	audio.src = "";
 	let resp = JSON.parse(xhr.response);
 
 	console.log("TODO: CHECK FILE TYPE: " + resp.file_type);

@@ -82,14 +82,18 @@ function stopRecording() {
     // eventually this will trigger the dataavailable event
     recorder.stop();
     sendButton.disabled = false;
+    clearInterval(setIntFunc);
+    document.getElementById("countdown").innerHTML = "";
 }
+
+var setIntFunc;
 
 function countDown() {
     var max = 6;
 
     console.log("Countdown");
     
-    var f = setInterval(function() {
+    setIntFunc = setInterval(function() {
 
 	
 	
@@ -99,13 +103,14 @@ function countDown() {
 	cDown.innerHTML = ""+ max;
 	
 	if (max < 1) {
-	    clearInterval(f);
+	    clearInterval(setIntFunc);
 	    stopButton.click();
+	    //document.getElementById("countdown").innerHTML = "0";
 	};
 	
     }, 1000);
 
-    f;
+    //f;
 }
 
 function sendBlob() {
@@ -144,8 +149,8 @@ function sendJSON(payload) {
     xhr.onloadend = function () {
      	// done
 	console.log("STATUS: "+ xhr.statusText);
-	console.log("STATUS: "+ JSON.stringify(xhr.response));
-	showResponse(xhr.response);
+	console.log("RESPONSE: "+ xhr.responseText);
+	showResponse(xhr.responseText);
     };
 
     
@@ -157,10 +162,10 @@ function showResponse(json) {
 
     clearResponse();
     var resp = document.getElementById("response");
-
-    var node = document.createTextNode(JSON.stringify(json));
-
-    resp.appendChild(node);
+    var o = JSON.parse(json);
+    var j = JSON.stringify(o, null, '\t');
+    
+    resp.innerHTML = j;
 };
 
 function clearResponse() {

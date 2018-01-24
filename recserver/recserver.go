@@ -124,8 +124,7 @@ func process(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		msg := fmt.Sprintf("failed to marshal response : %v", err)
 		log.Println(msg)
-		// or return JSON response with error message?
-		//res.Message = msg
+
 		http.Error(w, msg, http.StatusBadRequest)
 		return
 	}

@@ -123,7 +123,7 @@ func writeAudioFile(audioDir string, rec processInput) error {
 	if err != nil {
 		return fmt.Errorf("writeAudio: failed to create info JSON : %v", err)
 	}
-	infoFile, err := os.Create(infoFilePath) //ioutil.WriteFile(audioFilePath, string(infoJSON), 0644)
+	infoFile, err := os.Create(infoFilePath)
 	if err != nil {
 		return fmt.Errorf("writeAudio: failed to create info file : %v", err)
 	}

@@ -112,7 +112,7 @@ func generateDoc(w http.ResponseWriter, r *http.Request) {
 	}
 
 	s00 := `Available server request URLs
-               (auto generated from the router, so not all of them make any sense to call):`
+               (auto generated from the router):`
 	s0 := strings.Join(walkedURLs, "\n")
 
 	s1 := string(prettyJSON)

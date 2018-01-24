@@ -71,7 +71,7 @@ function startRecording() {
     recorder.start();
 
     clearResponse();
-    
+    countDown();
 }
 function stopRecording() {
     
@@ -83,6 +83,31 @@ function stopRecording() {
     recorder.stop();
     sendButton.disabled = false;
 }
+
+function countDown() {
+    var max = 6;
+
+    console.log("Countdown");
+    
+    var f = setInterval(function() {
+
+	
+	
+	max = max - 1;
+	
+	let cDown = document.getElementById("countdown");
+	cDown.innerHTML = ""+ max;
+	
+	if (max < 1) {
+	    clearInterval(f);
+	    stopButton.click();
+	};
+	
+    }, 1000);
+
+    f;
+}
+
 function sendBlob() {
     console.log("CURRENT BLOB SIZE: "+ currentBlob.size);
     console.log("CURRENT BLOB TYPE: "+ currentBlob.type);

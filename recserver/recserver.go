@@ -115,6 +115,16 @@ func process(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, msg, http.StatusInternalServerError)
 		return
 	}
+
+	//HB testing
+	res, err = runExternalKaldiDecoder("audio_dir/user0001/rec_0001.wav", res)
+	if err != nil {
+		msg := fmt.Sprintf("failed decoding audio file : %v", err)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusInternalServerError)
+		return
+	}
+
 	// TODO Create reasonable response
 
 	res.Ok = true

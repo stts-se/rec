@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8">
     <title>Rec</title>
-
+    
     <style>
       label { display: inline-block; width: 100px; }
     </style>
-
+    
     
   </head>
   <body>
-
+    
     <p>
       <em>This hideous demo client works in Chrome and Firefox only (I think)</em>
     </p>
@@ -20,11 +20,12 @@
       
     </p>
     
+    <p>_____________________________________________________________</p>
+    
     <p>
-      
       <label for="username">Username</label> <input id="username" name="username" type="text" value="user0001"><br>
       <label for="recording_id">Recording ID</label> <input id="recording_id" name="recording_id" type="text" value="rec_0001"><br>
-            <label for="text">Text</label> <input id="text" name="text" type="text" value="text to read aloud"><br>
+      <label for="text">Text</label> <input id="text" name="text" type="text" value="text to read aloud"><br>
     </p>
     
     
@@ -44,7 +45,7 @@
     <p>
       <audio id="audio" controls></audio>
     </p>
-
+    
     <p>
       <button id="send">send</button> <br>
       (sends audio to server) 
@@ -52,7 +53,7 @@
     <p>_____________________________________________________________</p>
     Server response after send:
     <p><pre id="response"></pre></p>
-
+    
     <p>_____________________________________________________________</p>
     
     Get audio back from server:

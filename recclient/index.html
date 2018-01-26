@@ -30,7 +30,9 @@
       
       <button id="rec">rec</button>
       <button id="stop">stop</button>
-      <div>Max 5 secs: <span id="countdown"></span></div><br>
+      
+      <progress id="rec_progress" value="0" max="5"></progress> (arbitrary max recording time, 5 secs)
+      
     </p>
     <p>
       <audio id="audio" controls></audio>

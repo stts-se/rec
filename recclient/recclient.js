@@ -83,34 +83,32 @@ function stopRecording() {
     recorder.stop();
     sendButton.disabled = false;
     clearInterval(setIntFunc);
-    document.getElementById("countdown").innerHTML = "";
+    document.getElementById("rec_progress").value = "0";
 }
 
 var setIntFunc;
 
 function countDown() {
-    var max = 6;
+    var max = 5;
+    let tick = 10;
+    var dur = 0;
 
-    console.log("Countdown");
+    document.getElementById("rec_progress").value = ""+ dur;
     
     setIntFunc = setInterval(function() {
 
+	dur = dur + (tick / 1000);
 	
+	document.getElementById("rec_progress").value = ""+ dur;
 	
-	max = max - 1;
-	
-	let cDown = document.getElementById("countdown");
-	cDown.innerHTML = ""+ max;
-	
-	if (max < 1) {
+	if (dur > max + 1) {
 	    clearInterval(setIntFunc);
 	    stopButton.click();
-	    //document.getElementById("countdown").innerHTML = "0";
 	};
 	
-    }, 1000);
+    }, tick);
 
-    //f;
+    setIntFunc;
 }
 
 function sendBlob() {

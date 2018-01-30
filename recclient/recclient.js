@@ -23,12 +23,19 @@ navigator.getUserMedia = (navigator.getUserMedia ||
 // //
 
 
-let recButton, stopButton, sendButton, getAudioButton;
+let recButton, stopButton, sendButton, getAudioButton, prevButton, nextButton;
 let baseURL = window.location.origin +"/rec";
 var currentBlob;
 var recorder;
 
 window.onload = function () {
+
+    prevButton  = document.getElementById('prev_button');
+    prevButton.addEventListener('click', getPrev)
+    
+    nextButton  = document.getElementById('next_button');
+    nextButton.addEventListener('click', getNext)
+    
     recButton = document.getElementById('rec');
     recButton.addEventListener('click', startRecording);
     recButton.disabled = false;
@@ -55,12 +62,70 @@ window.onload = function () {
 	    updateAudio(evt.data); 
 	});
 	
-	// ??
 	recorder.onstop = function(evt) {}
     });
 
     
-};    
+};
+
+
+function getPrev() {
+
+    document.getElementById("message").innerHTML = "";
+    
+    // TODO Error check user name
+    
+    let userName = document.getElementById('username').value
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", baseURL + "/get_previous_utterance/" + userName , true);
+
+    
+    // TODO error handling
+    
+    
+    xhr.onloadend = function () {
+	
+	let resp = JSON.parse(xhr.response);
+	
+	document.getElementById("recording_id").innerHTML = resp.recording_id;
+	document.getElementById("text").innerHTML = resp.text;
+	document.getElementById("message").innerHTML = resp.message;
+    };
+    
+    xhr.send();
+
+    
+}
+
+function getNext() {
+
+    document.getElementById("message").innerHTML = "";
+    
+    // TODO Error check user name
+
+    let userName = document.getElementById('username').value
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", baseURL + "/get_next_utterance/" + userName , true);
+
+    
+    // TODO error handling
+    
+    
+    xhr.onloadend = function () {
+	
+	let resp = JSON.parse(xhr.response);
+	
+	document.getElementById("recording_id").innerHTML = resp.recording_id;
+	document.getElementById("text").innerHTML = resp.text;
+	document.getElementById("message").innerHTML = resp.message;
+    };
+    
+    xhr.send();
+    
+}
+
 function startRecording() {
 
     // TODO set max recording time limit
@@ -123,8 +188,8 @@ function sendBlob() {
 	let payload = {
 	    username : document.getElementById("username").value,
 	    audio : { file_type : currentBlob.type, data: btoa(rez)},
-	    text : document.getElementById("text").value,
-	    recording_id : document.getElementById("recording_id").value
+	    text : document.getElementById("text").innerHTML,
+	    recording_id : document.getElementById("recording_id").innerHTML
 	};
 	
 	sendJSON(payload);
@@ -269,8 +334,6 @@ var canvasCtx = canvas.getContext("2d");
 var intendedWidth = document.querySelector('.wrapper').clientWidth;
 
 canvas.setAttribute('width',intendedWidth / 2);
-
-//var visualSelect = document.getElementById("visual");
 
 var drawVisual;
 

@@ -24,15 +24,19 @@
     
     <p>
       <label for="username">Username</label> <input id="username" name="username" type="text" value="user0001"><br>
-      <label for="recording_id">Recording ID</label> <input id="recording_id" name="recording_id" type="text" value="rec_0001"><br>
-      <label for="text">Text</label> <input id="text" name="text" type="text" value="text to read aloud"><br>
+      <label for="recording_id">Recording ID</label>                 <span id="recording_id"></span><br>
+      <label for="text">Text to read</label>                         <span id="text"></span><br>
+      
+      <button id="prev_button" >Prev</button>          <button id="next_button">Next</button> <br>
+      <span style="color:red" id="message"></span><br>
     </p>
+    
     
     
     <div class="wrapper">
       <canvas class="visualizer" width="640" height="100"></canvas> 
     </div>
-    
+      
     
     <p>
       

@@ -1,12 +1,11 @@
 package main
 
+// TODO put a mutex around file reading and writing
+
 import (
-	//"bytes"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
-	//"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -15,6 +14,8 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/gorilla/mux"
 )
 
 func index(w http.ResponseWriter, r *http.Request) {
@@ -185,9 +186,11 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%s\n", string(resJSON))
 }
 
+// The path to the directory where audio files are saved
 var audioDir string
 
-// This is filled in by main, listing the URLs handled by the router
+// This is filled in by main, listing the URLs handled by the router,
+// so that these can be shown in the generated docs.
 var walkedURLs []string
 
 func main() {
@@ -222,6 +225,10 @@ func main() {
 
 	// TODO Should this rather be a POST request?
 	r.HandleFunc("/rec/get_audio/{username}/{utterance_id}", getAudio).Methods("GET")
+
+	// Defined in getUtterance.go
+	r.HandleFunc("/rec/get_next_utterance/{username}", getNextUtterance).Methods("GET")
+	r.HandleFunc("/rec/get_previous_utterance/{username}", getPreviousUtterance).Methods("GET")
 
 	// List route URLs to use as simple on-line documentation
 	r.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {

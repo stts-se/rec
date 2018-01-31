@@ -15,48 +15,51 @@ import (
 func dummyInstantiateUtts() {
 
 	uttLists.currentUttForUser = make(map[string]int)
-	uttLists.uttsForUser = make(map[string][]utt)
+	uttLists.uttsForUser = make(map[string][]utterance)
 
-	utts1 := []utt{
-		{"rec_0001", "This is utterance number one"},
-		{"rec_0002", "Utterance number two."},
-		{"rec_0003", "Well, number three"},
+	utts1 := []utterance{
+		{RecordingID: "rec_0001", Text: "This is utterance number one"},
+		{RecordingID: "rec_0002", Text: "Utterance number two."},
+		{RecordingID: "rec_0003", Text: "Well, number three"},
 	}
-	utts2 := []utt{
-		{"rec_0001", "This is utterance number one, user two"},
-		{"rec_0002", "Utterance number two, user two."},
-		{"rec_0003", "Well, number three, user two"},
+	utts2 := []utterance{
+		{RecordingID: "rec_0001", Text: "This is utterance number one, user two"},
+		{RecordingID: "rec_0002", Text: "Utterance number two, user two."},
+		{RecordingID: "rec_0003", Text: "Well, number three, user two"},
 	}
 	uttLists.uttsForUser["user0001"] = utts1
 	uttLists.uttsForUser["user0002"] = utts2
 }
 
+// TO DO remove:
 func init() {
 	dummyInstantiateUtts()
 }
 
-type utt struct {
-	uttID string
-	text  string
-}
+// type utt struct {
+// 	uttID string
+// 	text  string
+// }
 
 type utteranceLists struct {
 	sync.Mutex
 	currentUttForUser map[string]int
-	uttsForUser       map[string][]utt
+	uttsForUser       map[string][]utterance
 }
 
 var uttLists = utteranceLists{}
 
-type nextUttResponse struct {
+type utterance struct {
 	UserName    string `json:"username"`
 	Text        string `json:"text"`
 	RecordingID string `json:"recording_id"`
 	Message     string `json:"message"`
+	Num         int    `json:"num"`
+	Of          int    `json:"of"`
 }
 
-func getUttRelativeToCurrent(userName string, uttIndex int) (utt, string) {
-	var res utt
+func getUttRelativeToCurrent(userName string, uttIndex int) (utterance, error) {
+	var res utterance
 	var msg string
 
 	uttLists.Lock()
@@ -64,18 +67,18 @@ func getUttRelativeToCurrent(userName string, uttIndex int) (utt, string) {
 
 	var newIndex int
 
-	var utterances []utt
+	var utterances []utterance
 
 	if utts, ok := uttLists.uttsForUser[userName]; !ok {
 		msg := fmt.Sprintf("get_next_utterance: no utterances for user '%s'", userName)
 		log.Print(msg)
-		return res, msg
+		return res, fmt.Errorf(msg)
 	} else {
 
 		if len(uttLists.uttsForUser[userName]) == 0 {
 			msg := fmt.Sprintf("get_next_utterance: no utterances for user '%s'", userName)
 			log.Print(msg)
-			return res, msg
+			return res, fmt.Errorf(msg)
 		}
 
 		utterances = utts
@@ -98,21 +101,25 @@ func getUttRelativeToCurrent(userName string, uttIndex int) (utt, string) {
 	}
 
 	uttLists.currentUttForUser[userName] = newIndex
-	return utterances[newIndex], msg
+
+	utterances[newIndex].UserName = userName
+	utterances[newIndex].Message = msg
+	utterances[newIndex].Num = newIndex + 1 // Number, not index
+	utterances[newIndex].Of = len(utterances)
+	return utterances[newIndex], nil
 }
 
 func getNextUtterance(w http.ResponseWriter, r *http.Request) {
-	var res nextUttResponse
-
 	vars := mux.Vars(r)
 	userName := strings.ToLower(vars["username"])
 
-	utt, msg := getUttRelativeToCurrent(userName, 1)
-
-	res.UserName = userName
-	res.RecordingID = utt.uttID
-	res.Text = utt.text
-	res.Message = msg
+	res, err := getUttRelativeToCurrent(userName, 1)
+	if err != nil {
+		msg0 := fmt.Sprintf("get_next_utterance: failed getting utterance : %v", err)
+		log.Print(msg0)
+		http.Error(w, msg0, http.StatusInternalServerError)
+		return
+	}
 
 	resJSON, err := json.Marshal(res)
 	if err != nil {
@@ -125,17 +132,18 @@ func getNextUtterance(w http.ResponseWriter, r *http.Request) {
 }
 
 func getPreviousUtterance(w http.ResponseWriter, r *http.Request) {
-	var res nextUttResponse
-
 	vars := mux.Vars(r)
 	userName := strings.ToLower(vars["username"])
 
-	utt, msg := getUttRelativeToCurrent(userName, -1)
+	res, err := getUttRelativeToCurrent(userName, -1)
+	if err != nil {
+		msg0 := fmt.Sprintf("get_previous_utterance: failed getting utterance : %v", err)
+		log.Print(msg0)
+		http.Error(w, msg0, http.StatusInternalServerError)
+		return
+	}
 
 	res.UserName = userName
-	res.RecordingID = utt.uttID
-	res.Text = utt.text
-	res.Message = msg
 
 	resJSON, err := json.Marshal(res)
 	if err != nil {

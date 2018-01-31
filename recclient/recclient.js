@@ -72,6 +72,7 @@ window.onload = function () {
 function getPrev() {
 
     document.getElementById("message").innerHTML = "";
+    document.getElementById("num").innerHTML = "";
     
     // TODO Error check user name
     
@@ -90,6 +91,7 @@ function getPrev() {
 	
 	document.getElementById("recording_id").innerHTML = resp.recording_id;
 	document.getElementById("text").innerHTML = resp.text;
+	document.getElementById("num").innerHTML = resp.num +"/"+ resp.of;
 	document.getElementById("message").innerHTML = resp.message;
     };
     
@@ -100,6 +102,7 @@ function getPrev() {
 
 function getNext() {
 
+    document.getElementById("num").innerHTML = "";
     document.getElementById("message").innerHTML = "";
     
     // TODO Error check user name
@@ -119,6 +122,7 @@ function getNext() {
 	
 	document.getElementById("recording_id").innerHTML = resp.recording_id;
 	document.getElementById("text").innerHTML = resp.text;
+	document.getElementById("num").innerHTML = resp.num +"/"+ resp.of;
 	document.getElementById("message").innerHTML = resp.message;
     };
     

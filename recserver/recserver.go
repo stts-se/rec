@@ -215,6 +215,15 @@ func main() {
 		os.Mkdir(audioDir, os.ModePerm)
 	}
 
+	//func loadUtteranceLists defined in getUtterance.go
+	uls, err := loadUtteranceLists(audioDir)
+	if err != nil {
+		msg := fmt.Sprintf("failed to load user utterance lists : %v", err)
+		log.Print(msg)
+		os.Exit(1)
+	}
+	uttLists = uls
+
 	p := "9993"
 	r := mux.NewRouter()
 	r.StrictSlash(true)

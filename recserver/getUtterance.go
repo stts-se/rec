@@ -3,8 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	//"os"
+	"path"
+	"path/filepath"
 	"strings"
 	"sync"
 
@@ -12,29 +16,30 @@ import (
 )
 
 // TO DO remove:
-func dummyInstantiateUtts() {
+//func dummyInstantiateUtts() {
 
-	uttLists.currentUttForUser = make(map[string]int)
-	uttLists.uttsForUser = make(map[string][]utterance)
+//uttLists.currentUttForUser = make(map[string]int)
+//uttLists.uttsForUser = make(map[string][]utterance)
 
-	utts1 := []utterance{
-		{RecordingID: "rec_0001", Text: "This is utterance number one"},
-		{RecordingID: "rec_0002", Text: "Utterance number two."},
-		{RecordingID: "rec_0003", Text: "Well, number three"},
-	}
-	utts2 := []utterance{
-		{RecordingID: "rec_0001", Text: "This is utterance number one, user two"},
-		{RecordingID: "rec_0002", Text: "Utterance number two, user two."},
-		{RecordingID: "rec_0003", Text: "Well, number three, user two"},
-	}
-	uttLists.uttsForUser["user0001"] = utts1
-	uttLists.uttsForUser["user0002"] = utts2
-}
+//utts1 := []utterance{
+//	{RecordingID: "rec_0001", Text: "This is utterance number one"},
+//	{RecordingID: "rec_0002", Text: "Utterance number two."},
+//	{RecordingID: "rec_0003", Text: "Well, number three"},
+//}
+//utts2 := []utterance{
+//	{RecordingID: "rec_0001", Text: "This is utterance number one, user two"},
+//	{RecordingID: "rec_0002", Text: "Utterance number two, user two."},
+//	{RecordingID: "rec_0003", Text: "Well, number three, user two"},
+//}
+//uttLists.uttsForUser["user0001"] = utts1
+//uttLists.uttsForUser["user0002"] = utts2
+//}
 
 // TO DO remove:
-func init() {
-	dummyInstantiateUtts()
-}
+//func init() {
+//	loadUtteranceLists("audio_dir")
+//	dummyInstantiateUtts()
+//}
 
 // type utt struct {
 // 	uttID string
@@ -45,6 +50,13 @@ type utteranceLists struct {
 	sync.Mutex
 	currentUttForUser map[string]int
 	uttsForUser       map[string][]utterance
+}
+
+func newUtteranceLists() utteranceLists {
+	return utteranceLists{
+		currentUttForUser: make(map[string]int),
+		uttsForUser:       make(map[string][]utterance),
+	}
 }
 
 var uttLists = utteranceLists{}
@@ -153,4 +165,59 @@ func getPreviousUtterance(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Fprintf(w, string(resJSON))
+}
+
+func loadUtteranceLists(dirPath string) (utteranceLists, error) {
+	var res = newUtteranceLists()
+
+	files, err := filepath.Glob(filepath.Join(dirPath, "*", "*.utt"))
+	if err != nil {
+		return res, fmt.Errorf("loadUtteranceLists: failed to list user *.utt files : %v", err)
+	}
+
+	for _, f := range files {
+		//fmt.Printf("FN: %s\n", f)
+
+		//fmt.Printf("base: %s\n", base)
+		// Parent dir name of file is "user name"
+		userName := path.Base(path.Dir(f))
+		utts, err := readUttFile(f)
+		if err != nil {
+			return res, fmt.Errorf("loadUtteranceLists: failed to read file : %v", err)
+		}
+
+		res.uttsForUser[userName] = append(res.uttsForUser[userName], utts...)
+	}
+
+	return res, nil
+}
+
+func readUttFile(fn string) ([]utterance, error) {
+	var res []utterance
+
+	bytes, err := ioutil.ReadFile(fn)
+	if err != nil {
+		return res, fmt.Errorf("readUttFile: %v", err)
+	}
+
+	lines := strings.Split(string(bytes), "\n")
+	for _, l := range lines {
+		l = strings.TrimSpace(l)
+		if l == "" || strings.HasPrefix(l, "#") {
+			continue
+		}
+
+		// TODO validate line
+		fs := strings.SplitN(l, "\t", 2)
+		if len(fs) != 2 || len(fs[0]) == 0 || len(fs[1]) == 0 {
+			log.Printf("readUttFile: skipping line of '%s': %s", fn, l)
+			continue
+		}
+		u := utterance{RecordingID: fs[0], Text: fs[1]}
+		fmt.Printf("%#v\n", u)
+		res = append(res, u)
+
+	}
+
+	return res, nil
 }

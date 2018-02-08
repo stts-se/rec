@@ -22,8 +22,14 @@ def decode(wavfile):
     #call decode script
     decode_cmd = "cd %s; bash decode_hb_2.sh %s/%s %s" % (kaldi_dir, recserver_dir, wavfile, model_dir)
     sys.stderr.write(decode_cmd+"\n")
-    result = os.popen(decode_cmd).read()
+    result0 = os.popen(decode_cmd)
+    result = result0.read()
 
+    rc = result0.close()
+    if rc is not None and rc >> 8:
+        sys.stderr.write("Command failed : " + decode_cmd + "\n")
+        exit(1)
+        
     #return output
     return result.strip()
 

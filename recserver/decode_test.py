@@ -7,10 +7,27 @@ model_dir = "exp/tri2b_mpe/"
 recserver_dir = "~/git/rec/recserver"
 
 def decode(wavfile):
-
+    
     # TODO REMOVE
     return "DUMMY RETURN VALUE"
     
+    if not os.path.isdir(kaldi_dir):
+        sys.stderr.write("kaldi_dir doesn't exist : "+ kaldi_dir +"\n")
+        exit(1)
+        return
+
+    m_dir = kaldi_dir +"/"+ model_dir
+    if not os.path.isdir(m_dir):
+        sys.stderr.write("model_dir doesn't exist : "+ m_dir +"\n")
+        exit(1)
+        return
+    
+    if not os.path.isdir(recserver_dir):
+        sys.stderr.write("recserver_dir doesn't exist : "+ recserver_dir + "\n")
+        exit(1)
+        return
+    
+        
     #check audio
     wav = wave.open(wavfile)
     rate = wav.getframerate()

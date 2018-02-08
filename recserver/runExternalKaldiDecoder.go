@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"log"
-	//"os"
+	"os"
 	"os/exec"
 )
 
@@ -18,13 +18,13 @@ func runExternalKaldiDecoder(wavFilePath string, res processResponse) (processRe
 
 	cmd := exec.Command("python", "decode_test.py", wavFilePath)
 	var out bytes.Buffer
-	var sterr bytes.Buffer
+	//var sterr bytes.Buffer
 	cmd.Stdout = &out
-	cmd.Stderr = &sterr
+	cmd.Stderr = os.Stderr //&sterr
 
 	err := cmd.Run()
 	if err != nil {
-		log.Printf("%s\n", sterr.String())
+		log.Printf("failure: %v\n", err /*sterr.String()*/)
 		return res, fmt.Errorf("runExternalKaldiDecoder failed running '%s': %v\n", cmd.Path, err)
 
 	}

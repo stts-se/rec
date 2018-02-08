@@ -17,7 +17,8 @@ func ffmpegConvert(inFilePath, outFilePath string, removeInputFile bool) error {
 	}
 
 	// '-y' means write over if output file already exists
-	cmd := exec.Command("ffmpeg", "-y", "-i", inFilePath, outFilePath)
+	//HB cmd := exec.Command("ffmpeg", "-y", "-i", inFilePath, outFilePath)
+	cmd := exec.Command("ffmpeg", "-y", "-i", inFilePath, "-ac", "1", "-ar", "16000", outFilePath)
 	var out bytes.Buffer
 	var sterr bytes.Buffer
 	cmd.Stdout = &out

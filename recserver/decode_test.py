@@ -7,6 +7,10 @@ model_dir = "exp/tri2b_mpe/"
 recserver_dir = "~/git/rec/recserver"
 
 def decode(wavfile):
+
+    # TODO REMOVE
+    return "DUMMY RETURN VALUE"
+    
     #check audio
     wav = wave.open(wavfile)
     rate = wav.getframerate()

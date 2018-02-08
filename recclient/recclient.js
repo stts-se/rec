@@ -348,7 +348,7 @@ function visualize() {
     
     analyser.fftSize = 256;
     var bufferLengthAlt = analyser.frequencyBinCount;
-    console.log(bufferLengthAlt);
+    //console.log(bufferLengthAlt);
     var dataArrayAlt = new Uint8Array(bufferLengthAlt);
     
     canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);

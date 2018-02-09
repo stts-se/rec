@@ -11,15 +11,6 @@ import (
 	"strings"
 )
 
-type fileInfo struct {
-	TargetUtterance   string  `json:"target_uttrance"`
-	ActualUtterance   string  `json:"actual_uttrance"`
-	Status            string  `json:"status"`
-	Ok                bool    `json:"ok"`
-	Confidence        float32 `json:"confidence"`
-	RecognitionResult string  `json:"recognition_result"`
-}
-
 func writeAudioFile(audioDir string, rec processInput) error {
 	if strings.TrimSpace(audioDir) == "" {
 		return fmt.Errorf("writeAudioFile: empty audioDir argument")
@@ -106,30 +97,7 @@ func writeAudioFile(audioDir string, rec processInput) error {
 		log.Printf("Converted saved file into wav: %s", audioFilePathWav)
 	}
 
-	// Add matching info JSON file
-
-	infoFileName := rec.RecordingID + ".json"
-	infoFilePath := filepath.Join(dirPath, infoFileName)
-	if _, err = os.Stat(infoFilePath); !os.IsNotExist(err) {
-		os.Remove(infoFilePath)
-	}
-
-	info := fileInfo{
-		TargetUtterance: rec.Text,
-		Status:          "unprocessed",
-	}
-
-	infoJSON, err := prettyMarshal(info)
-	if err != nil {
-		return fmt.Errorf("writeAudio: failed to create info JSON : %v", err)
-	}
-	infoFile, err := os.Create(infoFilePath)
-	if err != nil {
-		return fmt.Errorf("writeAudio: failed to create info file : %v", err)
-	}
-	defer infoFile.Close()
-
-	_, err = infoFile.WriteString(string(infoJSON) + "\n")
+	//err = writeJSONInfoFile(dirPath, rec)
 
 	return nil
 }

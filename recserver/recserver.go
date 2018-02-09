@@ -126,6 +126,19 @@ func process(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// TODO This is weird. Structs 'processInput' and
+	// 'processRespons' and 'infoFile' should probably be a single
+	// struct
+
+	// writeJSONInfoFile defined in writeJSONInfoFile.go
+	err = writeJSONInfoFile(audioDir, input, res)
+	if err != nil {
+		msg := fmt.Sprintf("failed writing info file : %v", err)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusInternalServerError)
+		return
+	}
+
 	// TODO Create reasonable response
 
 	res.Ok = true

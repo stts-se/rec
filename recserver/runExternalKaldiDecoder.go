@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 func runExternalKaldiDecoder(wavFilePath string, res processResponse) (processResponse, error) {
@@ -30,7 +31,7 @@ func runExternalKaldiDecoder(wavFilePath string, res processResponse) (processRe
 	}
 
 	log.Printf("RecognitionResult: %s\n", out.String())
-	res.RecognitionResult = out.String()
+	res.RecognitionResult = strings.TrimSpace(out.String())
 	res.Message = "Recognised by external kaldi recognizer"
 	return res, nil
 }

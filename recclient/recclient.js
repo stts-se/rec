@@ -65,6 +65,9 @@ window.onload = function () {
 	recorder.onstop = function(evt) {}
     });
 
+
+    // TODO Remove temporary initialization
+    prevButton.click();
     
 };
 

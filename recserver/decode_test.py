@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 from __future__ import division
-import sys, os, wave
+import sys, os, wave, time
 
 
 kaldi_dir = "~/git/kaldi/egs/irish_test_dec08"
@@ -7,9 +8,9 @@ model_dir = "exp/tri2b_mpe/"
 recserver_dir = "~/git/rec/recserver"
 
 def decode(wavfile):
-    
+
     # TODO REMOVE
-    return "DUMMY RETURN VALUE"
+    return "DUMMY RETURN VALUE " + time.strftime("%H:%M:%S")
     
     if not os.path.isdir(kaldi_dir):
         sys.stderr.write("kaldi_dir doesn't exist : "+ kaldi_dir +"\n")

@@ -273,7 +273,7 @@ func main() {
 	})
 
 	// Add paths that don't need to be in the generated
-	// documentation afte the r.Walk above
+	// documentation after the r.Walk above
 
 	r.PathPrefix("/rec/recclient/").Handler(http.StripPrefix("/rec/recclient/", http.FileServer(http.Dir("../recclient"))))
 

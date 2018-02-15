@@ -126,12 +126,12 @@ func generateDoc(w http.ResponseWriter, r *http.Request) {
 	d := tplData{
 		Title: title,
 		Items: []item{
-			item{Desc: s00, Example: s0},
-			item{Desc: "", Example: "__________________________________________________"},
-			item{Desc: "Input JSON to POST request to /rec/process/:", Example: s1},
-			item{Desc: "Sample JSON:", Example: s2},
-			item{Desc: "", Example: "__________________________________________________"},
-			item{Desc: "The JSON returned by a successful POST request to /rec/process/: ", Example: s3},
+			{Desc: s00, Example: s0},
+			{Desc: "", Example: "__________________________________________________"},
+			{Desc: "Input JSON to POST request to /rec/process/:", Example: s1},
+			{Desc: "Sample JSON:", Example: s2},
+			{Desc: "", Example: "__________________________________________________"},
+			{Desc: "The JSON returned by a successful POST request to /rec/process/: ", Example: s3},
 		},
 	}
 

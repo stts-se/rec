@@ -81,27 +81,21 @@ func getUttRelativeToCurrent(userName string, uttIndex int) (utterance, error) {
 
 	var utterances []utterance
 
-	if utts, ok := uttLists.uttsForUser[userName]; !ok {
+	if utts, ok := uttLists.uttsForUser[userName]; !ok || len(uttLists.uttsForUser[userName]) == 0 {
 		msg := fmt.Sprintf("get_next_utterance: no utterances for user '%s'", userName)
 		log.Print(msg)
 		return res, fmt.Errorf(msg)
 	} else {
 
-		if len(uttLists.uttsForUser[userName]) == 0 {
-			msg := fmt.Sprintf("get_next_utterance: no utterances for user '%s'", userName)
-			log.Print(msg)
-			return res, fmt.Errorf(msg)
-		}
-
 		utterances = utts
-
-		// Not first utterace
-		if currIndex, ok := uttLists.currentUttForUser[userName]; ok {
-			newIndex = uttIndex + currIndex
-		} else { //first utterance in list, currIndex == 0
-			newIndex = 0 //uttIndex + currIndex
-		}
 	}
+	// Not first utterace
+	if currIndex, ok := uttLists.currentUttForUser[userName]; ok {
+		newIndex = uttIndex + currIndex
+	} else { //first utterance in list, currIndex == 0
+		newIndex = 0 //uttIndex + currIndex
+	}
+	//}
 
 	if newIndex < 0 {
 		newIndex = 0

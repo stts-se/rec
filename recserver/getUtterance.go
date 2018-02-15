@@ -59,7 +59,7 @@ func newUtteranceLists() utteranceLists {
 	}
 }
 
-var uttLists = utteranceLists{}
+var uttLists = newUtteranceLists() //utteranceLists{}
 
 type utterance struct {
 	UserName    string `json:"username"`
@@ -167,12 +167,13 @@ func getPreviousUtterance(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(resJSON))
 }
 
-func loadUtteranceLists(dirPath string) (utteranceLists, error) {
-	var res = newUtteranceLists()
+// TODO adds data to global var uttLists
+func loadUtteranceLists(dirPath string) /*(utteranceLists,*/ error {
+	//var res = newUtteranceLists()
 
 	files, err := filepath.Glob(filepath.Join(dirPath, "*", "*.utt"))
 	if err != nil {
-		return res, fmt.Errorf("loadUtteranceLists: failed to list user *.utt files : %v", err)
+		return fmt.Errorf("loadUtteranceLists: failed to list user *.utt files : %v", err)
 	}
 
 	for _, f := range files {
@@ -183,13 +184,15 @@ func loadUtteranceLists(dirPath string) (utteranceLists, error) {
 		userName := path.Base(path.Dir(f))
 		utts, err := readUttFile(f)
 		if err != nil {
-			return res, fmt.Errorf("loadUtteranceLists: failed to read file : %v", err)
+			return fmt.Errorf("loadUtteranceLists: failed to read file : %v", err)
 		}
 
-		res.uttsForUser[userName] = append(res.uttsForUser[userName], utts...)
+		uttLists.Lock()
+		defer uttLists.Unlock()
+		uttLists.uttsForUser[userName] = append(uttLists.uttsForUser[userName], utts...)
 	}
 
-	return res, nil
+	return nil
 }
 
 func readUttFile(fn string) ([]utterance, error) {

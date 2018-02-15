@@ -239,13 +239,13 @@ func main() {
 	}
 
 	//func loadUtteranceLists defined in getUtterance.go
-	uls, err := loadUtteranceLists(audioDir)
+	err := loadUtteranceLists(audioDir)
 	if err != nil {
 		msg := fmt.Sprintf("failed to load user utterance lists : %v", err)
 		log.Print(msg)
 		os.Exit(1)
 	}
-	uttLists = uls
+	//uttLists = uls
 
 	p := "9993"
 	r := mux.NewRouter()
@@ -284,7 +284,7 @@ func main() {
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
-	fmt.Println("rec server started on port " + p)
+	fmt.Println("rec server started on localhost:" + p + "/rec")
 	log.Fatal(srv.ListenAndServe())
 	fmt.Println("No fun")
 }

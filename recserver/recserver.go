@@ -22,6 +22,10 @@ func index(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "../recclient/index.html")
 }
 
+func animationDemo(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "../recclient/animationdemo/index.html")
+}
+
 type audio struct {
 	FileType string `json:"file_type"`
 	Data     string `json:"data"`
@@ -252,6 +256,9 @@ func main() {
 	r.StrictSlash(true)
 	r.HandleFunc("/rec/", index)
 	r.HandleFunc("/rec/process/", process).Methods("POST")
+
+	r.HandleFunc("/rec/animationdemo", animationDemo)
+
 	// generateDoc is definied in file generateDoc.go
 	r.HandleFunc("/rec/doc/", generateDoc).Methods("GET")
 

@@ -63,10 +63,10 @@ function replayAudio(blob) {
 
 function init() {
     console.log("init: called");
-    document.body.onkeyup = function(e){
-	if (e.keyCode == 32)
-            start();
-    }
+    // document.body.onkeyup = function(e){
+	// if (e.keyCode == 32)
+           // start();
+    // }
 
     navigator.mediaDevices.getUserMedia({'audio': true, video: false}).then(function(stream) {
     	source = audioCtx.createMediaStreamSource(stream);
@@ -139,11 +139,11 @@ function setUnpauseEnabled(elem) {
     //console.log("setUnpauseEnabled");
     elem.innerHTML=pauseChar;
     elem.setAttribute("onClick", "unpause()");
-    document.body.onkeyup = function(e){
-	if(e.keyCode == 32){
-            unpause();
-	}
-    }
+    // document.body.onkeyup = function(e){
+	// if(e.keyCode == 32){
+           // unpause();
+	// }
+    // }
 }
 
 

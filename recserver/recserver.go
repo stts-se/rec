@@ -22,10 +22,6 @@ func index(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "../recclient/index.html")
 }
 
-func animationDemo(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "../recclient/animationdemo/index.html")
-}
-
 type audio struct {
 	FileType string `json:"file_type"`
 	Data     string `json:"data"`
@@ -257,7 +253,8 @@ func main() {
 	r.HandleFunc("/rec/", index)
 	r.HandleFunc("/rec/process/", process).Methods("POST")
 
-	r.HandleFunc("/rec/animationdemo", animationDemo)
+	// see animation.go
+	r.HandleFunc("/rec/animationdemo", animDemo)
 
 	// generateDoc is definied in file generateDoc.go
 	r.HandleFunc("/rec/doc/", generateDoc).Methods("GET")
@@ -278,7 +275,6 @@ func main() {
 		walkedURLs = append(walkedURLs, t)
 		return nil
 	})
-
 	// Add paths that don't need to be in the generated
 	// documentation after the r.Walk above
 

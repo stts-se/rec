@@ -256,6 +256,9 @@ func main() {
 	// see animation.go
 	r.HandleFunc("/rec/animationdemo", animDemo)
 
+	// see audioproc.go
+	r.HandleFunc("/rec/audioproc", audioProc)
+
 	// generateDoc is definied in file generateDoc.go
 	r.HandleFunc("/rec/doc/", generateDoc).Methods("GET")
 

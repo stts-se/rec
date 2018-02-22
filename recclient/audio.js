@@ -1,8 +1,8 @@
 var AUDIO = {};
 
 AUDIO.sendBlob = function(audioBlob, username, text, recording_id, onLoadEndFunc) {
-    console.log("audio.js : CURRENT BLOB SIZE: "+ audioBlob.size);
-    console.log("audio.js : CURRENT BLOB TYPE: "+ audioBlob.type);
+    console.log("audio.js : BLOB SIZE: "+ audioBlob.size);
+    console.log("audio.js : BLOB TYPE: "+ audioBlob.type);
     
     // This is a bit backwards, since reader.readAsBinaryString below runs async.
     var reader = new FileReader();
@@ -10,7 +10,7 @@ AUDIO.sendBlob = function(audioBlob, username, text, recording_id, onLoadEndFunc
 	let rez = reader.result //contains the contents of blob as a typed array
 	let payload = {
 	    username : username,
-	    audio : { file_type : currentBlob.type, data: btoa(rez)},
+	    audio : { file_type : audioBlob.type, data: btoa(rez)},
 	    text : text,
 	    recording_id : recording_id
 	};

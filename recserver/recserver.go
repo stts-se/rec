@@ -18,6 +18,15 @@ import (
 	"github.com/gorilla/mux"
 )
 
+func getParam(paramName string, r *http.Request) string {
+	res := r.FormValue(paramName)
+	if res != "" {
+		return res
+	}
+	vars := mux.Vars(r)
+	return vars[paramName]
+}
+
 func index(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "../recclient/index.html")
 }
@@ -256,14 +265,14 @@ func main() {
 	// see animation.go
 	r.HandleFunc("/rec/animationdemo", animDemo)
 
-	// see audioproc.go
-	r.HandleFunc("/rec/audioproc", audioProc)
-
 	// generateDoc is definied in file generateDoc.go
 	r.HandleFunc("/rec/doc/", generateDoc).Methods("GET")
 
 	// TODO Should this rather be a POST request?
 	r.HandleFunc("/rec/get_audio/{username}/{utterance_id}", getAudio).Methods("GET")
+
+	// audioproc.go
+	r.HandleFunc("/rec/build_spectrogram/{username}/{utterance_id}", buildSpectrogram).Methods("GET")
 
 	// Defined in getUtterance.go
 	r.HandleFunc("/rec/get_next_utterance/{username}", getNextUtterance).Methods("GET")

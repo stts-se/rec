@@ -23,7 +23,7 @@ navigator.getUserMedia = (navigator.getUserMedia ||
 // //
 
 
-let recButton, stopButton, sendButton, getAudioButton, prevButton, nextButton;
+let recButton, stopButton, sendButton, getAudioButton, getSpecButton, prevButton, nextButton;
 let baseURL = window.location.origin +"/rec";
 var currentBlob;
 var recorder;
@@ -49,7 +49,15 @@ window.onload = function () {
     sendButton.disabled = true;
 
     getAudioButton = document.getElementById('get_audio');
-    getAudioButton.addEventListener('click', getAudio);
+    getAudioButton.addEventListener('click', function() {
+	getAudio();
+	if (document.getElementById('get_audio_include_spectrogram').checked) {
+	    getSpectrogram();
+	}
+    });
+
+    // getSpecButton = document.getElementById('get_spectrogram');
+    // getSpecButton.addEventListener('click', getSpectrogram);
     
 
     
@@ -216,6 +224,12 @@ function clearResponse() {
     document.getElementById("response").innerHTML = "";
 }
 
+function clearSpectrogram() {
+    var ele = document.getElementById("spectrogram_from_server");
+    if (ele != null)
+	ele.removeAttribute("src");
+}
+
 
 function updateAudio(blob) {
     //console.log("UPDATE AUDIO: "+ blob.size);
@@ -242,10 +256,51 @@ function updateAudio(blob) {
     //sendButton.disabled = false;
 };
 
+function getSpectrogram() {
+    console.log("getSpectrogram()");
+    let userName = document.getElementById('username2').value;
+    let utteranceID = document.getElementById('recording_id2').value;
+    let useNoiseRed = document.getElementById('noise_red_spectrogram').checked;
+    let spec = document.getElementById('spectrogram_from_server');
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", baseURL + "/build_spectrogram/" + userName + "/" + utteranceID + "?noise_red=" + useNoiseRed, true);
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+    
+    // TODO error handling
+    
+    
+    xhr.onloadend = function () {
+     	// done
+	console.log("STATUS: "+ xhr.statusText);
+	spec.src = "";
+	let resp = JSON.parse(xhr.response);
+
+	console.log("TODO: CHECK FILE TYPE: " + resp.file_type);
+	
+	// https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript#16245768
+	let byteCharacters = atob(resp.data);  
+
+	var byteNumbers = new Array(byteCharacters.length);
+	for (var i = 0; i < byteCharacters.length; i++) {
+	    byteNumbers[i] = byteCharacters.charCodeAt(i);
+	}
+	var byteArray = new Uint8Array(byteNumbers);
+	
+	let blob = new Blob([byteArray], {'type' : "image/png"});
+	spec.src = URL.createObjectURL(blob);
+    };
+
+    
+    
+    xhr.send();   
+}
+
 
 function getAudio() {
 
     console.log("getAudio()");
+    clearSpectrogram();
     
     let userName = document.getElementById('username2').value;
     let utteranceID = document.getElementById('recording_id2').value;

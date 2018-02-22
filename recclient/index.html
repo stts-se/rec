@@ -66,10 +66,14 @@
       <label for="username2">Username</label> <input id="username2" type="text" value="user0001"><br>
       <label for="recording_id2">Recording ID</label> <input id="recording_id2" type="text" value="rec_0001"><br>
       <button id="get_audio">Get audio</button>
+      <input id="get_audio_include_spectrogram" type="checkbox" checked="checked">include spectrogram</input>
+      <input id="noise_red_spectrogram" type="checkbox" checked="checked">noise reduce spectrogram</input>
     </p>
     
     <p>
       <audio id="audio_from_server" controls></audio>
+      <br/>
+      <img id="spectrogram_from_server"></img>
     </p>
     
     

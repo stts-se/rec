@@ -186,70 +186,26 @@ function countDown() {
 function sendAndReceiveBlob() {
 
     var onLoadEndFunc = function (data) {
-	console.log("onLoadEndFunc data ", data);
+	//console.log("onLoadEndFunc data ", data);
 	clearResponse(); // originally called before sending
 	sendButton.disabled = true; // originally called after sendJSON
-	console.log("STATUS: "+ data.target.status + "/" + data.target.statusText);
-	console.log("RESPONSE: "+ data.target.responseText);
+	console.log("onLoadEndFunc|STATUS : "+ data.target.status + "/" + data.target.statusText);
+	console.log("onLoadEndFunc|RESPONSE : "+ data.target.responseText);
 	showResponse(data.target.responseText);
     };
 
-    sendBlob(currentBlob,
+    AUDIO.sendBlob(currentBlob,
 	     document.getElementById("username").value,
 	     document.getElementById("text").innerHTML,
 	     document.getElementById("recording_id").innerHTML,
 	     onLoadEndFunc);
 }
 
-function sendBlob_OLD() {
-    console.log("CURRENT BLOB SIZE: "+ currentBlob.size);
-    console.log("CURRENT BLOB TYPE: "+ currentBlob.type);
-    clearResponse();
-    
-    // This is a bit backwards, since reader.readAsBinaryString below runs async.
-    var reader = new FileReader();
-    reader.addEventListener("loadend", function() {
-	let rez = reader.result //contains the contents of blob as a typed array
-	let payload = {
-	    username : document.getElementById("username").value,
-	    audio : { file_type : currentBlob.type, data: btoa(rez)},
-	    text : document.getElementById("text").innerHTML,
-	    recording_id : document.getElementById("recording_id").innerHTML
-	};
-	
-	sendJSON(payload);
-	sendButton.disabled = true;
-    });
-    
-    reader.readAsBinaryString(currentBlob);
-    
-    console.log("SENDING BLOB"); 
-};
-
-function sendJSON_OLD(payload) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", baseURL + "/process/", true);
-    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-   
-    // TODO error handling
-    
-    
-    xhr.onloadend = function () {
-     	// done
-	console.log("STATUS: "+ xhr.statusText);
-	console.log("RESPONSE: "+ xhr.responseText);
-	showResponse(xhr.responseText);
-    };
-
-    
-    
-    xhr.send(JSON.stringify(payload));
-}
 
 function showResponse(json) {
     var resp = document.getElementById("response");
     clearResponse();
-    console.log("response", resp);
+    console.log("showResponse|response", resp);
     var o = JSON.parse(json);
     var j = JSON.stringify(o, null, '\t');
     

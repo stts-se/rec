@@ -1,7 +1,8 @@
-function sendBlob(audioBlob, username, text, recording_id, onLoadEndFunc) {
+var AUDIO = {};
+
+AUDIO.sendBlob = function(audioBlob, username, text, recording_id, onLoadEndFunc) {
     console.log("audio.js : CURRENT BLOB SIZE: "+ audioBlob.size);
     console.log("audio.js : CURRENT BLOB TYPE: "+ audioBlob.type);
-    //clearResponse();
     
     // This is a bit backwards, since reader.readAsBinaryString below runs async.
     var reader = new FileReader();
@@ -14,20 +15,20 @@ function sendBlob(audioBlob, username, text, recording_id, onLoadEndFunc) {
 	    recording_id : recording_id
 	};
 	
-	sendJSON(payload, onLoadEndFunc);
-	//sendButton.disabled = true;
+	AUDIO.sendJSON(payload, onLoadEndFunc);
     });
     
     reader.readAsBinaryString(audioBlob);
     
-    console.log("SENDING BLOB"); 
+    console.log("audio.js : SENDING BLOB"); 
 };
 
-function sendJSON(payload, onLoadEndFunc) {
+AUDIO.sendJSON = function(payload, onLoadEndFunc) {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", baseURL + "/process/", true);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');   
     xhr.onloadend = onLoadEndFunc
     xhr.send(JSON.stringify(payload));
-}
+};
+
 

@@ -31,6 +31,15 @@ func index(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "../recclient/index.html")
 }
 
+const defaultExtention = "wav"
+
+func mimeType(ext string) string {
+	if ext == "mp3" {
+		return "audio/mpeg"
+	}
+	return fmt.Sprintf("audio/%s", ext)
+}
+
 type audio struct {
 	FileType string `json:"file_type"`
 	Data     string `json:"data"`
@@ -176,6 +185,10 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userName := vars["username"]
 	utteranceID := vars["utterance_id"]
+	var ext = vars["ext"]
+	if ext == "" {
+		ext = defaultExtention
+	}
 	_, err := os.Stat(filepath.Join(audioDir, userName))
 	if os.IsNotExist(err) {
 		msg := fmt.Sprintf("get_audio: no audio for user '%s'", userName)
@@ -184,7 +197,7 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	audioFile := filepath.Join(audioDir, userName, utteranceID+".wav")
+	audioFile := filepath.Join(audioDir, userName, utteranceID+"."+ext)
 	_, err = os.Stat(audioFile)
 	if os.IsNotExist(err) {
 		msg := fmt.Sprintf("get_audio: no audio for utterance '%s'", utteranceID)
@@ -203,7 +216,7 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 
 	data := base64.StdEncoding.EncodeToString(bytes)
 
-	res.FileType = "audio/wav"
+	res.FileType = mimeType(ext)
 	res.Data = data
 
 	resJSON, err := prettyMarshal(res)
@@ -269,10 +282,13 @@ func main() {
 	r.HandleFunc("/rec/doc/", generateDoc).Methods("GET")
 
 	// TODO Should this rather be a POST request?
-	r.HandleFunc("/rec/get_audio/{username}/{utterance_id}", getAudio).Methods("GET")
+	r.HandleFunc("/rec/get_audio/{username}/{utterance_id}/{ext}", getAudio).Methods("GET")
+	r.HandleFunc("/rec/get_audio/{username}/{utterance_id}", getAudio).Methods("GET") // with default extension
 
 	// audioproc.go
+	r.HandleFunc("/rec/build_spectrogram/{username}/{utterance_id}/{ext}", buildSpectrogram).Methods("GET")
 	r.HandleFunc("/rec/build_spectrogram/{username}/{utterance_id}", buildSpectrogram).Methods("GET")
+	r.HandleFunc("/rec/analyse_audio/{username}/{utterance_id}/{ext}", analyseAudio).Methods("GET")
 	r.HandleFunc("/rec/analyse_audio/{username}/{utterance_id}", analyseAudio).Methods("GET")
 
 	// Defined in getUtterance.go

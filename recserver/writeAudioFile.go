@@ -84,7 +84,7 @@ func writeAudioFile(audioDir string, rec processInput) error {
 	log.Printf("AUDIO LEN: %d\n", len(audio))
 	log.Printf("WROTE FILE: %s\n", audioFile)
 
-	// Conver to wav, while we're at it:
+	// Convert to wav, while we're at it:
 	if ext != "wav" {
 		audioFilePathWav := filepath.Join(dirPath, rec.RecordingID+".wav")
 		// ffmpegConvert function is defined in ffmpegConvert.go
@@ -95,6 +95,32 @@ func writeAudioFile(audioDir string, rec processInput) error {
 			return fmt.Errorf(msg)
 		} // Woohoo, file converted into wav
 		log.Printf("Converted saved file into wav: %s", audioFilePathWav)
+	}
+
+	// Convert to opus, while we're at it:
+	if defaultExtention == "opus" && ext != defaultExtention {
+		audioFilePathOpus := filepath.Join(dirPath, rec.RecordingID+".opus")
+		// ffmpegConvert function is defined in ffmpegConvert.go
+		err = ffmpegConvert(audioFilePath, audioFilePathOpus, false)
+		if err != nil {
+			msg := fmt.Sprintf("writeAudioFile failed converting file : %v", err)
+			log.Print(msg)
+			return fmt.Errorf(msg)
+		} // Woohoo, file converted into opus
+		log.Printf("Converted saved file into opus: %s", audioFilePathOpus)
+	}
+
+	// Convert to mp3, while we're at it:
+	if defaultExtention == "mp3" && ext != defaultExtention+".mp3" {
+		audioFilePathMp3 := filepath.Join(dirPath, rec.RecordingID+".mp3")
+		// ffmpegConvert function is defined in ffmpegConvert.go
+		err = ffmpegConvert(audioFilePath, audioFilePathMp3, false)
+		if err != nil {
+			msg := fmt.Sprintf("writeAudioFile failed converting file : %v", err)
+			log.Print(msg)
+			return fmt.Errorf(msg)
+		} // Woohoo, file converted into mp3
+		log.Printf("Converted saved file into mp3: %s", audioFilePathMp3)
 	}
 
 	//err = writeJSONInfoFile(dirPath, rec)

@@ -27,6 +27,7 @@ let recButton, stopButton, sendButton, getAudioButton, getSpecButton, prevButton
 let baseURL = window.location.origin +"/rec";
 var currentBlob;
 var recorder;
+var spectro;
 
 window.onload = function () {
 
@@ -57,13 +58,10 @@ window.onload = function () {
 	analyseAudio();
     });
 
-    // getSpecButton = document.getElementById('get_spectrogram');
-    // getSpecButton.addEventListener('click', getSpectrogram);
-    
-
     
     navigator.mediaDevices.getUserMedia({'audio': true, video: false}).then(function(stream) {
 	source = audioCtx.createMediaStreamSource(stream);
+	//console.log("source.connect(analyser)");
         source.connect(analyser);
 	visualize();	
 	recorder = new MediaRecorder(stream);
@@ -77,7 +75,35 @@ window.onload = function () {
 
     // TODO Remove temporary initialization
     prevButton.click();
-    
+
+    // spectro = Spectrogram(document.getElementById('js-spectrogram'), {
+    // 	canvas: {
+    // 	    width: 1000,
+    // 	    height: 350
+    // 	},
+    // 	audio: {
+    // 	    enable: true
+    // 	},
+    // 	colors: function(steps) {
+    // 	    var baseColors = [[0,0,255,1], [0,255,255,1], [0,255,0,1], [255,255,0,1], [ 255,0,0,1]];
+    // 	    var positions = [0, 0.15, 0.30, 0.50, 0.75];
+	    
+    // 	    var scale = new chroma.scale(baseColors, positions)
+    // 	    	.domain([0, steps]);
+	    
+    // 	    var colors = [];
+	    
+    // 	    for (var i = 0; i < steps; ++i) {
+    // 		var color = scale(i);
+    // 		colors.push(color.hex());
+    // 	    }
+	    
+    // 	    return colors;
+    // 	}
+    // });
+    // live spectrogram:
+    // spectro.connectSource(analyser, audioCtx);
+    // spectro.start();
 };
 
 
@@ -315,7 +341,32 @@ function analyseAudio() {
 	console.log("Audio analysis:",resp);
     };
     
-    xhr.send();   
+    xhr.send();
+}
+
+function uint8ArrayToArrayBuffer(input) {
+    var res = new ArrayBuffer(input.length);
+    for(var i = 0; i < input.length; i++) {
+        res[i] = input[i];
+    }
+
+    return res;
+}
+function loadJSSpectrogram(audioByteArray) {
+    console.log("loadJSSpectrogram() not implemented");
+    // let arrayBuffer = uint8ArrayToArrayBuffer(audioByteArray);
+    // console.log(arrayBuffer.constructor);
+    // console.log("loadSpectogram DBG 1");
+    // audioCtx.decodeAudioData(arrayBuffer, function(buffer) {
+    // 	var slice = selectedMedia.slice;
+    // 	console.log("loadSpectogram DBG 2");
+    // 	AudioBufferSlice(buffer, 0, function(error, buf) {
+    // 	    console.log("loadSpectogram DBG 3");
+    // 	    spectro.connectSource(buf, audioCtx);
+    // 	    spectro.start();
+    // 	    console.log("loadSpectogram DBG 4");
+    // 	});
+    // });
 }
 
 function getAudio() {
@@ -327,8 +378,10 @@ function getAudio() {
     let utteranceID = document.getElementById('recording_id2').value;
     let audio = document.getElementById('audio_from_server');
 
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", baseURL + "/get_audio/" + userName + "/" + utteranceID, true);
+    let audioURL = baseURL + "/get_audio/" + userName + "/" + utteranceID;
+    console.log("getAudio URL " + audioURL);
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", audioURL, true);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
    
 
@@ -341,8 +394,6 @@ function getAudio() {
 	audio.src = "";
 	let resp = JSON.parse(xhr.response);
 
-	console.log("TODO: CHECK FILE TYPE: " + resp.file_type);
-	
 	// https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript#16245768
 	let byteCharacters = atob(resp.data);  
 
@@ -351,13 +402,14 @@ function getAudio() {
 	    byteNumbers[i] = byteCharacters.charCodeAt(i);
 	}
 	var byteArray = new Uint8Array(byteNumbers);
-	
-	let blob = new Blob([byteArray], {'type' : "audio/wav"});
+
+	loadJSSpectrogram(byteNumbers);
+
+	let blob = new Blob([byteArray], {'type' : resp.file_type});
 	audio.src = URL.createObjectURL(blob);
 	audio.play();
     };
-
-    
+  
     
     xhr.send();
 

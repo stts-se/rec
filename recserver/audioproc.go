@@ -20,6 +20,10 @@ func analyseAudio(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userName := vars["username"]
 	utteranceID := vars["utterance_id"]
+	var ext = vars["ext"]
+	if ext == "" {
+		ext = defaultExtention
+	}
 
 	_, err := os.Stat(filepath.Join(audioDir, userName))
 	if os.IsNotExist(err) {
@@ -29,7 +33,7 @@ func analyseAudio(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	audioFile := filepath.Join(audioDir, userName, utteranceID+".wav")
+	audioFile := filepath.Join(audioDir, userName, utteranceID+"."+ext)
 	_, err = os.Stat(audioFile)
 	if os.IsNotExist(err) {
 		msg := fmt.Sprintf("analyse_audio: no audio for utterance '%s'", utteranceID)
@@ -64,6 +68,10 @@ func buildSpectrogram(w http.ResponseWriter, r *http.Request) {
 	userName := vars["username"]
 	utteranceID := vars["utterance_id"]
 	noiseRedS := getParam("noise_red", r)
+	var ext = vars["ext"]
+	if ext == "" {
+		ext = defaultExtention
+	}
 
 	useNoiseReduction := false
 	if onRegexp.MatchString(noiseRedS) {
@@ -78,7 +86,7 @@ func buildSpectrogram(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	audioFile := filepath.Join(audioDir, userName, utteranceID+".wav")
+	audioFile := filepath.Join(audioDir, userName, utteranceID+"."+ext)
 	specFile := filepath.Join(audioDir, userName, utteranceID+".png")
 	_, err = os.Stat(audioFile)
 	if os.IsNotExist(err) {

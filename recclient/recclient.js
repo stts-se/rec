@@ -303,7 +303,7 @@ function getSpectrogram() {
 	spec.src = "";
 	let resp = JSON.parse(xhr.response);
 
-	console.log("TODO: CHECK FILE TYPE: " + resp.file_type);
+	//console.log("TODO: CHECK FILE TYPE: " + resp.file_type);
 	
 	// https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript#16245768
 	let byteCharacters = atob(resp.data);  
@@ -314,7 +314,7 @@ function getSpectrogram() {
 	}
 	var byteArray = new Uint8Array(byteNumbers);
 	
-	let blob = new Blob([byteArray], {'type' : "image/png"});
+	let blob = new Blob([byteArray], {'type' : resp.file_type});
 	spec.src = URL.createObjectURL(blob);
     };
 

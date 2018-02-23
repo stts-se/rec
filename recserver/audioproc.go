@@ -22,7 +22,7 @@ func analyseAudio(w http.ResponseWriter, r *http.Request) {
 	utteranceID := vars["utterance_id"]
 	var ext = vars["ext"]
 	if ext == "" {
-		ext = defaultExtention
+		ext = defaultExtension
 	}
 
 	_, err := os.Stat(filepath.Join(audioDir, userName))
@@ -70,7 +70,7 @@ func buildSpectrogram(w http.ResponseWriter, r *http.Request) {
 	noiseRedS := getParam("noise_red", r)
 	var ext = vars["ext"]
 	if ext == "" {
-		ext = defaultExtention
+		ext = defaultExtension
 	}
 
 	useNoiseReduction := false

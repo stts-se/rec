@@ -31,7 +31,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "../recclient/index.html")
 }
 
-const defaultExtention = "wav"
+const defaultExtension = "wav"
 
 func mimeType(ext string) string {
 	if ext == "mp3" {
@@ -187,7 +187,7 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 	utteranceID := vars["utterance_id"]
 	var ext = vars["ext"]
 	if ext == "" {
-		ext = defaultExtention
+		ext = defaultExtension
 	}
 	_, err := os.Stat(filepath.Join(audioDir, userName))
 	if os.IsNotExist(err) {
@@ -239,6 +239,11 @@ var audioDir string
 var walkedURLs []string
 
 func main() {
+
+	if !validAudioFileExtension(defaultExtension) {
+		log.Printf("Exiting! Unknown default audio file extension: %s", defaultExtension)
+		os.Exit(1)
+	}
 
 	// TODO return text prompt etc as well
 

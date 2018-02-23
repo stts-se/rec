@@ -54,6 +54,7 @@ window.onload = function () {
 	if (document.getElementById('get_audio_include_spectrogram').checked) {
 	    getSpectrogram();
 	}
+	analyseAudio();
     });
 
     // getSpecButton = document.getElementById('get_spectrogram');
@@ -291,11 +292,31 @@ function getSpectrogram() {
 	spec.src = URL.createObjectURL(blob);
     };
 
-    
-    
     xhr.send();   
 }
 
+
+function analyseAudio() {
+    console.log("analyseAudio()");
+    let userName = document.getElementById('username2').value;
+    let utteranceID = document.getElementById('recording_id2').value;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", baseURL + "/analyse_audio/" + userName + "/" + utteranceID, true);
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+    
+    // TODO error handling   
+    
+    xhr.onloadend = function () {
+     	// done
+	console.log("STATUS: "+ xhr.statusText);
+	let resp = JSON.parse(xhr.response);
+
+	console.log("Audio analysis:",resp);
+    };
+    
+    xhr.send();   
+}
 
 function getAudio() {
 

@@ -16,6 +16,48 @@ import (
 
 var onRegexp = regexp.MustCompile("^(?i)(true|yes|y|1|on)$")
 
+func analyseAudio(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userName := vars["username"]
+	utteranceID := vars["utterance_id"]
+
+	_, err := os.Stat(filepath.Join(audioDir, userName))
+	if os.IsNotExist(err) {
+		msg := fmt.Sprintf("analyse_audio: no audio dir for user '%s'", userName)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusBadRequest)
+		return
+	}
+
+	audioFile := filepath.Join(audioDir, userName, utteranceID+".wav")
+	_, err = os.Stat(audioFile)
+	if os.IsNotExist(err) {
+		msg := fmt.Sprintf("analyse_audio: no audio for utterance '%s'", utteranceID)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusBadRequest)
+		return
+	}
+
+	res, err := audioproc.Analyse(audioFile)
+	if err != nil {
+		msg := fmt.Sprintf("analyse_audio: failed to build spectrogram : %v", err)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusInternalServerError)
+		return
+	}
+
+	resJSON, err := prettyMarshal(res)
+	if err != nil {
+		msg := fmt.Sprintf("analyse_audio: failed to create JSON from struct : %v", res)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Fprintf(w, "%s\n", string(resJSON))
+}
+
 func buildSpectrogram(w http.ResponseWriter, r *http.Request) {
 	var res audioResponse
 	vars := mux.Vars(r)
@@ -77,5 +119,4 @@ func buildSpectrogram(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(w, "%s\n", string(resJSON))
-	//fmt.Fprintf(w, "%s\n", "getSpectrogram: not implemented")
 }

@@ -19,7 +19,12 @@ import (
 )
 
 func getParam(paramName string, r *http.Request) string {
+	fmt.Println("getParam r.URL", r.URL)
 	res := r.FormValue(paramName)
+	if res != "" {
+		return res
+	}
+	res = r.PostFormValue(paramName)
 	if res != "" {
 		return res
 	}
@@ -97,6 +102,12 @@ func checkProcessInput(input processInput) error {
 func process(w http.ResponseWriter, r *http.Request) {
 	res := processResponse{}
 	body, err := ioutil.ReadAll(r.Body)
+	noiseRedS := getParam("noise_red", r)
+	useNoiseReduction := false
+	if onRegexp.MatchString(noiseRedS) {
+		useNoiseReduction = true
+	}
+	log.Println("recserver process useNoiseReduction:", useNoiseReduction)
 	if err != nil {
 		msg := fmt.Sprintf("failed to read request body : %v", err)
 		log.Println(msg)
@@ -127,7 +138,7 @@ func process(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("GOT username: %s\ttext: %s\t recording id: %s\n", input.UserName, input.Text, input.RecordingID)
 
-	err = writeAudioFile(audioDir, input)
+	err = writeAudioFile(audioDir, input, useNoiseReduction)
 	if err != nil {
 		msg := fmt.Sprintf("failed writing audio file : %v", err)
 		log.Print(msg)
@@ -185,6 +196,15 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userName := vars["username"]
 	utteranceID := vars["utterance_id"]
+	noiseRedS := getParam("noise_red", r)
+	useNoiseReduction := false
+	if onRegexp.MatchString(noiseRedS) {
+		useNoiseReduction = true
+	}
+	log.Printf("recserver getAudio useNoiseReduction: %v (from string '%s')\n", useNoiseReduction, noiseRedS)
+	if useNoiseReduction {
+		utteranceID = utteranceID + noiseRedSuffix
+	}
 	var ext = vars["ext"]
 	if ext == "" {
 		ext = defaultExtension

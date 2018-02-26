@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/base64"
+	"github.com/stts-se/audioproc"
 	//"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -11,11 +12,13 @@ import (
 	"strings"
 )
 
+var noiseRedSuffix = "-noisered"
+
 func validAudioFileExtension(ext string) bool {
 	return (ext == "opus" || ext == "mp3" || ext == "wav")
 }
 
-func writeAudioFile(audioDir string, rec processInput) error {
+func writeAudioFile(audioDir string, rec processInput, useNoiseReduction bool) error {
 	if strings.TrimSpace(audioDir) == "" {
 		return fmt.Errorf("writeAudioFile: empty audioDir argument")
 	}
@@ -90,14 +93,21 @@ func writeAudioFile(audioDir string, rec processInput) error {
 
 	// Convert to wav, while we're at it:
 	if ext != "wav" {
-		audioFilePathWav := filepath.Join(dirPath, rec.RecordingID+".wav")
 		// ffmpegConvert function is defined in ffmpegConvert.go
+		audioFilePathWav := filepath.Join(dirPath, rec.RecordingID+".wav")
+		audioFilePathWavReduced := filepath.Join(dirPath, rec.RecordingID+noiseRedSuffix+".wav")
 		err = ffmpegConvert(audioFilePath, audioFilePathWav, false)
 		if err != nil {
 			msg := fmt.Sprintf("writeAudioFile failed converting file : %v", err)
 			log.Print(msg)
 			return fmt.Errorf(msg)
-		} // Woohoo, file converted into wav
+		}
+		err = audioproc.NoiseReduce(audioFilePathWav, audioFilePathWavReduced)
+		if err != nil {
+			msg := fmt.Sprintf("writeAudioFile failed noise reduction for file : %v", err)
+			log.Print(msg)
+			return fmt.Errorf(msg)
+		}
 		log.Printf("Converted saved file into wav: %s", audioFilePathWav)
 	}
 

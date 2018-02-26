@@ -69,7 +69,7 @@
 
       <!-- <span style="display:none"> --> <!-- hide server spectrogram options-->
       <span>
-	<input id="get_audio_include_spectrogram" type="checkbox" checked="checked">include spectrogram from server</input>
+	<input id="get_audio_include_spectrogram" type="checkbox">include spectrogram from server</input>
 	<input id="noise_red_spectrogram" type="checkbox" checked="checked">noise reduce spectrogram</input>
       </span>
       
@@ -80,10 +80,12 @@
       <br/>
       <img id="spectrogram_from_server"></img>
 
-      <span style="width:1100px">
-	<div id="js-wavesurfer-spectrogram"></div>
-	<div id="js-wavesurfer"></div>
+      <span>
+	<div id="js-wavesurfer-spectrogram">
+          </div>
+	</div>
 	<div id="js-wavesurfer-timeline"></div>
+	<div id="js-wavesurfer"></div>
       </span>
     </p>
     
@@ -96,8 +98,9 @@
 	<script src="recclient/vendor/spectrogram/chroma.js"></script>
 	<script src="recclient/vendor/spectrogram/audiobuffer-slice.js"></script> -->
   
-  <script src="recclient/vendor/wavesurfer/wavesurfer.min.js"></script>
-  <script src="recclient/vendor/wavesurfer/wavesurfer.spectrogram.min.js"></script>
-  <script src="recclient/vendor/wavesurfer/wavesurfer.timeline.min.js"></script>
+  <script src="recclient/vendor/wavesurfer-js/wavesurfer.min.js"></script>
+  <script src="recclient/vendor/wavesurfer-js/wavesurfer.spectrogram.min.js"></script>
+  <script src="recclient/vendor/wavesurfer-js/wavesurfer.timeline.min.js"></script>
+  <script src="recclient/vendor/jquery/3.1.0/jquery.min.js"></script>
 </html>
 

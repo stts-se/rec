@@ -72,39 +72,12 @@ window.onload = function () {
 	recorder.onstop = function(evt) {}
     });
 
+    initWavesurferJS();
 
     // TODO Remove temporary initialization
     prevButton.click();
 
-
-    
-    wavesurfer = WaveSurfer.create({
-	container: '#js-wavesurfer',
-	waveColor: 'violet',
-	progressColor: 'purple'
-    });
-    var lowpass = wavesurfer.backend.ac.createBiquadFilter();
-    wavesurfer.backend.setFilter(lowpass);
-
-    wavesurfer.on('ready', function () {
-	var spectrogram = Object.create(WaveSurfer.Spectrogram);
-	//wavesurfer.play();
-	spectrogram.init({
-            wavesurfer: wavesurfer,
-            container: "#js-wavesurfer-spectrogram"
-	});
-	//spectrogram.width = 1100;
-	//spectrogram.height = 300;
-	
-	// https://wavesurfer-js.org/doc/class/src/plugin/spectrogram.js~SpectrogramPlugin.html
-	
-	// var timeline = Object.create(WaveSurfer.Timeline);
-	// timeline.init({
-        //     wavesurfer: wavesurfer,
-        //     container: "#js-wavesurfer-timeline"
-	// });
-    });
-    
+    getAudioButton.click();
 };
 
 
@@ -136,7 +109,41 @@ function getPrev() {
     
     xhr.send();
 
+}
+
+function initWavesurferJS() {
+    // https://wavesurfer-js.org/doc/class/src/plugin/spectrogram.js~SpectrogramPlugin.html
+    wavesurfer = WaveSurfer.create({
+    	container: '#js-wavesurfer',
+    	waveColor: '#6699FF',
+    	progressColor: '#517acc', //'#46B54D',
+    	labels: true,
+    	//fftSamples: 256, //512,//1024,//1024,
+    	controls: true,
+    });
     
+    wavesurfer.on('ready', function () {
+    	//console.log("wavesurfer.js sample rate", wavesurfer.backend.ac.sampleRate);
+    	var spectrogram = Object.create(WaveSurfer.Spectrogram);
+    	spectrogram.init({
+    	    wavesurfer: wavesurfer,
+    	    container: "#js-wavesurfer-spectrogram",
+    	    //fftSamples: 256, //512,//1024,//1024,
+    	    labels: true,
+    	});
+    	var timeline = Object.create(WaveSurfer.Timeline);
+    	timeline.init({
+            wavesurfer: wavesurfer,
+            container: "#js-wavesurfer-timeline",
+    	    labels: true,
+    	});
+    	wavesurfer.play();
+    });
+
+    let maxWidth = "max-width: 1000px";
+    document.getElementById("js-wavesurfer").setAttribute("style", maxWidth);
+    document.getElementById("js-wavesurfer-spectrogram").setAttribute("style", maxWidth);
+    document.getElementById("js-wavesurfer-timeline").setAttribute("style", maxWidth);
 }
 
 function getNext() {
@@ -368,7 +375,9 @@ function getAudio() {
     let xhr = new XMLHttpRequest();
     xhr.open("GET", audioURL, true);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-   
+
+    let noiseRedSpec = document.getElementById('noise_red_spectrogram').checked;
+    console.log("getAudio noiseRedSpec", noiseRedSpec);
 
     // TODO error handling
     
@@ -390,16 +399,51 @@ function getAudio() {
 
 	let blob = new Blob([byteArray], {'type' : resp.file_type});
 	audio.src = URL.createObjectURL(blob);
-	audio.play();
+	//audio.play();
 
-	wavesurfer.loadBlob(blob);
-
+	if (noiseRedSpec !== true) {
+	    wavesurfer.loadBlob(blob);
+	}
     };
-  
+
+    if (noiseRedSpec) {
+	getAudioForSpectrogram(audioURL, noiseRedSpec);
+    }
     
     xhr.send();
 
-    
+}
+
+function getAudioForSpectrogram(audioURL, noiseRedSpec) {
+    console.log("getAudioForSpectrogram()");
+    let audioURLForSpec = audioURL + "?noise_red=" + noiseRedSpec
+    console.log("getAudio URL for spectrogram " + audioURLForSpec);
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", audioURLForSpec, true);
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+
+    xhr.onloadend = function () {
+     	// done
+	console.log("STATUS: "+ xhr.statusText);
+	audio.src = "";
+	let resp = JSON.parse(xhr.response);
+	
+	// https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript#16245768
+	let byteCharacters = atob(resp.data);  
+	
+	var byteNumbers = new Array(byteCharacters.length);
+	for (var i = 0; i < byteCharacters.length; i++) {
+	    byteNumbers[i] = byteCharacters.charCodeAt(i);
+	}
+	var byteArray = new Uint8Array(byteNumbers);
+
+	let blob = new Blob([byteArray], {'type' : resp.file_type});
+
+	wavesurfer.loadBlob(blob);
+    };
+  
+    xhr.send();
+
 }
 
 // //

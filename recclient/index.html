@@ -66,15 +66,25 @@
       <label for="username2">Username</label> <input id="username2" type="text" value="user0001"><br>
       <label for="recording_id2">Recording ID</label> <input id="recording_id2" type="text" value="rec_0001"><br>
       <button id="get_audio">Get audio</button>
-      <input id="get_audio_include_spectrogram" type="checkbox" checked="checked">include spectrogram from server</input>
-      <input id="noise_red_spectrogram" type="checkbox" checked="checked">noise reduce spectrogram</input>
+
+      <!-- <span style="display:none"> --> <!-- hide server spectrogram options-->
+      <span>
+	<input id="get_audio_include_spectrogram" type="checkbox" checked="checked">include spectrogram from server</input>
+	<input id="noise_red_spectrogram" type="checkbox" checked="checked">noise reduce spectrogram</input>
+      </span>
+      
     </p>
     
     <p>
       <audio id="audio_from_server" controls></audio>
       <br/>
       <img id="spectrogram_from_server"></img>
-<!--      <canvas id="js-spectrogram"></canvas> -->
+
+      <span style="width:1100px">
+	<div id="js-wavesurfer-spectrogram"></div>
+	<div id="js-wavesurfer"></div>
+	<div id="js-wavesurfer-timeline"></div>
+      </span>
     </p>
     
     
@@ -82,8 +92,12 @@
   
   <script src="recclient/audio.js"></script>
   <script src="recclient/recclient.js"></script>
-  <script src="recclient/vendor/spectrogram/spectrogram.js"></script>
-  <script src="recclient/vendor/spectrogram/chroma.js"></script>
-  <script src="recclient/vendor/spectrogram/audiobuffer-slice.js"></script>
+  <!--  <script src="recclient/vendor/spectrogram/spectrogram.js"></script>
+	<script src="recclient/vendor/spectrogram/chroma.js"></script>
+	<script src="recclient/vendor/spectrogram/audiobuffer-slice.js"></script> -->
+  
+  <script src="recclient/vendor/wavesurfer/wavesurfer.min.js"></script>
+  <script src="recclient/vendor/wavesurfer/wavesurfer.spectrogram.min.js"></script>
+  <script src="recclient/vendor/wavesurfer/wavesurfer.timeline.min.js"></script>
 </html>
 

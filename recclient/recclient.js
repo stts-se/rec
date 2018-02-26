@@ -27,7 +27,7 @@ let recButton, stopButton, sendButton, getAudioButton, getSpecButton, prevButton
 let baseURL = window.location.origin +"/rec";
 var currentBlob;
 var recorder;
-var spectro;
+var wavesurfer;
 
 window.onload = function () {
 
@@ -53,7 +53,7 @@ window.onload = function () {
     getAudioButton.addEventListener('click', function() {
 	getAudio();
 	if (document.getElementById('get_audio_include_spectrogram').checked) {
-	    getSpectrogram();
+	    getServerSpectrogram();
 	}
 	analyseAudio();
     });
@@ -76,34 +76,35 @@ window.onload = function () {
     // TODO Remove temporary initialization
     prevButton.click();
 
-    // spectro = Spectrogram(document.getElementById('js-spectrogram'), {
-    // 	canvas: {
-    // 	    width: 1000,
-    // 	    height: 350
-    // 	},
-    // 	audio: {
-    // 	    enable: true
-    // 	},
-    // 	colors: function(steps) {
-    // 	    var baseColors = [[0,0,255,1], [0,255,255,1], [0,255,0,1], [255,255,0,1], [ 255,0,0,1]];
-    // 	    var positions = [0, 0.15, 0.30, 0.50, 0.75];
-	    
-    // 	    var scale = new chroma.scale(baseColors, positions)
-    // 	    	.domain([0, steps]);
-	    
-    // 	    var colors = [];
-	    
-    // 	    for (var i = 0; i < steps; ++i) {
-    // 		var color = scale(i);
-    // 		colors.push(color.hex());
-    // 	    }
-	    
-    // 	    return colors;
-    // 	}
-    // });
-    // live spectrogram:
-    // spectro.connectSource(analyser, audioCtx);
-    // spectro.start();
+
+    
+    wavesurfer = WaveSurfer.create({
+	container: '#js-wavesurfer',
+	waveColor: 'violet',
+	progressColor: 'purple'
+    });
+    var lowpass = wavesurfer.backend.ac.createBiquadFilter();
+    wavesurfer.backend.setFilter(lowpass);
+
+    wavesurfer.on('ready', function () {
+	var spectrogram = Object.create(WaveSurfer.Spectrogram);
+	//wavesurfer.play();
+	spectrogram.init({
+            wavesurfer: wavesurfer,
+            container: "#js-wavesurfer-spectrogram"
+	});
+	//spectrogram.width = 1100;
+	//spectrogram.height = 300;
+	
+	// https://wavesurfer-js.org/doc/class/src/plugin/spectrogram.js~SpectrogramPlugin.html
+	
+	// var timeline = Object.create(WaveSurfer.Timeline);
+	// timeline.init({
+        //     wavesurfer: wavesurfer,
+        //     container: "#js-wavesurfer-timeline"
+	// });
+    });
+    
 };
 
 
@@ -251,7 +252,7 @@ function clearResponse() {
     document.getElementById("response").innerHTML = "";
 }
 
-function clearSpectrogram() {
+function clearServerSpectrogram() {
     var ele = document.getElementById("spectrogram_from_server");
     if (ele != null)
 	ele.removeAttribute("src");
@@ -283,8 +284,8 @@ function updateAudio(blob) {
     //sendButton.disabled = false;
 };
 
-function getSpectrogram() {
-    console.log("getSpectrogram()");
+function getServerSpectrogram() {
+    console.log("getServerSpectrogram()");
     let userName = document.getElementById('username2').value;
     let utteranceID = document.getElementById('recording_id2').value;
     let useNoiseRed = document.getElementById('noise_red_spectrogram').checked;
@@ -352,27 +353,11 @@ function uint8ArrayToArrayBuffer(input) {
 
     return res;
 }
-function loadJSSpectrogram(audioByteArray) {
-    console.log("loadJSSpectrogram() not implemented");
-    // let arrayBuffer = uint8ArrayToArrayBuffer(audioByteArray);
-    // console.log(arrayBuffer.constructor);
-    // console.log("loadSpectogram DBG 1");
-    // audioCtx.decodeAudioData(arrayBuffer, function(buffer) {
-    // 	var slice = selectedMedia.slice;
-    // 	console.log("loadSpectogram DBG 2");
-    // 	AudioBufferSlice(buffer, 0, function(error, buf) {
-    // 	    console.log("loadSpectogram DBG 3");
-    // 	    spectro.connectSource(buf, audioCtx);
-    // 	    spectro.start();
-    // 	    console.log("loadSpectogram DBG 4");
-    // 	});
-    // });
-}
 
 function getAudio() {
 
     console.log("getAudio()");
-    clearSpectrogram();
+    clearServerSpectrogram();
     
     let userName = document.getElementById('username2').value;
     let utteranceID = document.getElementById('recording_id2').value;
@@ -403,11 +388,12 @@ function getAudio() {
 	}
 	var byteArray = new Uint8Array(byteNumbers);
 
-	loadJSSpectrogram(byteNumbers);
-
 	let blob = new Blob([byteArray], {'type' : resp.file_type});
 	audio.src = URL.createObjectURL(blob);
 	audio.play();
+
+	wavesurfer.loadBlob(blob);
+
     };
   
     

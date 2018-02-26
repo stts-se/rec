@@ -29,11 +29,12 @@ func Analyse(inFilePath string) (map[string]string, error) {
 
 const soxCmd = "sox"
 
-func SoxEnabled() bool {
-	funcId := "SoxEnabled"
+var SoxEnabled = soxEnabled()
+
+func soxEnabled() bool {
 	_, pErr := exec.LookPath(soxCmd)
 	if pErr != nil {
-		log.Printf("%s failure : %v\n", funcId, pErr)
+		log.Printf("audioproc.SoxEnabled(): External '%s' command does not exist. The server will still function, but some features may not be available (e.g., noise reduction and server side spectrograms)", soxCmd)
 		return false
 	}
 	return true
@@ -48,7 +49,7 @@ func NoiseReduce(inFilePath, outFilePath string) error {
 	_, pErr := exec.LookPath(soxCmd)
 	if pErr != nil {
 		log.Printf("%s failure : %v\n", funcId, pErr)
-		return fmt.Errorf("%s failed to find the external 'sox' command : %v", funcId, pErr)
+		return fmt.Errorf("%s failed to find the external '%s' command : %v", funcId, soxCmd, pErr)
 	}
 
 	// (1) noise profile
@@ -94,7 +95,7 @@ func BuildSoxSpectrogram(inFilePath, outFilePath string, useNoiseReduction bool)
 	_, pErr := exec.LookPath(soxCmd)
 	if pErr != nil {
 		log.Printf("%s failure : %v\n", funcId, pErr)
-		return fmt.Errorf("%s failed to find the external 'sox' command : %v", funcId, pErr)
+		return fmt.Errorf("%s failed to find the external '%s' command : %v", funcId, soxCmd, pErr)
 	}
 
 	specInputFile := inFilePath

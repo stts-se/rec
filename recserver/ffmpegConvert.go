@@ -8,18 +8,29 @@ import (
 	"os/exec"
 )
 
+const ffmpegCmd = "ffmpeg"
+
+func ffmpegEnabled() bool {
+	_, pErr := exec.LookPath(ffmpegCmd)
+	if pErr != nil {
+		log.Printf("recserver.FfmpegEnabled(): External '%s' command does not exist!", ffmpegCmd)
+		return false
+	}
+	return true
+}
+
 func ffmpegConvert(inFilePath, outFilePath string, removeInputFile bool) error {
 
-	_, pErr := exec.LookPath("ffmpeg")
+	_, pErr := exec.LookPath("ffmpegx")
 	if pErr != nil {
 		log.Printf("ffmpegConvert failure : %v\n", pErr)
 		return fmt.Errorf("ffmpegConvert failed to find the external 'ffmpeg' command : %v", pErr)
 	}
 
 	// '-y' means write over if output file already exists
-	//HB cmd := exec.Command("ffmpeg", "-y", "-i", inFilePath, outFilePath)
+	//HB cmd := exec.Command(ffmpegCmd, "-y", "-i", inFilePath, outFilePath)
 	sampleRate := "16000"
-	cmd := exec.Command("ffmpeg", "-y", "-i", inFilePath, "-ac", "1", "-ar", sampleRate, outFilePath)
+	cmd := exec.Command(ffmpegCmd, "-y", "-i", inFilePath, "-ac", "1", "-ar", sampleRate, outFilePath)
 	var out bytes.Buffer
 	var sterr bytes.Buffer
 	cmd.Stdout = &out

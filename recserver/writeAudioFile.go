@@ -18,7 +18,7 @@ func validAudioFileExtension(ext string) bool {
 	return (ext == "opus" || ext == "mp3" || ext == "wav")
 }
 
-func writeAudioFile(audioDir string, rec processInput, useNoiseReduction bool) error {
+func writeAudioFile(audioDir string, rec processInput) error {
 	if strings.TrimSpace(audioDir) == "" {
 		return fmt.Errorf("writeAudioFile: empty audioDir argument")
 	}
@@ -102,7 +102,7 @@ func writeAudioFile(audioDir string, rec processInput, useNoiseReduction bool) e
 			log.Print(msg)
 			return fmt.Errorf(msg)
 		}
-		if audioproc.SoxEnabled() {
+		if audioproc.SoxEnabled {
 			err = audioproc.NoiseReduce(audioFilePathWav, audioFilePathWavReduced)
 			if err != nil {
 				msg := fmt.Sprintf("writeAudioFile failed noise reduction for file : %v", err)
@@ -110,7 +110,7 @@ func writeAudioFile(audioDir string, rec processInput, useNoiseReduction bool) e
 				return fmt.Errorf(msg)
 			}
 			log.Printf("Converted saved file into noise-reduced wav: %s", audioFilePathWavReduced)
-		} else {
+		} else { // silently skip generation of wav with noise reduction and remove old noisered file if it exists
 			if _, err = os.Stat(audioFilePathWavReduced); !os.IsNotExist(err) {
 				err = os.Remove(audioFilePathWavReduced)
 				if err != nil {

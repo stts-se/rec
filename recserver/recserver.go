@@ -102,12 +102,14 @@ func checkProcessInput(input processInput) error {
 func process(w http.ResponseWriter, r *http.Request) {
 	res := processResponse{}
 	body, err := ioutil.ReadAll(r.Body)
-	noiseRedS := getParam("noise_red", r)
-	useNoiseReduction := false
-	if onRegexp.MatchString(noiseRedS) {
-		useNoiseReduction = true
-	}
+
+	// noiseRedS := getParam("noise_red", r)
+	// useNoiseReduction := false
+	// if onRegexp.MatchString(noiseRedS) {
+	// 	useNoiseReduction = true
+	// }
 	//log.Println("recserver process useNoiseReduction:", useNoiseReduction)
+
 	if err != nil {
 		msg := fmt.Sprintf("failed to read request body : %v", err)
 		log.Println(msg)
@@ -138,7 +140,7 @@ func process(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("GOT username: %s\ttext: %s\t recording id: %s\n", input.UserName, input.Text, input.RecordingID)
 
-	err = writeAudioFile(audioDir, input, useNoiseReduction)
+	err = writeAudioFile(audioDir, input)
 	if err != nil {
 		msg := fmt.Sprintf("failed writing audio file : %v", err)
 		log.Print(msg)
@@ -262,6 +264,11 @@ func main() {
 
 	if !validAudioFileExtension(defaultExtension) {
 		log.Printf("Exiting! Unknown default audio file extension: %s", defaultExtension)
+		os.Exit(1)
+	}
+
+	if !ffmpegEnabled() {
+		log.Printf("Exiting! %s is required! Please install.", ffmpegCmd)
 		os.Exit(1)
 	}
 

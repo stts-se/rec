@@ -5,7 +5,7 @@ import (
 	// "encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
-	"github.com/stts-se/audioproc"
+	"github.com/stts-se/rec/audioproc"
 	"io/ioutil"
 	"log"
 	"net/http"

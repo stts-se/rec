@@ -19,7 +19,7 @@ import (
 )
 
 func getParam(paramName string, r *http.Request) string {
-	fmt.Println("getParam r.URL", r.URL)
+	//fmt.Println("getParam r.URL", r.URL)
 	res := r.FormValue(paramName)
 	if res != "" {
 		return res
@@ -107,7 +107,7 @@ func process(w http.ResponseWriter, r *http.Request) {
 	if onRegexp.MatchString(noiseRedS) {
 		useNoiseReduction = true
 	}
-	log.Println("recserver process useNoiseReduction:", useNoiseReduction)
+	//log.Println("recserver process useNoiseReduction:", useNoiseReduction)
 	if err != nil {
 		msg := fmt.Sprintf("failed to read request body : %v", err)
 		log.Println(msg)
@@ -201,7 +201,7 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 	if onRegexp.MatchString(noiseRedS) {
 		useNoiseReduction = true
 	}
-	log.Printf("recserver getAudio useNoiseReduction: %v (from string '%s')\n", useNoiseReduction, noiseRedS)
+	//log.Printf("recserver getAudio useNoiseReduction: %v (from string '%s')\n", useNoiseReduction, noiseRedS)
 	if useNoiseReduction {
 		utteranceID = utteranceID + noiseRedSuffix
 	}

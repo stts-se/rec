@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/base64"
-	"github.com/stts-se/audioproc"
+	"github.com/stts-se/rec/audioproc"
 	//"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -102,11 +102,21 @@ func writeAudioFile(audioDir string, rec processInput, useNoiseReduction bool) e
 			log.Print(msg)
 			return fmt.Errorf(msg)
 		}
-		err = audioproc.NoiseReduce(audioFilePathWav, audioFilePathWavReduced)
-		if err != nil {
-			msg := fmt.Sprintf("writeAudioFile failed noise reduction for file : %v", err)
-			log.Print(msg)
-			return fmt.Errorf(msg)
+		if audioproc.SoxEnabled() {
+			err = audioproc.NoiseReduce(audioFilePathWav, audioFilePathWavReduced)
+			if err != nil {
+				msg := fmt.Sprintf("writeAudioFile failed noise reduction for file : %v", err)
+				log.Print(msg)
+				return fmt.Errorf(msg)
+			}
+			log.Printf("Converted saved file into noise-reduced wav: %s", audioFilePathWavReduced)
+		} else {
+			if _, err = os.Stat(audioFilePathWavReduced); !os.IsNotExist(err) {
+				err = os.Remove(audioFilePathWavReduced)
+				if err != nil {
+					log.Printf("failed to remove file : %v\n", err)
+				}
+			}
 		}
 		log.Printf("Converted saved file into wav: %s", audioFilePathWav)
 	}

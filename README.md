@@ -13,6 +13,8 @@ __________________________
 
 To compile and run the server:
 
-go run *.go
+go run *.go <json-config-file>
+
+sample config file: config/config-sample.json
 
 (or go build; ./recserver or go install; recserver)

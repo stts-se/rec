@@ -8,7 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"regexp"
-	//"strings"
+	"strings"
 )
 
 func execCmd(cmd *exec.Cmd) (bytes.Buffer, error) {
@@ -29,12 +29,17 @@ func Analyse(inFilePath string) (map[string]string, error) {
 }
 
 func SoxEnabled() bool {
-	_, pErr := exec.LookPath(config.MyConfig.SoxCommand)
-	if pErr != nil {
-		log.Printf("audioproc.SoxEnabled(): External '%s' command does not exist. The server will still function, but some features may not be available (e.g., noise reduction and server side spectrograms)", config.MyConfig.SoxCommand)
+	log.Printf("audioproc.go SoxCommand: %s\n", config.MyConfig.SoxCommand)
+	if strings.TrimSpace(config.MyConfig.SoxCommand) == "" {
 		return false
+	} else {
+		_, pErr := exec.LookPath(config.MyConfig.SoxCommand)
+		if pErr != nil {
+			log.Printf("audioproc.SoxEnabled(): External '%s' command does not exist. The server will still function, but some features may not be available (e.g., noise reduction and server side spectrograms)", config.MyConfig.SoxCommand)
+			return false
+		}
+		return true
 	}
-	return true
 }
 
 func NoiseReduce(inFilePath, outFilePath string) error {

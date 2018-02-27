@@ -55,7 +55,6 @@ window.onload = function () {
 	if (document.getElementById('get_audio_include_spectrogram').checked) {
 	    getServerSpectrogram();
 	}
-	analyseAudio();
     });
 
     
@@ -74,12 +73,35 @@ window.onload = function () {
 
     initWavesurferJS();
 
+    initSoxStatus()
+    
     // TODO Remove temporary initialization
     prevButton.click();
 
     getAudioButton.click();
 };
 
+
+function initSoxStatus() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", baseURL + "/enabled/sox" , true);
+
+    xhr.onloadend = function () {
+	let resp = JSON.parse(xhr.response);
+	let enabled = (resp.enabled == "true")
+	//console.log("initSoxStatus soxEnabledResp", resp)
+	console.log("initSoxStatus soxEnabled", enabled)
+	if (enabled) {
+	    document.getElementById("get_audio_include_spectrogram").removeAttribute("disabled");
+	    document.getElementById("noise_red_spectrogram").removeAttribute("disabled");
+	} else {
+	    document.getElementById("get_audio_include_spectrogram").setAttribute("disabled","disabled");
+	    document.getElementById("noise_red_spectrogram").setAttribute("disabled","disabled");
+	}
+    };    
+    xhr.send();
+    
+}
 
 function getPrev() {
 
@@ -329,28 +351,6 @@ function getServerSpectrogram() {
     xhr.send();   
 }
 
-
-function analyseAudio() {
-    console.log("analyseAudio()");
-    let userName = document.getElementById('username2').value;
-    let utteranceID = document.getElementById('recording_id2').value;
-
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", baseURL + "/analyse_audio/" + userName + "/" + utteranceID, true);
-    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-    
-    // TODO error handling   
-    
-    xhr.onloadend = function () {
-     	// done
-	console.log("STATUS: "+ xhr.statusText);
-	let resp = JSON.parse(xhr.response);
-
-	console.log("Audio analysis:",resp);
-    };
-    
-    xhr.send();
-}
 
 function uint8ArrayToArrayBuffer(input) {
     var res = new ArrayBuffer(input.length);

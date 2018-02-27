@@ -3,6 +3,7 @@ package audioproc
 import (
 	"bytes"
 	"fmt"
+	"github.com/stts-se/rec/config"
 	"log"
 	"os"
 	"os/exec"
@@ -27,14 +28,10 @@ func Analyse(inFilePath string) (map[string]string, error) {
 	return res, nil
 }
 
-const soxCmd = "sox"
-
-var SoxEnabled = soxEnabled()
-
-func soxEnabled() bool {
-	_, pErr := exec.LookPath(soxCmd)
+func SoxEnabled() bool {
+	_, pErr := exec.LookPath(config.MyConfig.SoxCommand)
 	if pErr != nil {
-		log.Printf("audioproc.SoxEnabled(): External '%s' command does not exist. The server will still function, but some features may not be available (e.g., noise reduction and server side spectrograms)", soxCmd)
+		log.Printf("audioproc.SoxEnabled(): External '%s' command does not exist. The server will still function, but some features may not be available (e.g., noise reduction and server side spectrograms)", config.MyConfig.SoxCommand)
 		return false
 	}
 	return true
@@ -46,15 +43,15 @@ func NoiseReduce(inFilePath, outFilePath string) error {
 
 	funcId := "NoiseReduce"
 
-	_, pErr := exec.LookPath(soxCmd)
+	_, pErr := exec.LookPath(config.MyConfig.SoxCommand)
 	if pErr != nil {
 		log.Printf("%s failure : %v\n", funcId, pErr)
-		return fmt.Errorf("%s failed to find the external '%s' command : %v", funcId, soxCmd, pErr)
+		return fmt.Errorf("%s failed to find the external '%s' command : %v", funcId, config.MyConfig.SoxCommand, pErr)
 	}
 
 	// (1) noise profile
 	// sox /tmp/rec_0001.wav -n noiseprof /tmp/rec_0001-tmp.noiseprof
-	cmd := exec.Command(soxCmd, inFilePath, "-n", "noiseprof", noiseProfPath)
+	cmd := exec.Command(config.MyConfig.SoxCommand, inFilePath, "-n", "noiseprof", noiseProfPath)
 	stderr, err := execCmd(cmd)
 	if err != nil {
 		log.Printf("%s\n", stderr.String())
@@ -64,7 +61,7 @@ func NoiseReduce(inFilePath, outFilePath string) error {
 
 	// (2) noise reduction
 	// sox /tmp/rec_0001.wav /tmp/rec_0001-tmp.wav noisered /tmp/rec_0001-tmp.noiseprof 0.21
-	cmd = exec.Command(soxCmd, inFilePath, outFilePath, "noisered", noiseProfPath, "0.21")
+	cmd = exec.Command(config.MyConfig.SoxCommand, inFilePath, outFilePath, "noisered", noiseProfPath, "0.21")
 	stderr, err = execCmd(cmd)
 	if err != nil {
 		log.Printf("%s\n", stderr.String())
@@ -92,10 +89,10 @@ func BuildSoxSpectrogram(inFilePath, outFilePath string, useNoiseReduction bool)
 
 	//log.Printf("%s input %s %s %v", funcId, inFilePath, outFilePath, useNoiseReduction)
 
-	_, pErr := exec.LookPath(soxCmd)
+	_, pErr := exec.LookPath(config.MyConfig.SoxCommand)
 	if pErr != nil {
 		log.Printf("%s failure : %v\n", funcId, pErr)
-		return fmt.Errorf("%s failed to find the external '%s' command : %v", funcId, soxCmd, pErr)
+		return fmt.Errorf("%s failed to find the external '%s' command : %v", funcId, config.MyConfig.SoxCommand, pErr)
 	}
 
 	specInputFile := inFilePath
@@ -104,7 +101,7 @@ func BuildSoxSpectrogram(inFilePath, outFilePath string, useNoiseReduction bool)
 
 		// (1) noise profile
 		// sox /tmp/rec_0001.wav -n noiseprof /tmp/rec_0001-tmp.noiseprof
-		cmd := exec.Command(soxCmd, inFilePath, "-n", "noiseprof", noiseProfPath)
+		cmd := exec.Command(config.MyConfig.SoxCommand, inFilePath, "-n", "noiseprof", noiseProfPath)
 		stderr, err := execCmd(cmd)
 		if err != nil {
 			log.Printf("%s\n", stderr.String())
@@ -114,7 +111,7 @@ func BuildSoxSpectrogram(inFilePath, outFilePath string, useNoiseReduction bool)
 
 		// (2) noise reduction
 		// sox /tmp/rec_0001.wav /tmp/rec_0001-tmp.wav noisered /tmp/rec_0001-tmp.noiseprof 0.21
-		cmd = exec.Command(soxCmd, inFilePath, noiseRedFilePath, "noisered", noiseProfPath, "0.21")
+		cmd = exec.Command(config.MyConfig.SoxCommand, inFilePath, noiseRedFilePath, "noisered", noiseProfPath, "0.21")
 		stderr, err = execCmd(cmd)
 		if err != nil {
 			log.Printf("%s\n", stderr.String())
@@ -124,7 +121,7 @@ func BuildSoxSpectrogram(inFilePath, outFilePath string, useNoiseReduction bool)
 	}
 
 	// (3) spectrogram | -m for monochrome, -l for light background
-	cmd := exec.Command(soxCmd, specInputFile, "-n" /*"rate", "7k",*/, "spectrogram", "-m", "-l", "-x", "1100", "-y", "300", "-z", "90", "-o", outFilePath)
+	cmd := exec.Command(config.MyConfig.SoxCommand, specInputFile, "-n" /*"rate", "7k",*/, "spectrogram", "-m", "-l", "-x", "1100", "-y", "300", "-z", "90", "-o", outFilePath)
 	stderr, err := execCmd(cmd)
 	if err != nil {
 		log.Printf("%s\n", stderr.String())

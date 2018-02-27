@@ -49,10 +49,11 @@ window.onload = function () {
     stopButton = document.getElementById('stopandsend');
     stopButton.addEventListener('click', function() {
 	stopRecording();
-	//sendAndReceiveBlob();
+	//sendAndReceiveBlob(); // => added to dataavailable event listener below
     });
     stopButton.disabled = true;
     
+    // stop+send not used as separate buttons, instead see stopButton also sends to server
     sendButton = document.getElementById('send');
     sendButton.addEventListener('click', sendAndReceiveBlob);
     sendButton.disabled = true;

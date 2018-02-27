@@ -7,8 +7,8 @@ import (
 )
 
 type fileInfo struct {
-	TargetUtterance   string  `json:"target_uttrance"`
-	ActualUtterance   string  `json:"actual_uttrance"`
+	TargetUtterance   string  `json:"target_utterance"`
+	ActualUtterance   string  `json:"actual_utterance"`
 	Status            string  `json:"status"`
 	Ok                bool    `json:"ok"`
 	Confidence        float32 `json:"confidence"`

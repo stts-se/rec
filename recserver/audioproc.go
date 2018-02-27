@@ -16,6 +16,14 @@ import (
 
 var onRegexp = regexp.MustCompile("^(?i)(true|yes|y|1|on)$")
 
+func soxEnabled(w http.ResponseWriter, r *http.Request) {
+	if audioproc.SoxEnabled() {
+		fmt.Fprintf(w, "%s\n", "{\"enabled\": \"true\"}")
+	} else {
+		fmt.Fprintf(w, "%s\n", "{\"enabled\": \"false\"}")
+	}
+}
+
 func analyseAudio(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userName := vars["username"]

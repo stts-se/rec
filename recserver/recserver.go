@@ -11,7 +11,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
@@ -305,16 +304,8 @@ func main() {
 	//TODO Check Go ffmpeg, or similar, bindings instead of
 	// external call
 
-	// Test that external ffmpeg command is found, or exit
-	cmd := "ffmpeg"
-	_, pErr := exec.LookPath(cmd)
-	if pErr != nil {
-
-		log.Printf("Exiting. Failed to find external command '%s'. Try installing it.\n", cmd)
-		os.Exit(0)
-	}
-
 	audioDir = config.MyConfig.AudioDir
+	log.Printf("recserver audioDir: %s\n", audioDir)
 	_, sErr := os.Stat(audioDir)
 	if os.IsNotExist(sErr) {
 		os.Mkdir(audioDir, os.ModePerm)
@@ -329,10 +320,9 @@ func main() {
 	}
 	//uttLists = uls
 
-	p := "9993"
+	p := config.MyConfig.ServerPort
 	r := mux.NewRouter()
 	r.StrictSlash(true)
-	r.HandleFunc("/", index)
 	r.HandleFunc("/rec/", index)
 	r.HandleFunc("/rec/process/", process).Methods("POST")
 
@@ -368,6 +358,9 @@ func main() {
 	})
 	// Add paths that don't need to be in the generated
 	// documentation after the r.Walk above
+
+	// for ngrok access
+	r.HandleFunc("/", index)
 
 	r.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "favicon.ico")

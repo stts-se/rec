@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/stts-se/rec/config"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -49,6 +50,8 @@ type audio struct {
 	FileType string `json:"file_type"`
 	Data     string `json:"data"`
 }
+
+// TODO: processResponse in a better way
 
 // {username, audio, text, (recording_id if overwriting)}
 type processInput struct {
@@ -140,7 +143,7 @@ func process(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("GOT username: %s\ttext: %s\t recording id: %s\n", input.UserName, input.Text, input.RecordingID)
 
-	err = writeAudioFile(audioDir, input)
+	audioFile, err := writeAudioFile(audioDir, input)
 	if err != nil {
 		msg := fmt.Sprintf("failed writing audio file : %v", err)
 		log.Print(msg)
@@ -148,13 +151,25 @@ func process(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//HB testing
-	res, err = runExternalKaldiDecoder("audio_dir/user0001/rec_0001.wav", res)
-	if err != nil {
-		msg := fmt.Sprintf("failed decoding audio file : %v", err)
-		log.Print(msg)
-		http.Error(w, msg, http.StatusInternalServerError)
-		return
+	//HL testing
+	if len(config.MyConfig.KaldiGStreamerURL) > 0 {
+		res, err = runGStreamerKaldiFromURL(config.MyConfig.KaldiGStreamerURL, audioFile, res)
+		if err != nil {
+			msg := fmt.Sprintf("failed decoding audio file : %v", err)
+			log.Print(msg)
+			http.Error(w, msg, http.StatusInternalServerError)
+			return
+		}
+	} else {
+		log.Println("No URL defined for GStreamer Kaldi, will run dummy Kaldi instead")
+		// HB testing
+		res, err = runExternalKaldiDecoder(audioFile, res)
+		if err != nil {
+			msg := fmt.Sprintf("failed decoding audio file : %v", err)
+			log.Print(msg)
+			http.Error(w, msg, http.StatusInternalServerError)
+			return
+		}
 	}
 
 	// TODO This is weird. Structs 'processInput' and
@@ -262,6 +277,19 @@ var walkedURLs []string
 
 func main() {
 
+	if len(os.Args) != 2 {
+		fmt.Println("USAGE: go run recserver.go <json-config-file>")
+		fmt.Println("sample config file: config/config-sample.json")
+		os.Exit(1)
+	}
+
+	cfg, cErr := config.NewConfig(os.Args[1])
+	if cErr != nil {
+		log.Printf("Exiting. Failed to read config file : %v", cErr)
+		os.Exit(1)
+	}
+	config.MyConfig = cfg
+
 	if !validAudioFileExtension(defaultExtension) {
 		log.Printf("Exiting! Unknown default audio file extension: %s", defaultExtension)
 		os.Exit(1)
@@ -286,7 +314,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	audioDir = "audio_dir"
+	audioDir = config.MyConfig.AudioDir
 	_, sErr := os.Stat(audioDir)
 	if os.IsNotExist(sErr) {
 		os.Mkdir(audioDir, os.ModePerm)
@@ -322,6 +350,7 @@ func main() {
 	r.HandleFunc("/rec/build_spectrogram/{username}/{utterance_id}", buildSpectrogram).Methods("GET")
 	r.HandleFunc("/rec/analyse_audio/{username}/{utterance_id}/{ext}", analyseAudio).Methods("GET")
 	r.HandleFunc("/rec/analyse_audio/{username}/{utterance_id}", analyseAudio).Methods("GET")
+	r.HandleFunc("/rec/enabled/sox", soxEnabled).Methods("GET")
 
 	// Defined in getUtterance.go
 	r.HandleFunc("/rec/get_next_utterance/{username}", getNextUtterance).Methods("GET")

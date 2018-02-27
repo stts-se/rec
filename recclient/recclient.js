@@ -172,7 +172,7 @@ function initWavesurferJS() {
     	wavesurfer.play();
     });
 
-    let maxWidth = "max-width: 1000px";
+    let maxWidth = "max-width: 1244px";
     document.getElementById("js-wavesurfer").setAttribute("style", maxWidth);
     document.getElementById("js-wavesurfer-spectrogram").setAttribute("style", maxWidth);
     document.getElementById("js-wavesurfer-timeline").setAttribute("style", maxWidth);

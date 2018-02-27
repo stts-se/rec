@@ -37,7 +37,7 @@ import (
 
 // TO DO remove:
 //func init() {
-//	loadUtteranceLists("audio_dir")
+//	loadUtteranceLists(config.MyConfig.AudioDir)
 //	dummyInstantiateUtts()
 //}
 

@@ -21,7 +21,7 @@ func ffmpegEnabled() bool {
 
 func ffmpegConvert(inFilePath, outFilePath string, removeInputFile bool) error {
 
-	_, pErr := exec.LookPath("ffmpegx")
+	_, pErr := exec.LookPath(ffmpegCmd)
 	if pErr != nil {
 		log.Printf("ffmpegConvert failure : %v\n", pErr)
 		return fmt.Errorf("ffmpegConvert failed to find the external 'ffmpeg' command : %v", pErr)

@@ -18,9 +18,9 @@ var onRegexp = regexp.MustCompile("^(?i)(true|yes|y|1|on)$")
 
 func soxEnabled(w http.ResponseWriter, r *http.Request) {
 	if audioproc.SoxEnabled() {
-		fmt.Fprintf(w, "%s\n", "{\"enabled\": \"true\"}")
+		fmt.Fprintf(w, "%s\n", "{\"command\": \"sox\",\n\"enabled\": \"true\"}")
 	} else {
-		fmt.Fprintf(w, "%s\n", "{\"enabled\": \"false\"}")
+		fmt.Fprintf(w, "%s\n", "{\"command\": \"sox\",\n\"enabled\": \"false\"}")
 	}
 }
 

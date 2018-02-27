@@ -41,7 +41,7 @@
     <p>
       
       <button id="rec">rec</button>
-      <button id="stop">stop</button>
+      <button id="stopandsend">stop/send</button>
       
       <progress id="rec_progress" value="0" max="5"></progress> (arbitrary max recording time, 5 secs)
       
@@ -50,10 +50,11 @@
       <audio id="audio" controls></audio>
     </p>
     
-    <p>
+    <p style="display:none">
       <button id="send">send</button>
       (sends audio to server) <br>
     </p>
+
     <p>_____________________________________________________________</p>
     <details open="open">
     <summary>Server response after send:</summary>

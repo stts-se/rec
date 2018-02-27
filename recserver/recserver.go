@@ -368,6 +368,10 @@ func main() {
 	// Add paths that don't need to be in the generated
 	// documentation after the r.Walk above
 
+	r.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "favicon.ico")
+	})
+
 	r.PathPrefix("/rec/recclient/").Handler(http.StripPrefix("/rec/recclient/", http.FileServer(http.Dir("../recclient"))))
 
 	srv := &http.Server{
@@ -377,7 +381,7 @@ func main() {
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
-	fmt.Println("rec server started on localhost:" + p + "/rec")
+	log.Println("rec server started on localhost:" + p + "/rec")
 	log.Fatal(srv.ListenAndServe())
 	fmt.Println("No fun")
 }

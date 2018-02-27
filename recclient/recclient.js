@@ -3,7 +3,7 @@
 // https://mozdevs.github.io/MediaRecorder-examples/record-live-audio.html
 // https://github.com/mdn/voice-change-o-matic
 
-'use strict'
+//'use strict'
 
 // //
 // //
@@ -25,6 +25,7 @@ navigator.getUserMedia = (navigator.getUserMedia ||
 
 let recButton, stopButton, sendButton, getAudioButton, getSpecButton, prevButton, nextButton;
 let baseURL = window.location.origin +"/rec";
+console.log(baseURL);
 var currentBlob;
 var recorder;
 var wavesurfer;
@@ -41,8 +42,15 @@ window.onload = function () {
     recButton.addEventListener('click', startRecording);
     recButton.disabled = false;
     
-    stopButton = document.getElementById('stop');
-    stopButton.addEventListener('click', stopRecording);
+    // stopButton = document.getElementById('stop');
+    // stopButton.addEventListener('click', stopRecording);
+    // stopButton.disabled = true;
+    
+    stopButton = document.getElementById('stopandsend');
+    stopButton.addEventListener('click', function() {
+	stopRecording();
+	//sendAndReceiveBlob();
+    });
     stopButton.disabled = true;
     
     sendButton = document.getElementById('send');
@@ -65,7 +73,8 @@ window.onload = function () {
 	visualize();	
 	recorder = new MediaRecorder(stream);
 	recorder.addEventListener('dataavailable', function (evt) {
-	    updateAudio(evt.data); 
+	    updateAudio(evt.data);
+	    sendAndReceiveBlob();
 	});
 	
 	recorder.onstop = function(evt) {}
@@ -211,7 +220,8 @@ function startRecording() {
     countDown();
 }
 function stopRecording() {
-    
+    console.log("stopRecording()");
+
     recButton.disabled = false;
     stopButton.disabled = true;
     
@@ -249,6 +259,7 @@ function countDown() {
 }
 
 function sendAndReceiveBlob() {
+    console.log("sendAndReceiveBlob()");
 
     var onLoadEndFunc = function (data) {
 	//console.log("onLoadEndFunc data ", data);
@@ -289,6 +300,7 @@ function clearServerSpectrogram() {
 
 
 function updateAudio(blob) {
+    console.log("updateAudio()", blob.size);
     //console.log("UPDATE AUDIO: "+ blob.size);
     //console.log("UPDATE AUDIO: "+ blob.type);
 

@@ -332,6 +332,7 @@ func main() {
 	p := "9993"
 	r := mux.NewRouter()
 	r.StrictSlash(true)
+	r.HandleFunc("/", index)
 	r.HandleFunc("/rec/", index)
 	r.HandleFunc("/rec/process/", process).Methods("POST")
 

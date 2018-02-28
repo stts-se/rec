@@ -268,7 +268,11 @@ function sendAndReceiveBlob() {
 	sendButton.disabled = true; // originally called after sendJSON
 	console.log("onLoadEndFunc|STATUS : "+ data.target.status + "/" + data.target.statusText);
 	console.log("onLoadEndFunc|RESPONSE : "+ data.target.responseText);
-	showResponse(data.target.responseText);
+	if (data.target.status === 200) {
+	    showResponse(data.target.responseText);
+	} else {
+	    showError(data, document.getElementById("recording_id").innerHTML);
+	}
     };
 
     AUDIO.sendBlob(currentBlob,
@@ -278,11 +282,35 @@ function sendAndReceiveBlob() {
 	     onLoadEndFunc);
 }
 
+function showError(data, recordingId) {
+    var resp = document.getElementById("response");
+    clearResponse();
+
+//     type processResponse struct {
+// 	Ok                bool    `json:"ok"`
+// 	Confidence        float32 `json:"confidence"`
+// 	RecognitionResult string  `json:"recognition_result"`
+// 	RecordingID       string  `json:"recording_id"`
+// 	Message           string  `json:"message"`
+// }
+
+    var json = {
+	"ok": false,
+	"confidence": -1,
+	"recognition_result": "",
+	"recording_id": recordingId,
+	"message": data.target.status + "/" + data.target.statusText + ": " + data.target.responseText.trim(),
+    };
+    
+    //var o = JSON.parse(json);
+    var j = JSON.stringify(json, null, '\t');
+    
+    resp.innerHTML = j;
+}
 
 function showResponse(json) {
     var resp = document.getElementById("response");
     clearResponse();
-    console.log("showResponse|response", resp);
     var o = JSON.parse(json);
     var j = JSON.stringify(o, null, '\t');
     

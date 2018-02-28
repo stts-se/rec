@@ -302,7 +302,6 @@ function showError(data, recordingId) {
 	"message": data.target.status + "/" + data.target.statusText + ": " + data.target.responseText.trim(),
     };
     
-    //var o = JSON.parse(json);
     var j = JSON.stringify(json, null, '\t');
     
     resp.innerHTML = j;

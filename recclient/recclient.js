@@ -88,7 +88,7 @@ window.onload = function () {
     // TODO Remove temporary initialization
     prevButton.click();
 
-    getAudioButton.click();
+    // getAudioButton.click(); HL using this for quicker dev with spectrograms
 };
 
 

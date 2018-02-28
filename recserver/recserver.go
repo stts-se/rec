@@ -150,29 +150,17 @@ func process(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//HL testing
-	if len(config.MyConfig.KaldiGStreamerURL) > 0 {
-		res, err = runGStreamerKaldiFromURL(config.MyConfig.KaldiGStreamerURL, audioFile, res)
-		if err != nil {
-			msg := fmt.Sprintf("failed decoding audio file : %v", err)
-			log.Print(msg)
-			http.Error(w, msg, http.StatusInternalServerError)
-			return
-		}
-	} else {
-		log.Println("No URL defined for GStreamer Kaldi, will run dummy Kaldi instead")
-		// HB testing
-		res, err = runExternalKaldiDecoder(audioFile, res)
-		if err != nil {
-			msg := fmt.Sprintf("failed decoding audio file : %v", err)
-			log.Print(msg)
-			http.Error(w, msg, http.StatusInternalServerError)
-			return
-		}
+	res, err = analyzeAudio(audioFile, res)
+	//log.Print("analyzeAudio.res =", res)
+	if err != nil {
+		msg := err.Error()
+		log.Print(msg)
+		http.Error(w, msg, http.StatusInternalServerError)
+		return
 	}
 
 	// TODO This is weird. Structs 'processInput' and
-	// 'processRespons' and 'infoFile' should probably be a single
+	// 'processResponse' and 'infoFile' should probably be a single
 	// struct
 
 	// writeJSONInfoFile defined in writeJSONInfoFile.go
@@ -199,6 +187,26 @@ func process(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(w, "%s\n", string(resJSON))
+}
+
+func analyzeAudio(audioFile string, res processResponse) (processResponse, error) {
+	if len(config.MyConfig.KaldiGStreamerURL) > 0 {
+		//HL testing - gstreamer kaldi currently running with English model on Nikolaj's PC
+		res, err := runGStreamerKaldiFromURL(config.MyConfig.KaldiGStreamerURL, audioFile, res)
+		if err != nil {
+			return res, fmt.Errorf("%s gstreamer kaldi failed decoding audio file : %v", "gstreamer kaldi", err)
+		}
+		//log.Print("runGStreamerKaldiFromURL.res =", res)
+		return res, nil
+	}
+	log.Println("No URL defined for GStreamer Kaldi, will run dummy Kaldi instead")
+	// HB testing - currently a dummy return value
+	res, err := runExternalKaldiDecoder(audioFile, res)
+	if err != nil {
+		return res, fmt.Errorf("%s failed decoding audio file : %v", "external kaldi", err)
+	}
+	//log.Print("runExternalKaldiDecoder.res =", res)
+	return res, nil
 }
 
 type audioResponse struct {
@@ -360,7 +368,10 @@ func main() {
 	// documentation after the r.Walk above
 
 	// for ngrok access
-	r.HandleFunc("/", index)
+	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/plain")
+		fmt.Fprintf(w, "%s\n", "server up and running")
+	})
 
 	r.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "favicon.ico")

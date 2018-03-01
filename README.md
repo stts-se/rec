@@ -13,7 +13,7 @@ __________________________
 
 To compile and run the server:
 
-go run *.go <json-config-file>
+go run *.go &lt;json-config-file&gt;
 
 sample config file: config/config-sample.json
 

@@ -39,8 +39,8 @@ window.onload = function () {
 function move0(event) {
     // listen for enter key
     if ( event.keyCode == 13 || event.which == 13 ) {
-	var move = document.getElementById('speak0').value;
-	move(move);
+	var m = document.getElementById('speak0').value;
+	move(m);
     }    
 }
 
@@ -82,8 +82,8 @@ function init() {
     });
 
     recordButtonN = document.getElementById('record');
-    stopButtonN = document.getElementById('stop');
-    stopButtonN.disabled = true;
+    //stopButtonN = document.getElementById('stop');
+    //stopButtonN.disabled = true;
 }
 
 function updateAudio(blob) {

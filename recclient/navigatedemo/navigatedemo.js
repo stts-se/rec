@@ -208,37 +208,53 @@ function stop() {
 
 function moveRight() {
     var elem = document.getElementById("animate");
+    var width = document.getElementById("container").offsetWidth;
+    var n = 100;
     
-    for(var i = 0; i < 100; i++) {
-	horizontal++;
-	elem.style.left = horizontal + 'px'; 
+    for(var i = 0; i < n; i++) {
+	if (horizontal + elem.offsetWidth < width) { 
+	    horizontal++;
+	    elem.style.left = horizontal + 'px';
+	}
     }; 
 }
 
 function moveLeft() {
     var elem = document.getElementById("animate");
+    var n = 100;
     
-    for(var i = 0; i < 100; i++) {
-	horizontal--;
-	elem.style.left = horizontal + 'px'; 
+    for(var i = 0; i < n; i++) {
+	if (horizontal > 0) { 
+	    horizontal--;
+	    elem.style.left = horizontal + 'px';
+	}
     }; 
 }
 
+
 function moveUp() {
     var elem = document.getElementById("animate");
+    var n = 100;
     
-    for(var i = 0; i < 100; i++) {
-	vertical--;
-	elem.style.top = vertical + 'px'; 
-    };
+    for(var i = 0; i < n; i++) {
+	if (vertical > 0) { 
+	    vertical--;
+	    elem.style.top = vertical + 'px';
+	}
+    }; 
 }
+
 
 function moveDown() {
     var elem = document.getElementById("animate");
+    var height = document.getElementById("container").offsetHeight;
+    var n = 100;
     
-    for(var i = 0; i < 100; i++) {
-	vertical++;
-	elem.style.top = vertical + 'px'; 
-    };
+    for(var i = 0; i < n; i++) {
+	if (vertical + elem.offsetHeight < height) { 
+	    vertical++;
+	    elem.style.top = vertical + 'px';
+	}
+    }; 
 }
 

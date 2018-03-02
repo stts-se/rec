@@ -284,8 +284,10 @@ function sleep(milliseconds) {
   }
 }
 
+
+
 function record() {
-    clearResponse()
+    clearResponse();
     recordButtonN.disabled = true;
     stopButtonN.disabled = false;
     if (recorderN != null) {
@@ -294,6 +296,14 @@ function record() {
 	
 	//recorderN.start(); // continuous input
 	recorderN.start(); // input only on send
+	var stopRecording = setInterval(function() {
+	    
+	    console.log("STOP RECORDING CALLED");
+	    
+	    stop();
+	    clearInterval(stopRecording);
+	}, 1500);
+	
     }
 
     //setTimeout(stop(), 1500);

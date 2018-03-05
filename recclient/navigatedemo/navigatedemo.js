@@ -166,12 +166,12 @@ function showError(data) {
 
 
 function sleep(milliseconds) {
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+	if ((new Date().getTime() - start) > milliseconds){
+	    break;
+	}
     }
-  }
 }
 
 
@@ -179,7 +179,7 @@ function sleep(milliseconds) {
 function record() {
     clearResponse();
     recordButtonN.disabled = true;
-    stopButtonN.disabled = false;
+    //stopButtonN.disabled = false;
     if (recorderN != null) {
 	
 	console.log("startRecorder:",recorderN);
@@ -188,21 +188,23 @@ function record() {
 	recorderN.start(); // input only on send
 	var stopRecording = setInterval(function() {
 	    
-	    console.log("STOP RECORDING CALLED");
+	    //console.log("STOP RECORDING CALLED");
 	    
 	    stop();
 	    clearInterval(stopRecording);
-	}, 1500);
+	}, 2000);
 	
-    }
-
+    } 
 }
 
 function stop() {
-    recorderN.stop();
-    recordButtonN.disabled = false;
-    stopButtonN.disabled = true;
-    
+    if (recorderN.state === "recording") { 
+	recorderN.stop();
+	recordButtonN.disabled = false;
+    } else {
+	console.log("stop(): tried to stop when not recording");
+    }
+    //stopButtonN.disabled = true;
 }
 
 

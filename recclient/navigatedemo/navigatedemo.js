@@ -192,7 +192,7 @@ function record() {
 	    
 	    stop();
 	    clearInterval(stopRecording);
-	}, 2000);
+	}, 1500);
 	
     } 
 }

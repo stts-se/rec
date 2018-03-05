@@ -2,7 +2,7 @@
     "kaldi_gstreamer_url": "http://192.168.0.105:8080/client/dynamic/recognize",
     "sox_command": "sox",
     "audio_dir": "audio_dir",
-    "server_port": "9993",
-    "tensorflow_cmd": "python /home/hanna/git_repos/tensorflow/tensorflow/examples/speech_commands/label_wav.py --graph=/tmp/my_frozen_graph.pb --labels=/tmp/speech_commands_train/conv_labels.txt --wav={wavfile}"
+    "server_port": "9993"
+    //"tensorflow_cmd": "python /home/hanna/git_repos/tensorflow/tensorflow/examples/speech_commands/label_wav.py --graph=/tmp/my_frozen_graph.pb --labels=/tmp/speech_commands_train/conv_labels.txt --wav={wavfile}"
 }
 

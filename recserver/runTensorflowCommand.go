@@ -22,6 +22,9 @@ var wavFilePlaceHolder = "{wavfile}"
 
 var scoreRe = regexp.MustCompile("^([^ ]+) [(]score = ([0-9.]+)[)]$")
 
+// to activate tensorflow:
+// source ~/progz/tensorflow/bin/activate
+
 func runTensorflowCommand(command string, wavFilePath string, res processResponse) (processResponse, error) {
 
 	methodName := "tensorflow"

@@ -23,7 +23,6 @@ var currentBlobN;
 var audioCtxN = new (window.AudioContext || window.webkitAudioContext)();
 var sourceN;
 var streamN;
-
 // fork getUserMedia for multiple browser versions, for those that need prefixes
 navigator.getUserMedia = (navigator.getUserMedia ||
                           navigator.webkitGetUserMedia ||
@@ -64,20 +63,41 @@ function move(strn) {
 
 let baseURL = window.location.origin +"/rec";
 
-
 function init() {
     console.log("init: called");
     
+    document.addEventListener("keydown", function(event) {
+	if (event.keyCode == 32 && recorderN.state !== "recording") {
+	    record();
+	}
+    });
+			  
     navigator.mediaDevices.getUserMedia({'audio': true, video: false}).then(function(stream) {
     	sourceN = audioCtxN.createMediaStreamSource(stream);
 	console.log("init: creating MediaRecorder");
-    	recorderN = new MediaRecorder(stream);
+    	recorderN = new MediaRecorder(stream); //, {audioBitsPerSecond:6000});
+
+	// VAD | https://github.com/kdavis-mozilla/vad.js
+	var options = {
+	    source: sourceN,
+	    voice_stop: function() {
+		if (recorderN.state === "running") {
+		    console.log('vad: voice_stop');
+		    recorderN.stop();
+		}
+	    }, 
+	    voice_start: function() {}
+	};
+	var vad = new VAD(options);
+
 	recorderN.addEventListener('dataavailable', function (evt) {
-	    updateAudio(evt.data);
-	    sendAndReceiveBlob();
+	    updateAudio(evt.data)
 	});
 
-	recorderN.onstop = function(evt) {}
+	recorderN.onstop = function(evt) {
+	    console.log("recorderN.onstop")
+	    sendAndReceiveBlob();
+	}
 	
     });
 
@@ -87,8 +107,7 @@ function init() {
 }
 
 function updateAudio(blob) {
-    console.log("updateAudio()", blob.size);
-    
+    console.log("updateAudio()", blob.size);    
     console.log("updateAudio(): "+ blob.type);
 
     currentBlobN = blob;
@@ -116,7 +135,7 @@ function sendAndReceiveBlob() {
 	}
     };
 
-    
+    console.log("currentBlobN", currentBlobN);
     AUDIO.sendBlob(currentBlobN,
 		   "tmpuser",
 		   "_",
@@ -175,7 +194,6 @@ function sleep(milliseconds) {
 }
 
 
-
 function record() {
     clearResponse();
     recordButtonN.disabled = true;
@@ -206,7 +224,6 @@ function stop() {
     }
     //stopButtonN.disabled = true;
 }
-
 
 function moveRight() {
     var elem = document.getElementById("animate");

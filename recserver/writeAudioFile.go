@@ -98,7 +98,7 @@ func writeAudioFile(audioDir string, rec processInput) (string, error) {
 		audioFilePathWavReduced := filepath.Join(dirPath, rec.RecordingID+noiseRedSuffix+".wav")
 		err = ffmpegConvert(audioFilePath, audioFilePathWav, false)
 		if err != nil {
-			msg := fmt.Sprintf("writeAudioFile failed converting file : %v", err)
+			msg := fmt.Sprintf("writeAudioFile failed converting from %s to %s : %v", audioFilePath, audioFilePathWav, err)
 			log.Print(msg)
 			return "", fmt.Errorf(msg)
 		}
@@ -128,7 +128,7 @@ func writeAudioFile(audioDir string, rec processInput) (string, error) {
 			// ffmpegConvert function is defined in ffmpegConvert.go
 			err = ffmpegConvert(audioFilePath, audioFilePathOpus, false)
 			if err != nil {
-				msg := fmt.Sprintf("writeAudioFile failed converting file : %v", err)
+				msg := fmt.Sprintf("writeAudioFile failed converting from %s to %s : %v", audioFilePath, audioFilePathOpus, err)
 				log.Print(msg)
 				return "", fmt.Errorf(msg)
 			} // Woohoo, file converted into opus
@@ -140,7 +140,7 @@ func writeAudioFile(audioDir string, rec processInput) (string, error) {
 			// ffmpegConvert function is defined in ffmpegConvert.go
 			err = ffmpegConvert(audioFilePath, audioFilePathMp3, false)
 			if err != nil {
-				msg := fmt.Sprintf("writeAudioFile failed converting file : %v", err)
+				msg := fmt.Sprintf("writeAudioFile failed converting from %s to %s : %v", audioFilePath, audioFilePathMp3, err)
 				log.Print(msg)
 				return "", fmt.Errorf(msg)
 			} // Woohoo, file converted into mp3

@@ -11,6 +11,8 @@ import (
 
 func runExternalKaldiDecoder(wavFilePath string, res processResponse) (processResponse, error) {
 
+	methodName := "tensorflow"
+
 	_, pErr := exec.LookPath("python")
 	if pErr != nil {
 		log.Printf("failure : %v\n", pErr)
@@ -32,6 +34,11 @@ func runExternalKaldiDecoder(wavFilePath string, res processResponse) (processRe
 
 	log.Printf("RecognitionResult: %s\n", out.String())
 	res.RecognitionResult = strings.TrimSpace(out.String())
-	res.Message = "Recognised by external kaldi recognizer"
+	msg := "Recognised by external kaldi recognizer"
+	if len(res.Message) > 0 {
+		res.Message = res.Message + "; " + fmt.Sprintf("[%s] %s", methodName, msg)
+	} else {
+		res.Message = fmt.Sprintf("[%s] %s", methodName, msg)
+	}
 	return res, nil
 }

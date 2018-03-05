@@ -14,6 +14,7 @@ type Config struct {
 	SoxCommand        string `json:"sox_command"`
 	AudioDir          string `json:"audio_dir"`
 	ServerPort        string `json:"server_port"`
+	TensorflowCmd     string `json:"tensorflow_cmd"`
 }
 
 func NewConfig(filePath string) (Config, error) {

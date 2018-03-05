@@ -66,6 +66,7 @@ type processInput struct {
 //	 ? "recognition_result": <text-string>,
 //	 ? "recording_id": <uri>
 //	}
+// TODO: insert "Source" field here
 type processResponse struct {
 	Ok                bool    `json:"ok"`
 	Confidence        float32 `json:"confidence"`
@@ -140,6 +141,7 @@ func process(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	res.RecordingID = input.RecordingID
 	log.Printf("GOT username: %s\ttext: %s\t recording id: %s\n", input.UserName, input.Text, input.RecordingID)
 
 	audioFile, err := writeAudioFile(audioDir, input)
@@ -175,7 +177,6 @@ func process(w http.ResponseWriter, r *http.Request) {
 	// TODO Create reasonable response
 
 	res.Ok = true
-	res.RecordingID = input.RecordingID
 
 	resJSON, err := json.Marshal(res)
 	if err != nil {
@@ -190,16 +191,23 @@ func process(w http.ResponseWriter, r *http.Request) {
 }
 
 func analyzeAudio(audioFile string, res processResponse) (processResponse, error) {
-	if len(config.MyConfig.KaldiGStreamerURL) > 0 {
-		//HL testing - gstreamer kaldi currently running with English model on Nikolaj's PC
-		res, err := runGStreamerKaldiFromURL(config.MyConfig.KaldiGStreamerURL, audioFile, res)
+	if len(config.MyConfig.TensorflowCmd) > 0 {
+		res, err := runTensorflowCommand(config.MyConfig.TensorflowCmd, audioFile, res)
 		if err != nil {
-			return res, fmt.Errorf("%s gstreamer kaldi failed decoding audio file : %v", "gstreamer kaldi", err)
+			return res, fmt.Errorf("%s failed for input audio file : %v", "tensorflow", err)
 		}
 		//log.Print("runGStreamerKaldiFromURL.res =", res)
 		return res, nil
 	}
-	log.Println("No URL defined for GStreamer Kaldi, will run dummy Kaldi instead")
+	if len(config.MyConfig.KaldiGStreamerURL) > 0 {
+		//HL testing - gstreamer kaldi currently running with English model on Nikolaj's PC
+		res, err := runGStreamerKaldiFromURL(config.MyConfig.KaldiGStreamerURL, audioFile, res)
+		if err != nil {
+			return res, fmt.Errorf("%s failed decoding audio file : %v", "gstreamer kaldi", err)
+		}
+		//log.Print("runGStreamerKaldiFromURL.res =", res)
+		return res, nil
+	}
 	// HB testing - currently a dummy return value
 	res, err := runExternalKaldiDecoder(audioFile, res)
 	if err != nil {

@@ -22,6 +22,8 @@ type gstreamerResponse struct {
 
 func runGStreamerKaldiFromURL(url string, wavFilePath string, res processResponse) (processResponse, error) {
 
+	methodName := "gstreamer kaldi"
+
 	// curl -T $WAVFILE "http://192.168.0.105:8080/client/dynamic/recognize"
 	// {"status": 0, "hypotheses": [{"utterance": "just three style."}], "id": "80a4a3e6-15ec-41e7-ac5d-fa2ea2386df2"}
 
@@ -67,11 +69,11 @@ func runGStreamerKaldiFromURL(url string, wavFilePath string, res processRespons
 		res.Ok = false
 	}
 	if len(res.Message) > 0 {
-		res.Message = res.Message + "; " + gsResp.Message
+		res.Message = res.Message + "; " + fmt.Sprintf("[%s] %s", methodName, gsResp.Message)
 	} else {
-		res.Message = gsResp.Message
+		res.Message = fmt.Sprintf("[%s] %s", methodName, gsResp.Message)
 	}
 
-	log.Printf("RecognitionResult: %s\n", res.RecognitionResult)
+	log.Printf("runKaldiGStreamerFromURL RecognitionResult: %s\n", res.RecognitionResult)
 	return res, nil
 }

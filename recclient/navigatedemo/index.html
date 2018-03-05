@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Navigate demo</title>
+  </head>
+  <style>
+    #container {
+    width: 400px;
+    height: 400px;
+    position: relative;
+    background: #90ee90;
+    }
+    #animate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    background-color: #00CED1;
+    }
+
+    <!-- reference for drawing a circle -->
+    #circle {
+    width: 50px;
+    height: 50px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    background: black;
+    }
+  </style>
+  <body>
+
+    <p>
+      
+      <input  id="speak0" type="text" onkeyup="move0(event)">
+      
+      <button id="record" onclick="record()">rec</button>
+      <!-- <button id="stop" onclick="stop()">stop</button> -->
+      
+      <audio controls id="audio"></audio>
+
+      
+      <!-- <button id="reset" onclick="reset()" disabled="disabled">Reset</button> -->
+      <br/>
+      <!-- <br/><span><em style="font-size: 95%">Hint: Speak to toggle recording mode</em></span> -->
+    </p> 
+
+    
+    <p>
+      <div id="container">
+	<div id="animate"></div>
+      </div>
+    </p>
+
+
+    <div id="response"></div>
+    
+
+    <script type="text/javascript" src="recclient/audio.js"></script>
+    <script type="text/javascript" src="recclient/navigatedemo/navigatedemo.js"></script>
+
+    
+    
+  </body>
+</html>

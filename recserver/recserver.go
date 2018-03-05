@@ -104,6 +104,8 @@ func checkProcessInput(input processInput) error {
 
 func process(w http.ResponseWriter, r *http.Request) {
 	res := processResponse{}
+	//return res
+
 	body, err := ioutil.ReadAll(r.Body)
 
 	// noiseRedS := getParam("noise_red", r)
@@ -380,6 +382,9 @@ func main() {
 		w.Header().Set("Content-Type", "text/plain")
 		fmt.Fprintf(w, "%s\n", "server up and running")
 	})
+
+	// see navigatedemo.go
+	r.HandleFunc("/rec/navigatedemo", navigateDemo)
 
 	r.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "favicon.ico")

@@ -51,4 +51,60 @@ func TestUser(t *testing.T) {
 		t.Errorf("expected error, got nil")
 	}
 
+	_, err = listUsers("_?==)(#)(#(#")
+	if err == nil {
+		t.Errorf("expected error, got nil")
+	}
+
+	us, err := listUsers(d)
+	if err != nil {
+		t.Errorf("expected nil, got %v", err)
+	}
+	if w, g := 0, len(us); w != g {
+		t.Errorf("wanted %d got %d", w, g)
+	}
+
+	err = addUser(d, u)
+	us, err = listUsers(d)
+	if err != nil {
+		t.Errorf("expected nil, got %v", err)
+	}
+	if w, g := 1, len(us); w != g {
+		t.Errorf("wanted %d got %d", w, g)
+	}
+	err = addUser(d+"_no_such_dir", u)
+	if err == nil {
+		t.Errorf("expected error, got nil")
+	}
+	u2 := "second_user"
+	err = addUser(d, u2)
+	if err != nil {
+		t.Errorf("%v", err)
+	}
+
+	us, err = listUsers(d)
+	if err != nil {
+		t.Errorf("expected nil, got %v", err)
+	}
+	if w, g := 2, len(us); w != g {
+		t.Errorf("wanted %d got %d", w, g)
+	}
+
+	err = deleteUser(d, u)
+	if err != nil {
+		t.Errorf("expected nil, got %v", err)
+	}
+
+	err = deleteUser(d, u2)
+	if err != nil {
+		t.Errorf("expected nil, got %v", err)
+	}
+
+	us, err = listUsers(d)
+	if err != nil {
+		t.Errorf("expected nil, got %v", err)
+	}
+	if w, g := 0, len(us); w != g {
+		t.Errorf("wanted %d got %d", w, g)
+	}
 }

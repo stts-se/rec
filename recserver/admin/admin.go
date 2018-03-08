@@ -56,9 +56,14 @@ func subDirs(dirPath string) []os.FileInfo {
 }
 
 func addUser(baseDir, userName string) error {
+	_, err := os.Stat(baseDir)
+	if os.IsNotExist(err) {
+		return fmt.Errorf("dir does not exist '%s'", baseDir)
+	}
+
 	userName = strings.ToLower(userName)
 	userDirName := filepath.Join(baseDir, userName)
-	_, err := os.Stat(userDirName)
+	_, err = os.Stat(userDirName)
 	if !os.IsNotExist(err) {
 		return fmt.Errorf("user already exists '%s'", userName)
 	}
@@ -85,4 +90,19 @@ func deleteUser(baseDir, userName string) error {
 	}
 
 	return nil
+}
+
+func listUsers(baseDir string) ([]string, error) {
+	var res []string
+	fi, err := ioutil.ReadDir(baseDir)
+	if err != nil {
+		return res, fmt.Errorf("failed to list users : %v", err)
+	}
+
+	for _, f := range fi {
+		if f.IsDir() {
+			res = append(res, f.Name())
+		}
+	}
+	return res, nil
 }

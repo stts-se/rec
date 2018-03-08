@@ -10,7 +10,8 @@ import (
 
 // TODO Return error? Doesn't check whether path is dir or file if it exists
 func userExists(audioDir, userName string) bool {
-	userDirName := filepath.Join(audioDir, strings.ToLower(userName))
+	userName = strings.ToLower(userName)
+	userDirName := filepath.Join(audioDir, userName)
 
 	fi, err := os.Stat(userDirName)
 	//if os.IsNotExist(err) {
@@ -55,7 +56,6 @@ func subDirs(dirPath string) []os.FileInfo {
 }
 
 func addUser(baseDir, userName string) error {
-
 	userName = strings.ToLower(userName)
 	userDirName := filepath.Join(baseDir, userName)
 	_, err := os.Stat(userDirName)
@@ -66,6 +66,22 @@ func addUser(baseDir, userName string) error {
 	err = os.MkdirAll(userDirName, os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("failed to add user '%s'", userName)
+	}
+
+	return nil
+}
+
+func deleteUser(baseDir, userName string) error {
+	userName = strings.ToLower(userName)
+	userDirName := filepath.Join(baseDir, userName)
+	_, err := os.Stat(userDirName)
+	if os.IsNotExist(err) {
+		return fmt.Errorf("no such user '%s'", userName)
+	}
+
+	err = os.RemoveAll(userDirName)
+	if err != nil {
+		fmt.Errorf("failed to delete user '%s' : %v", userName, err)
 	}
 
 	return nil

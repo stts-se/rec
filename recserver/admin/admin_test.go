@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestUserExists(t *testing.T) {
+func TestUser(t *testing.T) {
 
 	d := "tmtTstUserDir"
 	_, err := os.Stat(d)
@@ -38,6 +38,17 @@ func TestUserExists(t *testing.T) {
 	err = addUser(d, u)
 	if err == nil {
 		t.Errorf("should not be able to add existing user '%s'", u)
+	}
+
+	err = deleteUser(d, u)
+	if err != nil {
+		t.Errorf("failed to delete user '%s' : %v", u, err)
+	}
+
+	// Can't delete user twice
+	err = deleteUser(d, u)
+	if err == nil {
+		t.Errorf("expected error, got nil")
 	}
 
 }

@@ -15,6 +15,8 @@ import (
 // For writing files
 var mutex sync.Mutex
 
+const uttSuffix = ".utt"
+
 // TODO Return error? Doesn't check whether path is dir or file if it exists
 func userExists(audioDir, userName string) bool {
 	userName = strings.ToLower(userName)
@@ -146,13 +148,14 @@ func writeSimpleUttFile(baseDir, userName, baseFileName string, utts []rec.Utter
 
 	var lines [][]byte
 	for _, u := range utts {
-		lines = append(lines, []byte(u.Text))
+		l := fmt.Sprintf("%s\t%s", u.RecordingID, u.Text)
+		lines = append(lines, []byte(l))
 	}
 
 	var data = bytes.Join(lines, []byte("\n"))
 	data = append(data, []byte("\n")...)
 
-	uttFileName := filepath.Join(userDirName, baseFileName+".utt")
+	uttFileName := filepath.Join(userDirName, baseFileName+uttSuffix)
 
 	mutex.Lock()
 	defer mutex.Unlock()
@@ -163,4 +166,28 @@ func writeSimpleUttFile(baseDir, userName, baseFileName string, utts []rec.Utter
 	}
 
 	return nil
+}
+
+func readUttFile(baseDir, userName, baseFileName string) ([]rec.Utterance, error) {
+	var res []rec.Utterance
+	userName = strings.ToLower(userName)
+
+	mutex.Lock()
+	defer mutex.Unlock()
+	fn := filepath.Join(baseDir, userName, baseFileName+uttSuffix)
+	bts, err := ioutil.ReadFile(fn)
+	if err != nil {
+		return res, fmt.Errorf("failed to read utt file '%s'", fn)
+	}
+	lines := strings.Split(string(bts), "\n")
+	for _, l := range lines {
+		if strings.TrimSpace(l) == "" {
+			continue
+		}
+		fs := strings.SplitN(l, "\t", 2)
+		// TODO error check
+		res = append(res, rec.Utterance{RecordingID: fs[0], Text: fs[1]})
+	}
+
+	return res, nil
 }

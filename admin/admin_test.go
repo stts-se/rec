@@ -143,9 +143,22 @@ func TestWriteSimpleUttFile(t *testing.T) {
 		t.Errorf("expected nil, got %v", err)
 	}
 
+	_, err = readUttFile("no", "such", "file")
+	if err == nil {
+		t.Errorf("expected error, got nil")
+	}
+
+	utts1, err := readUttFile(d, u, fn)
+	if err != nil {
+		t.Errorf("expected nil, got %v", err)
+	}
+	if w, g := 3, len(utts1); w != g {
+		t.Errorf("wanted %d, got %d", w, g)
+	}
+
 	// clean up
-	// _, err = os.Stat(d)
-	// if !os.IsNotExist(err) {
-	// 	os.RemoveAll(d)
-	// }
+	_, err = os.Stat(d)
+	if !os.IsNotExist(err) {
+		os.RemoveAll(d)
+	}
 }

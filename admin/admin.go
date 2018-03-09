@@ -17,20 +17,25 @@ var mutex sync.Mutex
 
 const uttSuffix = ".utt"
 
+type Admin struct {
+	BaseDir string
+}
+
+func NewAdmin(baseDir string) Admin {
+	return Admin{BaseDir: baseDir}
+}
+
 // TODO Return error? Doesn't check whether path is dir or file if it exists
-func userExists(audioDir, userName string) bool {
+func userExists(baseDir, userName string) bool {
 	userName = strings.ToLower(userName)
-	userDirName := filepath.Join(audioDir, userName)
+	userDirName := filepath.Join(baseDir, userName)
 
 	fi, err := os.Stat(userDirName)
-	//if os.IsNotExist(err) {
-	//	return false
-	//} else {
 	if os.IsNotExist(err) {
 		return false
 	}
 
-	if !fi.IsDir() {
+	if fi == nil || !fi.IsDir() {
 		return false
 	}
 
@@ -107,7 +112,7 @@ func deleteUser(baseDir, userName string) error {
 	return nil
 }
 
-func listUsers(baseDir string) ([]string, error) {
+func ListUsers(baseDir string) ([]string, error) {
 	var res []string
 	fi, err := ioutil.ReadDir(baseDir)
 	if err != nil {

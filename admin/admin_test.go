@@ -54,12 +54,12 @@ func TestUser(t *testing.T) {
 		t.Errorf("expected error, got nil")
 	}
 
-	_, err = listUsers("_?==)(#)(#(#")
+	_, err = ListUsers("_?==)(#)(#(#")
 	if err == nil {
 		t.Errorf("expected error, got nil")
 	}
 
-	us, err := listUsers(d)
+	us, err := ListUsers(d)
 	if err != nil {
 		t.Errorf("expected nil, got %v", err)
 	}
@@ -68,7 +68,7 @@ func TestUser(t *testing.T) {
 	}
 
 	err = addUser(d, u)
-	us, err = listUsers(d)
+	us, err = ListUsers(d)
 	if err != nil {
 		t.Errorf("expected nil, got %v", err)
 	}
@@ -85,7 +85,7 @@ func TestUser(t *testing.T) {
 		t.Errorf("%v", err)
 	}
 
-	us, err = listUsers(d)
+	us, err = ListUsers(d)
 	if err != nil {
 		t.Errorf("expected nil, got %v", err)
 	}
@@ -103,7 +103,7 @@ func TestUser(t *testing.T) {
 		t.Errorf("expected nil, got %v", err)
 	}
 
-	us, err = listUsers(d)
+	us, err = ListUsers(d)
 	if err != nil {
 		t.Errorf("expected nil, got %v", err)
 	}

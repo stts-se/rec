@@ -3,6 +3,8 @@ package admin
 import (
 	"os"
 	"testing"
+
+	"github.com/stts-se/rec"
 )
 
 func TestUser(t *testing.T) {
@@ -116,7 +118,7 @@ func TestUser(t *testing.T) {
 	}
 }
 
-func TestAddUtts(t *testing.T) {
+func TestWriteSimpleUttFile(t *testing.T) {
 	// set up
 	d := "tmtTstUserDir2"
 	_, err := os.Stat(d)
@@ -128,13 +130,22 @@ func TestAddUtts(t *testing.T) {
 		t.Errorf("failed to create dir '%s': %v", d, err)
 	}
 
-	u = "user_u1"
+	u := "user_u1"
+	fn := "test_utts"
 
-	uttsForUser(d, u, []utterrance)
+	utts := []rec.Utterance{
+		{RecordingID: "utt001", Text: "test utterance one"},
+		{RecordingID: "utt002", Text: "test utterance two"},
+		{RecordingID: "utt003", Text: "test utterance three"},
+	}
+	err = writeSimpleUttFile(d, u, fn, utts)
+	if err != nil {
+		t.Errorf("expected nil, got %v", err)
+	}
 
 	// clean up
-	_, err = os.Stat(d)
-	if !os.IsNotExist(err) {
-		os.RemoveAll(d)
-	}
+	// _, err = os.Stat(d)
+	// if !os.IsNotExist(err) {
+	// 	os.RemoveAll(d)
+	// }
 }

@@ -1,11 +1,14 @@
 package admin
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/stts-se/rec"
 )
 
 // TODO Return error? Doesn't check whether path is dir or file if it exists
@@ -105,4 +108,43 @@ func listUsers(baseDir string) ([]string, error) {
 		}
 	}
 	return res, nil
+}
+
+func writeSimpleUttFile(baseDir, userName, baseFileName string, utts []rec.Utterance) error {
+	_, err := os.Stat(baseDir)
+	if os.IsNotExist(err) {
+		return fmt.Errorf("no such dir '%s'", baseDir)
+	}
+
+	userName = strings.ToLower(userName)
+	userDirName := filepath.Join(baseDir, userName)
+	fi, err := os.Stat(userDirName)
+	// If user not already exists, create a dir of name userName
+	if os.IsNotExist(err) {
+		if fi != nil && !fi.IsDir() {
+			return fmt.Errorf("failed to create user: non-dir file of same name already exists '%s'", userName)
+		}
+
+		err := addUser(baseDir, userName)
+		if err != nil {
+			return fmt.Errorf("failed to create user '%s' : %v", userName, err)
+		}
+	}
+
+	var lines [][]byte
+	for _, u := range utts {
+		lines = append(lines, []byte(u.Text))
+	}
+
+	var data = bytes.Join(lines, []byte("\n"))
+	data = append(data, []byte("\n")...)
+
+	uttFileName := filepath.Join(userDirName, baseFileName+".utt")
+
+	err = ioutil.WriteFile(uttFileName, data, os.ModePerm)
+	if err != nil {
+		return fmt.Errorf("failed to create utterance file '%s' : %v", uttFileName, err)
+	}
+
+	return nil
 }

@@ -134,7 +134,7 @@ func TestWriteSimpleUttFile(t *testing.T) {
 	fn := "test_utts"
 
 	utts := []rec.Utterance{
-		{RecordingID: "utt001", Text: "test utterance one äöåæø"},
+		{RecordingID: "utt001", Text: "test utterance one"},
 		{RecordingID: "utt002", Text: "test utterance two"},
 		{RecordingID: "utt003", Text: "test utterance three"},
 	}

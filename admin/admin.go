@@ -7,9 +7,13 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 
 	"github.com/stts-se/rec"
 )
+
+// For writing files
+var mutex sync.Mutex
 
 // TODO Return error? Doesn't check whether path is dir or file if it exists
 func userExists(audioDir, userName string) bool {
@@ -37,6 +41,8 @@ func createBaseDir(d string) error {
 		return fmt.Errorf("dir already exists: '%s'", d)
 	}
 
+	mutex.Lock()
+	defer mutex.Unlock()
 	err = os.MkdirAll(d, os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("failed to create base dir '%s' : ", d, err)
@@ -71,6 +77,8 @@ func addUser(baseDir, userName string) error {
 		return fmt.Errorf("user already exists '%s'", userName)
 	}
 
+	mutex.Lock()
+	defer mutex.Unlock()
 	err = os.MkdirAll(userDirName, os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("failed to add user '%s'", userName)
@@ -87,6 +95,8 @@ func deleteUser(baseDir, userName string) error {
 		return fmt.Errorf("no such user '%s'", userName)
 	}
 
+	mutex.Lock()
+	defer mutex.Unlock()
 	err = os.RemoveAll(userDirName)
 	if err != nil {
 		fmt.Errorf("failed to delete user '%s' : %v", userName, err)
@@ -111,6 +121,7 @@ func listUsers(baseDir string) ([]string, error) {
 }
 
 func writeSimpleUttFile(baseDir, userName, baseFileName string, utts []rec.Utterance) error {
+
 	_, err := os.Stat(baseDir)
 	if os.IsNotExist(err) {
 		return fmt.Errorf("no such dir '%s'", baseDir)
@@ -119,7 +130,9 @@ func writeSimpleUttFile(baseDir, userName, baseFileName string, utts []rec.Utter
 	userName = strings.ToLower(userName)
 	userDirName := filepath.Join(baseDir, userName)
 	fi, err := os.Stat(userDirName)
+
 	// If user not already exists, create a dir of name userName
+
 	if os.IsNotExist(err) {
 		if fi != nil && !fi.IsDir() {
 			return fmt.Errorf("failed to create user: non-dir file of same name already exists '%s'", userName)
@@ -140,6 +153,9 @@ func writeSimpleUttFile(baseDir, userName, baseFileName string, utts []rec.Utter
 	data = append(data, []byte("\n")...)
 
 	uttFileName := filepath.Join(userDirName, baseFileName+".utt")
+
+	mutex.Lock()
+	defer mutex.Unlock()
 
 	err = ioutil.WriteFile(uttFileName, data, os.ModePerm)
 	if err != nil {

@@ -17,14 +17,6 @@ var mutex sync.Mutex
 
 const uttSuffix = ".utt"
 
-type Admin struct {
-	BaseDir string
-}
-
-func NewAdmin(baseDir string) Admin {
-	return Admin{BaseDir: baseDir}
-}
-
 // TODO Return error? Doesn't check whether path is dir or file if it exists
 func userExists(baseDir, userName string) bool {
 	userName = strings.ToLower(userName)

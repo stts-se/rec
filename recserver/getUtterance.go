@@ -13,6 +13,8 @@ import (
 	"sync"
 
 	"github.com/gorilla/mux"
+
+	"github.com/stts-se/rec"
 )
 
 // TO DO remove:
@@ -49,29 +51,29 @@ import (
 type utteranceLists struct {
 	sync.Mutex
 	currentUttForUser map[string]int
-	uttsForUser       map[string][]utterance
+	uttsForUser       map[string][]rec.Utterance
 }
 
 func newUtteranceLists() utteranceLists {
 	return utteranceLists{
 		currentUttForUser: make(map[string]int),
-		uttsForUser:       make(map[string][]utterance),
+		uttsForUser:       make(map[string][]rec.Utterance),
 	}
 }
 
 var uttLists = newUtteranceLists() //utteranceLists{}
 
-type utterance struct {
-	UserName    string `json:"username"`
-	Text        string `json:"text"`
-	RecordingID string `json:"recording_id"`
-	Message     string `json:"message"`
-	Num         int    `json:"num"`
-	Of          int    `json:"of"`
-}
+// type utterance struct {
+// 	UserName    string `json:"username"`
+// 	Text        string `json:"text"`
+// 	RecordingID string `json:"recording_id"`
+// 	Message     string `json:"message"`
+// 	Num         int    `json:"num"`
+// 	Of          int    `json:"of"`
+// }
 
-func getUttRelativeToCurrent(userName string, uttIndex int) (utterance, error) {
-	var res utterance
+func getUttRelativeToCurrent(userName string, uttIndex int) (rec.Utterance, error) {
+	var res rec.Utterance
 	var msg string
 
 	uttLists.Lock()
@@ -79,7 +81,7 @@ func getUttRelativeToCurrent(userName string, uttIndex int) (utterance, error) {
 
 	var newIndex int
 
-	var utterances []utterance
+	var utterances []rec.Utterance
 
 	utts, ok := uttLists.uttsForUser[userName]
 	if !ok || len(utts) == 0 {
@@ -190,8 +192,8 @@ func loadUtteranceLists(dirPath string) /*(utteranceLists,*/ error {
 	return nil
 }
 
-func readUttFile(fn string) ([]utterance, error) {
-	var res []utterance
+func readUttFile(fn string) ([]rec.Utterance, error) {
+	var res []rec.Utterance
 
 	bytes, err := ioutil.ReadFile(fn)
 	if err != nil {
@@ -211,7 +213,7 @@ func readUttFile(fn string) ([]utterance, error) {
 			log.Printf("readUttFile: skipping line of '%s': %s", fn, l)
 			continue
 		}
-		u := utterance{RecordingID: fs[0], Text: fs[1]}
+		u := rec.Utterance{RecordingID: fs[0], Text: fs[1]}
 		fmt.Printf("%#v\n", u)
 		res = append(res, u)
 

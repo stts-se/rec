@@ -63,7 +63,7 @@ func subDirs(dirPath string) []os.FileInfo {
 	return res
 }
 
-func addUser(baseDir, userName string) error {
+func AddUser(baseDir, userName string) error {
 	_, err := os.Stat(baseDir)
 	if os.IsNotExist(err) {
 		return fmt.Errorf("dir does not exist '%s'", baseDir)
@@ -86,7 +86,7 @@ func addUser(baseDir, userName string) error {
 	return nil
 }
 
-func deleteUser(baseDir, userName string) error {
+func DeleteUser(baseDir, userName string) error {
 	userName = strings.ToLower(userName)
 	userDirName := filepath.Join(baseDir, userName)
 	_, err := os.Stat(userDirName)
@@ -137,7 +137,7 @@ func writeSimpleUttFile(baseDir, userName, baseFileName string, utts []rec.Utter
 			return fmt.Errorf("failed to create user: non-dir file of same name already exists '%s'", userName)
 		}
 
-		err := addUser(baseDir, userName)
+		err := AddUser(baseDir, userName)
 		if err != nil {
 			return fmt.Errorf("failed to create user '%s' : %v", userName, err)
 		}

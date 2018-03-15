@@ -44,7 +44,7 @@ func main() {
 	flag.Parse()
 	fileName := flag.Arg(1)
 	if fileName == "" {
-		fmt.Fprintf(os.Stderr, "Please supply a file name or --help.\n") //, os.Args[0])
+		fmt.Fprintf(os.Stderr, "reccli <AUDIO FILE> or --help.\n") //, os.Args[0])
 		os.Exit(0)
 	}
 

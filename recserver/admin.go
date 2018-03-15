@@ -55,3 +55,19 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Fprintf(w, "deleted user '"+userName+"'\n")
 }
+
+func getUtts(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userName := vars["username"]
+	userName = strings.ToLower(userName)
+	uttLists, err := admin.ListUtts(audioDir, userName)
+	if err != nil {
+		msg := fmt.Sprintf("filed to list utterance for '%s' : %v", userName, err)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusInternalServerError)
+		return
+	}
+
+	//TODO Json
+	fmt.Fprintf(w, "%v\n", uttLists)
+}

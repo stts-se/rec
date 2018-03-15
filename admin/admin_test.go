@@ -27,7 +27,7 @@ func TestUser(t *testing.T) {
 		t.Errorf("expected false, got true")
 	}
 
-	err = addUser(d, u)
+	err = AddUser(d, u)
 	if err != nil {
 		t.Errorf("failed to add user '%s'", u)
 	}
@@ -38,18 +38,18 @@ func TestUser(t *testing.T) {
 	}
 
 	// Shouldn't be able to add same user twice
-	err = addUser(d, u)
+	err = AddUser(d, u)
 	if err == nil {
 		t.Errorf("should not be able to add existing user '%s'", u)
 	}
 
-	err = deleteUser(d, u)
+	err = DeleteUser(d, u)
 	if err != nil {
 		t.Errorf("failed to delete user '%s' : %v", u, err)
 	}
 
 	// Can't delete user twice
-	err = deleteUser(d, u)
+	err = DeleteUser(d, u)
 	if err == nil {
 		t.Errorf("expected error, got nil")
 	}
@@ -67,7 +67,7 @@ func TestUser(t *testing.T) {
 		t.Errorf("wanted %d got %d", w, g)
 	}
 
-	err = addUser(d, u)
+	err = AddUser(d, u)
 	us, err = ListUsers(d)
 	if err != nil {
 		t.Errorf("expected nil, got %v", err)
@@ -75,12 +75,12 @@ func TestUser(t *testing.T) {
 	if w, g := 1, len(us); w != g {
 		t.Errorf("wanted %d got %d", w, g)
 	}
-	err = addUser(d+"_no_such_dir", u)
+	err = AddUser(d+"_no_such_dir", u)
 	if err == nil {
 		t.Errorf("expected error, got nil")
 	}
 	u2 := "second_user"
-	err = addUser(d, u2)
+	err = AddUser(d, u2)
 	if err != nil {
 		t.Errorf("%v", err)
 	}
@@ -93,12 +93,12 @@ func TestUser(t *testing.T) {
 		t.Errorf("wanted %d got %d", w, g)
 	}
 
-	err = deleteUser(d, u)
+	err = DeleteUser(d, u)
 	if err != nil {
 		t.Errorf("expected nil, got %v", err)
 	}
 
-	err = deleteUser(d, u2)
+	err = DeleteUser(d, u2)
 	if err != nil {
 		t.Errorf("expected nil, got %v", err)
 	}
@@ -138,21 +138,32 @@ func TestWriteSimpleUttFile(t *testing.T) {
 		{RecordingID: "utt002", Text: "test utterance two"},
 		{RecordingID: "utt003", Text: "test utterance three"},
 	}
-	err = writeSimpleUttFile(d, u, fn, utts)
+	err = WriteSimpleUttFile(d, u, fn, utts)
 	if err != nil {
 		t.Errorf("expected nil, got %v", err)
 	}
 
-	_, err = readUttFile("no", "such", "file")
+	_, err = ReadUttFile("no", "such", "file")
 	if err == nil {
 		t.Errorf("expected error, got nil")
 	}
 
-	utts1, err := readUttFile(d, u, fn)
+	utts1, err := ReadUttFile(d, u, fn)
 	if err != nil {
 		t.Errorf("expected nil, got %v", err)
 	}
 	if w, g := 3, len(utts1); w != g {
+		t.Errorf("wanted %d, got %d", w, g)
+	}
+
+	uttList, err := ListUtts(d, u)
+	if err != nil {
+		t.Errorf("expected nil, got %v", err)
+	}
+	if w, g := 1, len(uttList); w != g {
+		t.Errorf("wanted %d, got %d", w, g)
+	}
+	if w, g := 3, len(uttList[0].Utts); w != g {
 		t.Errorf("wanted %d, got %d", w, g)
 	}
 

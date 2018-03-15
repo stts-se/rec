@@ -165,6 +165,7 @@ func getPreviousUtterance(w http.ResponseWriter, r *http.Request) {
 }
 
 // TODO adds data to global var uttLists
+// TODO contents of different .utt files are collapsed. Want to keep them apart?
 func loadUtteranceLists(dirPath string) /*(utteranceLists,*/ error {
 	//var res = newUtteranceLists()
 

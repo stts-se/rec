@@ -119,7 +119,34 @@ func ListUsers(baseDir string) ([]string, error) {
 	return res, nil
 }
 
-func writeSimpleUttFile(baseDir, userName, baseFileName string, utts []rec.Utterance) error {
+func ListUtts(baseDir, userName string) ([]rec.UttList, error) {
+	var res []rec.UttList
+
+	userName = strings.ToLower(userName)
+	userDir := filepath.Join(baseDir, userName)
+
+	ls := filepath.Join(userDir, "*"+uttSuffix)
+
+	files, err := filepath.Glob(ls)
+	if err != nil {
+		return res, fmt.Errorf("failed to list utterances for '%s' : %v", userName, err)
+	}
+
+	for _, f := range files {
+		// TODO frail: ".utt" or "." + "utt" ...?
+		fn := strings.TrimSuffix(filepath.Base(f), uttSuffix)
+		utts, err := ReadUttFile(baseDir, userName, fn)
+		if err != nil {
+			return res, fmt.Errorf("failed to read utterance file '%s' : %v", fn, err)
+
+		}
+		res = append(res, rec.UttList{Name: fn, Utts: utts})
+	}
+
+	return res, nil
+}
+
+func WriteSimpleUttFile(baseDir, userName, baseFileName string, utts []rec.Utterance) error {
 
 	_, err := os.Stat(baseDir)
 	if os.IsNotExist(err) {
@@ -165,7 +192,7 @@ func writeSimpleUttFile(baseDir, userName, baseFileName string, utts []rec.Utter
 	return nil
 }
 
-func readUttFile(baseDir, userName, baseFileName string) ([]rec.Utterance, error) {
+func ReadUttFile(baseDir, userName, baseFileName string) ([]rec.Utterance, error) {
 	var res []rec.Utterance
 	userName = strings.ToLower(userName)
 
@@ -185,6 +212,8 @@ func readUttFile(baseDir, userName, baseFileName string) ([]rec.Utterance, error
 		// TODO error check
 		res = append(res, rec.Utterance{RecordingID: fs[0], Text: fs[1]})
 	}
+
+	//fmt.Printf("%v\n", res)
 
 	return res, nil
 }

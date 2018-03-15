@@ -369,6 +369,7 @@ func main() {
 	r.HandleFunc("/rec/admin/list_users", listUsers).Methods("GET")
 	r.HandleFunc("/rec/admin/add_user/{username}", addUser).Methods("GET")
 	r.HandleFunc("/rec/admin/delete_user/{username}", deleteUser).Methods("GET")
+	r.HandleFunc("/rec/admin/get_utts/{username}", getUtts).Methods("GET")
 
 	// List route URLs to use as simple on-line documentation
 	r.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {

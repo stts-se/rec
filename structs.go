@@ -8,3 +8,8 @@ type Utterance struct {
 	Num         int    `json:"num"`
 	Of          int    `json:"of"`
 }
+
+type UttList struct {
+	Name string      `json:"name"`
+	Utts []Utterance `json:"utts"`
+}

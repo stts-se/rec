@@ -43,9 +43,8 @@ func main() {
 
 	flag.Parse()
 	fileName := flag.Arg(1)
-	fmt.Println(fileName)
 	if fileName == "" {
-		fmt.Fprintf(os.Stderr, "you must supply a file name\n") //, os.Args[0])
+		fmt.Fprintf(os.Stderr, "Please supply a file name or --help.\n") //, os.Args[0])
 		os.Exit(0)
 	}
 

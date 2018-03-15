@@ -6,7 +6,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/stts-se/rec/config"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -16,6 +15,9 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+
+	"github.com/stts-se/rec"
+	"github.com/stts-se/rec/config"
 )
 
 func getParam(paramName string, r *http.Request) string {
@@ -45,20 +47,22 @@ func mimeType(ext string) string {
 	return fmt.Sprintf("audio/%s", ext)
 }
 
-type audio struct {
-	FileType string `json:"file_type"`
-	Data     string `json:"data"`
-}
+// Definition below moved to rec/structs.go
+// type audio struct {
+// 	FileType string `json:"file_type"`
+// 	Data     string `json:"data"`
+// }
 
 // TODO: processResponse in a better way
 
 // {username, audio, text, (recording_id if overwriting)}
-type processInput struct {
-	UserName    string `json:"username"`
-	Audio       audio  `json:"audio"`
-	Text        string `json:"text"`
-	RecordingID string `json:"recording_id"`
-}
+// Definition below moved to rec/structs.go
+// type ProcessInput struct {
+// 	UserName    string `json:"username"`
+// 	Audio       audio  `json:"audio"`
+// 	Text        string `json:"text"`
+// 	RecordingID string `json:"recording_id"`
+// }
 
 //	{
 //	 "ok": true|false,
@@ -75,7 +79,7 @@ type processResponse struct {
 	Message           string  `json:"message"`
 }
 
-func checkProcessInput(input processInput) error {
+func checkProcessInput(input rec.ProcessInput) error {
 	var errMsg []string
 
 	if strings.TrimSpace(input.UserName) == "" {
@@ -124,7 +128,7 @@ func process(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	input := processInput{}
+	input := rec.ProcessInput{}
 	err = json.Unmarshal(body, &input)
 	if err != nil {
 		msg := fmt.Sprintf("failed to unmarshal incoming JSON : %v", err)

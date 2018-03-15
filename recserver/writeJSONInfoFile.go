@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/stts-se/rec"
 )
 
 type fileInfo struct {
@@ -15,7 +17,7 @@ type fileInfo struct {
 	RecognitionResult string  `json:"recognition_result"`
 }
 
-func writeJSONInfoFile(audioDir string, rec processInput, res processResponse) error {
+func writeJSONInfoFile(audioDir string, rec rec.ProcessInput, res processResponse) error {
 
 	// Add matching info JSON file
 

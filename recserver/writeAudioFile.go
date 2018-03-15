@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/base64"
-	"github.com/stts-se/rec/audioproc"
 	//"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -10,6 +9,9 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/stts-se/rec"
+	"github.com/stts-se/rec/audioproc"
 )
 
 var noiseRedSuffix = "-noisered"
@@ -18,7 +20,7 @@ func validAudioFileExtension(ext string) bool {
 	return (ext == "opus" || ext == "mp3" || ext == "wav")
 }
 
-func writeAudioFile(audioDir string, rec processInput) (string, error) {
+func writeAudioFile(audioDir string, rec rec.ProcessInput) (string, error) {
 	if strings.TrimSpace(audioDir) == "" {
 		return "", fmt.Errorf("writeAudioFile: empty audioDir argument")
 	}

@@ -8,6 +8,8 @@ import (
 	"log"
 	"net/http"
 	"strings"
+
+	"github.com/stts-se/rec"
 )
 
 const docTemplate = `
@@ -52,9 +54,9 @@ func prettyMarshal(thing interface{}) ([]byte, error) {
 func generateDoc(w http.ResponseWriter, r *http.Request) {
 	title := "rec doc"
 
-	processIn := processInput{
+	processIn := rec.ProcessInput{
 		UserName: "string",
-		Audio: audio{
+		Audio: rec.Audio{
 			FileType: "string",
 			Data:     "string of base64 encoded data",
 		},
@@ -62,9 +64,9 @@ func generateDoc(w http.ResponseWriter, r *http.Request) {
 		RecordingID: "string",
 	}
 
-	processInSample := processInput{
+	processInSample := rec.ProcessInput{
 		UserName: "user0001",
-		Audio: audio{
+		Audio: rec.Audio{
 			FileType: "audio/webm",
 			Data:     "GkXfo59ChoEBQ ...",
 		},

@@ -102,5 +102,6 @@ func main() {
 		fmt.Fprintf(os.Stderr, "failed to process JSON '%s': %v\n", string(body), err)
 		os.Exit(1)
 	}
+
 	fmt.Fprintf(os.Stderr, "%s\n", string(prettyBody.Bytes()))
 }

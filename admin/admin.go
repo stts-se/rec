@@ -193,7 +193,7 @@ func WriteSimpleUttFile(baseDir, userName, baseFileName string, utts []rec.Utter
 }
 
 func ReadUttFile(baseDir, userName, baseFileName string) ([]rec.Utterance, error) {
-	var res []rec.Utterance
+	var res0, res []rec.Utterance
 	userName = strings.ToLower(userName)
 
 	mutex.Lock()
@@ -204,16 +204,29 @@ func ReadUttFile(baseDir, userName, baseFileName string) ([]rec.Utterance, error
 		return res, fmt.Errorf("failed to read utt file '%s'", fn)
 	}
 	lines := strings.Split(string(bts), "\n")
+
+	n := 0
 	for _, l := range lines {
 		if strings.TrimSpace(l) == "" {
 			continue
 		}
 		fs := strings.SplitN(l, "\t", 2)
 		// TODO error check
-		res = append(res, rec.Utterance{RecordingID: fs[0], Text: fs[1]})
+		n++
+		res0 = append(res0, rec.Utterance{
+			UserName:    userName,
+			RecordingID: fs[0],
+			Text:        fs[1],
+			//TODO maybe we don't need the Num and Of fields
+			Num: n,
+		})
 	}
 
-	//fmt.Printf("%v\n", res)
+	//TODO maybe we don't need the Num and Of fields
+	for _, u := range res0 {
+		u.Of = n
+		res = append(res, u)
+	}
 
 	return res, nil
 }

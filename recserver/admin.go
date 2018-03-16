@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -68,6 +69,7 @@ func getUtts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//TODO Json
-	fmt.Fprintf(w, "%v\n", uttLists)
+	uttListsJSON, err := json.Marshal(uttLists)
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Fprintf(w, "%v\n", string(uttListsJSON))
 }

@@ -63,9 +63,16 @@ func getUtts(w http.ResponseWriter, r *http.Request) {
 	userName = strings.ToLower(userName)
 	uttLists, err := admin.ListUtts(audioDir, userName)
 	if err != nil {
-		msg := fmt.Sprintf("filed to list utterance for '%s' : %v", userName, err)
+		msg := fmt.Sprintf("failed to list utterance for '%s' : %v", userName, err)
 		log.Print(msg)
 		http.Error(w, msg, http.StatusInternalServerError)
+		return
+	}
+
+	if len(uttLists) == 0 {
+		w.Header().Set("Content-Type", "text/plain")
+		// TODO return error status?
+		fmt.Fprintf(w, "no utterance lists for '%s'\n", userName)
 		return
 	}
 

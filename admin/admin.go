@@ -124,6 +124,7 @@ func ListUtts(baseDir, userName string) ([]rec.UttList, error) {
 
 	userName = strings.ToLower(userName)
 	userDir := filepath.Join(baseDir, userName)
+	//TODO Check if user exists, and return error if not?
 
 	ls := filepath.Join(userDir, "*"+uttSuffix)
 

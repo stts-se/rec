@@ -26,6 +26,8 @@ func main() {
 	fileName := flag.Arg(0)
 	if fileName == "" {
 		fmt.Fprintf(os.Stderr, "reccli <AUDIO FILE> or --help.\n") //, os.Args[0])
+		flag.PrintDefaults()
+		//fmt.Fprintf(os.Stderr, "%s\n", flag.PrintDefaults())
 		os.Exit(0)
 	}
 

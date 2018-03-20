@@ -15,31 +15,12 @@ import (
 	"github.com/stts-se/rec"
 )
 
-type F struct {
-	s string
-}
-
-func (f F) String() string { return f.s }
-func (f *F) Set(s string) error {
-	f.s = s
-	return nil
-}
-
-var flagUserName, flagRecordingID, flagURL, flagText F
-
-func init() {
-	flagUserName = F{s: "tmpuser0"}
-	flagRecordingID = F{s: "tmprecid0"}
-	flagURL = F{s: "http://localhost:9993/rec/process/"}
-	flagText = F{s: "DUMMY_TEXT0"}
-
-	flag.Var(&flagURL, "url", "URL for calling rec server.")
-	flag.Var(&flagUserName, "u", "user name to be sent to server along with sound file.")
-	flag.Var(&flagRecordingID, "r", "recording ID to be sent to server along with sound file.")
-	flag.Var(&flagText, "t", "text to be sent to server along with sound file.")
-}
-
 func main() {
+	var flagUserName, flagRecordingID, flagURL, flagText string
+	flag.StringVar(&flagURL, "url", "http://localhost:9993/rec/process/", "URL for calling rec server.")
+	flag.StringVar(&flagUserName, "u", "tmpuser0", "user name to be sent to server along with sound file.")
+	flag.StringVar(&flagRecordingID, "r", "tmprecid0", "recording ID to be sent to server along with sound file.")
+	flag.StringVar(&flagText, "t", "DUMMY_TEXT0", "text to be sent to server along with sound file.")
 
 	flag.Parse()
 	fileName := flag.Arg(0)
@@ -58,9 +39,9 @@ func main() {
 	ext := strings.TrimPrefix(path.Ext(path.Base(fileName)), ".")
 
 	payload := rec.ProcessInput{
-		UserName:    flagUserName.String(),
-		RecordingID: flagRecordingID.String(),
-		Text:        flagText.String(),
+		UserName:    flagUserName,
+		RecordingID: flagRecordingID,
+		Text:        flagText,
 		Audio: rec.Audio{
 			Data:     aud,
 			FileType: "audio/" + ext,
@@ -73,7 +54,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	resp, err := http.Post(flagURL.String(), "application/json", bytes.NewBuffer(pl))
+	resp, err := http.Post(flagURL, "application/json", bytes.NewBuffer(pl))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to call server : %v\n", err)
 		os.Exit(1)

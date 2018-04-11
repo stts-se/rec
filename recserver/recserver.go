@@ -181,10 +181,10 @@ func processInternal(w http.ResponseWriter, r *http.Request, returnList bool) {
 	}
 
 	sorter := func(i, j int) bool {
-		if res[i].Confidence == res[j].Confidence {
-			return res[i].Ok
-		} else {
+		if res[i].Ok && res[j].Ok {
 			return res[i].Confidence > res[j].Confidence
+		} else {
+			return res[i].Ok
 		}
 	}
 	sort.Slice(res, sorter)

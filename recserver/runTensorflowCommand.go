@@ -61,7 +61,6 @@ func runTensorflowCommand(command string, wavFilePath string, input rec.ProcessI
 
 	// FILE TAB RES TAB SCORE
 	res0 := strings.Split(strings.TrimSpace(out.String()), "\t")
-	fmt.Printf("DEBÄGG runTensorflowCommand %#v\n", res0)
 	text := res0[1]
 	score, err := strconv.ParseFloat(res0[2], 64)
 	if err != nil {

@@ -64,6 +64,7 @@ func runGStreamerKaldiFromURL(url string, wavFilePath string, input rec.ProcessI
 
 	if len(gsResp.Hypotheses) > 0 {
 		res.RecognitionResult = gsResp.Hypotheses[0].Utterance
+		res.Ok = true
 	} else {
 		res.RecognitionResult = ""
 		res.Ok = false

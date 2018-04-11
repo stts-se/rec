@@ -180,7 +180,13 @@ func processInternal(w http.ResponseWriter, r *http.Request, returnList bool) {
 		}
 	}
 
-	sorter := func(i, j int) bool { return res[i].Confidence > res[j].Confidence }
+	sorter := func(i, j int) bool {
+		if res[i].Confidence == res[j].Confidence {
+			return res[i].Ok
+		} else {
+			return res[i].Confidence > res[j].Confidence
+		}
+	}
 	sort.Slice(res, sorter)
 	if returnList {
 		resJSON, err := json.Marshal(res)

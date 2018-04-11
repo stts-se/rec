@@ -7,11 +7,14 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/stts-se/rec"
 )
 
-func runExternalKaldiDecoder(wavFilePath string, res processResponse) (processResponse, error) {
+func runExternalKaldiDecoder(wavFilePath string, input rec.ProcessInput) (processResponse, error) {
 
 	methodName := "tensorflow"
+	res := processResponse{RecordingID: input.RecordingID}
 
 	_, pErr := exec.LookPath("python")
 	if pErr != nil {
@@ -33,12 +36,14 @@ func runExternalKaldiDecoder(wavFilePath string, res processResponse) (processRe
 	}
 
 	log.Printf("RecognitionResult: %s\n", out.String())
-	res.RecognitionResult = strings.TrimSpace(out.String())
-	msg := "Recognised by external kaldi recognizer"
-	if len(res.Message) > 0 {
-		res.Message = res.Message + "; " + fmt.Sprintf("[%s] %s", methodName, msg)
+	text := strings.TrimSpace(out.String())
+	if len(text) > 0 {
+		res.RecognitionResult = text
+		res.Ok = true
 	} else {
-		res.Message = fmt.Sprintf("[%s] %s", methodName, msg)
+		res.Ok = false
 	}
+	msg := "Recognised by external kaldi recognizer"
+	res.Message = fmt.Sprintf("[%s] %s", methodName, msg)
 	return res, nil
 }

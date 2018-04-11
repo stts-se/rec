@@ -6,9 +6,10 @@ import (
 	"log"
 	"os/exec"
 	"path/filepath"
-	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/stts-se/rec"
 )
 
 type tensorflowResponse struct {
@@ -20,14 +21,12 @@ type tensorflowResponse struct {
 
 var wavFilePlaceHolder = "{wavfile}"
 
-var scoreRe = regexp.MustCompile("^([^ ]+) [(]score = ([0-9.]+)[)]$")
+//var scoreRe = regexp.MustCompile("^([^ ]+) [(]score = ([0-9.]+)[)]$")
 
-// to activate tensorflow:
-// source ~/progz/tensorflow/bin/activate
-
-func runTensorflowCommand(command string, wavFilePath string, res processResponse) (processResponse, error) {
+func runTensorflowCommand(command string, wavFilePath string, input rec.ProcessInput) (processResponse, error) {
 
 	methodName := "tensorflow"
+	res := processResponse{RecordingID: input.RecordingID}
 
 	if !strings.Contains(command, wavFilePlaceHolder) {
 		msg := fmt.Sprintf("input tensorflow command must contain wav file variable %s", wavFilePlaceHolder)
@@ -60,30 +59,26 @@ func runTensorflowCommand(command string, wavFilePath string, res processRespons
 		return res, fmt.Errorf("failed running command %v : %v", cmd, err)
 	}
 
-	// <WORD> (score = <SCORE>)
-	res0 := strings.Split(out.String(), "\n")[0]
-	match := scoreRe.FindStringSubmatch(res0)
-	if len(match) != 3 {
-		msg := fmt.Sprintf("couldn't parse match result '%s' into text and score", res0)
-		log.Printf("failure : %s\n", msg)
-		return res, fmt.Errorf("%s", msg)
-	}
-	text := match[1]
-	score, err := strconv.ParseFloat(match[2], 64)
+	// FILE TAB RES TAB SCORE
+	res0 := strings.Split(strings.TrimSpace(out.String()), "\t")
+	fmt.Printf("DEBÄGG runTensorflowCommand %#v\n", res0)
+	text := res0[1]
+	score, err := strconv.ParseFloat(res0[2], 64)
 	if err != nil {
 		log.Printf("failure : %v\n", err)
 		return res, fmt.Errorf("failed parsing score to float64 : %v", err)
 	}
-	res.RecognitionResult = text
-	res.Confidence = float32(score)
+	if text == "FAIL" {
+		res.Ok = false
+	} else {
+		res.Ok = true
+		res.RecognitionResult = text
+		res.Confidence = float32(score)
+	}
 
 	msg := "Recognised by external tensorflow recognizer"
 
-	if len(res.Message) > 0 {
-		res.Message = res.Message + "; " + fmt.Sprintf("[%s] %s", methodName, msg)
-	} else {
-		res.Message = fmt.Sprintf("[%s] %s", methodName, msg)
-	}
+	res.Message = fmt.Sprintf("[%s] %s", methodName, msg)
 
 	log.Printf("runTensorflowCommand RecognitionResult: %s\n", res.RecognitionResult)
 	return res, nil

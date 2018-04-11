@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"github.com/stts-se/rec"
 )
 
 type hypo struct {
@@ -20,9 +22,10 @@ type gstreamerResponse struct {
 	Message    string `json:"message"`
 }
 
-func runGStreamerKaldiFromURL(url string, wavFilePath string, res processResponse) (processResponse, error) {
+func runGStreamerKaldiFromURL(url string, wavFilePath string, input rec.ProcessInput) (processResponse, error) {
 
 	methodName := "gstreamer kaldi"
+	res := processResponse{RecordingID: input.RecordingID}
 
 	// curl -T $WAVFILE "http://192.168.0.105:8080/client/dynamic/recognize"
 	// {"status": 0, "hypotheses": [{"utterance": "just three style."}], "id": "80a4a3e6-15ec-41e7-ac5d-fa2ea2386df2"}
@@ -68,11 +71,7 @@ func runGStreamerKaldiFromURL(url string, wavFilePath string, res processRespons
 	if gsResp.Status != 0 {
 		res.Ok = false
 	}
-	if len(res.Message) > 0 {
-		res.Message = res.Message + "; " + fmt.Sprintf("[%s] %s", methodName, gsResp.Message)
-	} else {
-		res.Message = fmt.Sprintf("[%s] %s", methodName, gsResp.Message)
-	}
+	res.Message = fmt.Sprintf("[%s] %s", methodName, gsResp.Message)
 
 	log.Printf("runKaldiGStreamerFromURL RecognitionResult: %s\n", res.RecognitionResult)
 	return res, nil

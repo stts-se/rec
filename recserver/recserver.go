@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 
@@ -107,17 +108,15 @@ func checkProcessInput(input rec.ProcessInput) error {
 }
 
 func process(w http.ResponseWriter, r *http.Request) {
-	res := processResponse{}
-	//return res
+	processInternal(w, r, false)
+}
 
+func processDev(w http.ResponseWriter, r *http.Request) {
+	processInternal(w, r, true)
+}
+
+func processInternal(w http.ResponseWriter, r *http.Request, returnList bool) {
 	body, err := ioutil.ReadAll(r.Body)
-
-	// noiseRedS := getParam("noise_red", r)
-	// useNoiseReduction := false
-	// if onRegexp.MatchString(noiseRedS) {
-	// 	useNoiseReduction = true
-	// }
-	//log.Println("recserver process useNoiseReduction:", useNoiseReduction)
 
 	if err != nil {
 		msg := fmt.Sprintf("failed to read request body : %v", err)
@@ -147,7 +146,6 @@ func process(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res.RecordingID = input.RecordingID
 	log.Printf("GOT username: %s\ttext: %s\t recording id: %s\n", input.UserName, input.Text, input.RecordingID)
 
 	audioFile, err := writeAudioFile(audioDir, input)
@@ -158,7 +156,7 @@ func process(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res, err = analyzeAudio(audioFile, res)
+	res, err := analyzeAudio(audioFile, input)
 	//log.Print("analyzeAudio.res =", res)
 	if err != nil {
 		msg := err.Error()
@@ -172,53 +170,79 @@ func process(w http.ResponseWriter, r *http.Request) {
 	// struct
 
 	// writeJSONInfoFile defined in writeJSONInfoFile.go
-	err = writeJSONInfoFile(audioDir, input, res)
-	if err != nil {
-		msg := fmt.Sprintf("failed writing info file : %v", err)
-		log.Print(msg)
-		http.Error(w, msg, http.StatusInternalServerError)
-		return
+	for _, r := range res {
+		err = writeJSONInfoFile(audioDir, input, r)
+		if err != nil {
+			msg := fmt.Sprintf("failed writing info file : %v", err)
+			log.Print(msg)
+			http.Error(w, msg, http.StatusInternalServerError)
+			return
+		}
 	}
 
-	// TODO Create reasonable response
+	sorter := func(i, j int) bool { return res[i].Confidence > res[j].Confidence }
+	sort.Slice(res, sorter)
+	if returnList {
+		resJSON, err := json.Marshal(res)
+		if err != nil {
+			msg := fmt.Sprintf("failed to marshal response : %v", err)
+			log.Println(msg)
 
-	res.Ok = true
+			http.Error(w, msg, http.StatusBadRequest)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintf(w, "%s\n", string(resJSON))
+	} else {
+		log.Printf("recserver debug, longer list was: %-v\n", res)
+		var r1 processResponse
+		if len(res) > 0 {
+			r1 = res[0]
+		} else {
+			r1 = processResponse{Ok: false,
+				RecordingID:       input.RecordingID,
+				Message:           "No result from server",
+				RecognitionResult: ""}
+		}
+		resJSON, err := json.Marshal(r1)
+		if err != nil {
+			msg := fmt.Sprintf("failed to marshal response : %v", err)
+			log.Println(msg)
 
-	resJSON, err := json.Marshal(res)
-	if err != nil {
-		msg := fmt.Sprintf("failed to marshal response : %v", err)
-		log.Println(msg)
-
-		http.Error(w, msg, http.StatusBadRequest)
-		return
+			http.Error(w, msg, http.StatusBadRequest)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintf(w, "%s\n", string(resJSON))
 	}
-	w.Header().Set("Content-Type", "application/json")
-	fmt.Fprintf(w, "%s\n", string(resJSON))
+
 }
 
-func analyzeAudio(audioFile string, res processResponse) (processResponse, error) {
+func analyzeAudio(audioFile string, input rec.ProcessInput) ([]processResponse, error) {
+	res := []processResponse{}
 	if len(config.MyConfig.TensorflowCmd) > 0 {
-		res, err := runTensorflowCommand(config.MyConfig.TensorflowCmd, audioFile, res)
+		r0, err := runTensorflowCommand(config.MyConfig.TensorflowCmd, audioFile, input)
 		if err != nil {
 			return res, fmt.Errorf("%s failed for input audio file : %v", "tensorflow", err)
 		}
 		//log.Print("runGStreamerKaldiFromURL.res =", res)
-		return res, nil
+		res = append(res, r0)
 	}
 	if len(config.MyConfig.KaldiGStreamerURL) > 0 {
 		//HL testing - gstreamer kaldi currently running with English model on Nikolaj's PC
-		res, err := runGStreamerKaldiFromURL(config.MyConfig.KaldiGStreamerURL, audioFile, res)
+		r0, err := runGStreamerKaldiFromURL(config.MyConfig.KaldiGStreamerURL, audioFile, input)
 		if err != nil {
 			return res, fmt.Errorf("%s failed decoding audio file : %v", "gstreamer kaldi", err)
 		}
 		//log.Print("runGStreamerKaldiFromURL.res =", res)
-		return res, nil
+		res = append(res, r0)
 	}
 	// HB testing - currently a dummy return value
-	res, err := runExternalKaldiDecoder(audioFile, res)
+	r0, err := runExternalKaldiDecoder(audioFile, input)
 	if err != nil {
 		return res, fmt.Errorf("%s failed decoding audio file : %v", "external kaldi", err)
 	}
+	res = append(res, r0)
 	//log.Print("runExternalKaldiDecoder.res =", res)
 	return res, nil
 }
@@ -347,6 +371,7 @@ func main() {
 	r.StrictSlash(true)
 	r.HandleFunc("/rec/", index)
 	r.HandleFunc("/rec/process/", process).Methods("POST")
+	r.HandleFunc("/rec/process_dev/", processDev).Methods("POST") // return a list of results instead
 
 	// see animation.go
 	r.HandleFunc("/rec/animationdemo", animDemo)

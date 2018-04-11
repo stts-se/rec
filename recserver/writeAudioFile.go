@@ -21,6 +21,11 @@ func validAudioFileExtension(ext string) bool {
 }
 
 func writeAudioFile(audioDir string, rec rec.ProcessInput) (string, error) {
+
+	// writeMutex declaren in recserver.go
+	writeMutex.Lock()
+	defer writeMutex.Unlock()
+
 	if strings.TrimSpace(audioDir) == "" {
 		return "", fmt.Errorf("writeAudioFile: empty audioDir argument")
 	}
@@ -60,15 +65,21 @@ func writeAudioFile(audioDir string, rec rec.ProcessInput) (string, error) {
 	}
 
 	audioFile := rec.RecordingID // filePath.Join(dirPath, rec.RecordingID + ". " + ext) "/tmp/nilz"
+	// generate next running number for file with same recordingID. Starts at "0001"
+	// always returns, with default returnvaule "0001"
+	// declared in generateNextFileNum.go
+	runningNum := generateNextFileNum(dirPath, audioFile)
+	recordingIDFileBase := audioFile + "_" + runningNum
+
 	if ext != "" {
-		audioFile = audioFile + "." + ext
+		audioFile = recordingIDFileBase + "." + ext
 	}
 
 	audioFilePath := filepath.Join(dirPath, audioFile)
 	// If file of same name exists, remove
-	if _, err = os.Stat(audioFilePath); !os.IsNotExist(err) {
-		os.Remove(audioFilePath)
-	}
+	//if _, err = os.Stat(audioFilePath); !os.IsNotExist(err) {
+	//	os.Remove(audioFilePath)
+	//}
 
 	var audio []byte
 	audio, err = base64.StdEncoding.DecodeString(rec.Audio.Data)
@@ -96,8 +107,8 @@ func writeAudioFile(audioDir string, rec rec.ProcessInput) (string, error) {
 	// Convert to wav, while we're at it:
 	if ext != "wav" {
 		// ffmpegConvert function is defined in ffmpegConvert.go
-		audioFilePathWav := filepath.Join(dirPath, rec.RecordingID+".wav")
-		audioFilePathWavReduced := filepath.Join(dirPath, rec.RecordingID+noiseRedSuffix+".wav")
+		audioFilePathWav := filepath.Join(dirPath, recordingIDFileBase /*rec.RecordingID*/ +".wav")
+		audioFilePathWavReduced := filepath.Join(dirPath, recordingIDFileBase /*rec.RecordingID*/ +noiseRedSuffix+".wav")
 		err = ffmpegConvert(audioFilePath, audioFilePathWav, false)
 		if err != nil {
 			msg := fmt.Sprintf("writeAudioFile failed converting from %s to %s : %v", audioFilePath, audioFilePathWav, err)
@@ -126,7 +137,7 @@ func writeAudioFile(audioDir string, rec rec.ProcessInput) (string, error) {
 	// Convert to opus, while we're at it:
 	if defaultExtension == "opus" {
 		if ext != defaultExtension {
-			audioFilePathOpus := filepath.Join(dirPath, rec.RecordingID+".opus")
+			audioFilePathOpus := filepath.Join(dirPath, recordingIDFileBase /*rec.RecordingID*/ +".opus")
 			// ffmpegConvert function is defined in ffmpegConvert.go
 			err = ffmpegConvert(audioFilePath, audioFilePathOpus, false)
 			if err != nil {
@@ -138,7 +149,7 @@ func writeAudioFile(audioDir string, rec rec.ProcessInput) (string, error) {
 		}
 	} else if defaultExtension == "mp3" {
 		if ext != defaultExtension+".mp3" {
-			audioFilePathMp3 := filepath.Join(dirPath, rec.RecordingID+".mp3")
+			audioFilePathMp3 := filepath.Join(dirPath, recordingIDFileBase /*rec.RecordingID*/ +".mp3")
 			// ffmpegConvert function is defined in ffmpegConvert.go
 			err = ffmpegConvert(audioFilePath, audioFilePathMp3, false)
 			if err != nil {
@@ -158,6 +169,6 @@ func writeAudioFile(audioDir string, rec rec.ProcessInput) (string, error) {
 
 	//err = writeJSONInfoFile(dirPath, rec)
 
-	audioFileFinal := filepath.Join(dirPath, rec.RecordingID+"."+defaultExtension)
+	audioFileFinal := filepath.Join(dirPath, recordingIDFileBase /*rec.RecordingID*/ +"."+defaultExtension)
 	return audioFileFinal, nil
 }

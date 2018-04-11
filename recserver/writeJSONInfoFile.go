@@ -17,11 +17,15 @@ type fileInfo struct {
 	RecognitionResult string  `json:"recognition_result"`
 }
 
-func writeJSONInfoFile(audioDir string, rec rec.ProcessInput, res processResponse) error {
+func writeJSONInfoFile(audioDir string, fileBaseName string, rec rec.ProcessInput, res processResponse) error {
+
+	// writeMutex declaren in recserver.go
+	writeMutex.Lock()
+	defer writeMutex.Unlock()
 
 	// Add matching info JSON file
 
-	infoFileName := rec.RecordingID + ".json"
+	infoFileName := fileBaseName /*rec.RecordingID*/ + ".json"
 	infoFilePath := filepath.Join(audioDir, rec.UserName, infoFileName)
 	if _, err := os.Stat(infoFilePath); !os.IsNotExist(err) {
 		os.Remove(infoFilePath)

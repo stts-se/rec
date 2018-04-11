@@ -1,7 +1,5 @@
 package main
 
-// TODO put a mutex around file reading and writing
-
 import (
 	"encoding/base64"
 	"encoding/json"
@@ -10,9 +8,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path"
 	"path/filepath"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -20,6 +20,8 @@ import (
 	"github.com/stts-se/rec"
 	"github.com/stts-se/rec/config"
 )
+
+var writeMutex sync.Mutex
 
 func getParam(paramName string, r *http.Request) string {
 	//fmt.Println("getParam r.URL", r.URL)
@@ -148,6 +150,7 @@ func processInternal(w http.ResponseWriter, r *http.Request, returnList bool) {
 
 	log.Printf("GOT username: %s\ttext: %s\t recording id: %s\n", input.UserName, input.Text, input.RecordingID)
 
+	// writeAudioFile uses writeMutex internally
 	audioFile, err := writeAudioFile(audioDir, input)
 	if err != nil {
 		msg := fmt.Sprintf("failed writing audio file : %v", err)
@@ -169,9 +172,14 @@ func processInternal(w http.ResponseWriter, r *http.Request, returnList bool) {
 	// 'processResponse' and 'infoFile' should probably be a single
 	// struct
 
+	//TODO  Clean up how base file name + dirs and exts are handled
+	baseFileName := strings.TrimSuffix(path.Base(audioFile), path.Ext(audioFile))
+
 	// writeJSONInfoFile defined in writeJSONInfoFile.go
+	// uses writeMutex internally
+
 	for _, r := range res {
-		err = writeJSONInfoFile(audioDir, input, r)
+		err = writeJSONInfoFile(audioDir, baseFileName, input, r)
 		if err != nil {
 			msg := fmt.Sprintf("failed writing info file : %v", err)
 			log.Print(msg)

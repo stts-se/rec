@@ -15,12 +15,7 @@ var numRE = regexp.MustCompile("^.*_([0-9]{4})[.][^0-9]+$")
 func generateNextFileNum(audioDir rec.AudioDir, fileNameBase string) string {
 	res := "0001"
 
-	//fmt.Println("HEJ DIN FAN 1 ", dirPath)
-	//fmt.Println("HEJ DIN FAN 2 ", fileNameBase)
-
 	highest := 0
-
-	//fmt.Println("HEJ DIN FAN PATH: ", filepath.Join(dirPath, fileNameBase+"*"))
 
 	matches, err := filepath.Glob(filepath.Join(audioDir.Path(), fileNameBase+"_[0-9][0-9][0-9][0-9].*"))
 	if err != nil {
@@ -33,7 +28,6 @@ func generateNextFileNum(audioDir rec.AudioDir, fileNameBase string) string {
 	}
 
 	for _, m := range matches {
-		//fmt.Println("HEJ DI FAN FILE: ", m)
 		numStr := numRE.FindStringSubmatch(m)
 		if len(numStr) != 2 {
 			log.Printf("generateNextFileNum failed to match number in file name: '%s'\n", m)
@@ -50,12 +44,6 @@ func generateNextFileNum(audioDir rec.AudioDir, fileNameBase string) string {
 	}
 
 	highest++
-
-	//if err != nil {}
-
 	res = fmt.Sprintf("%04d", highest)
-
-	//fmt.Println("HEJ DIN FAN 3 ", res)
-	//fmt.Println()
 	return res
 }

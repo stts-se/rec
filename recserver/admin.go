@@ -3,8 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"path"
 	"strings"
 
 	"github.com/gorilla/mux"
@@ -79,4 +81,38 @@ func getUtts(w http.ResponseWriter, r *http.Request) {
 	uttListsJSON, err := json.Marshal(uttLists)
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(w, "%v\n", string(uttListsJSON))
+}
+
+func listFiles(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userName := vars["username"]
+
+	userName = strings.ToLower(userName)
+
+	userDir := path.Join(audioDir, userName)
+	//fileList, err := admin.ListFiles(audioDir, userName)
+	files, err := ioutil.ReadDir(userDir)
+	if err != nil {
+		msg := fmt.Sprintf("failed to list files for '%s' : %v", userName, err)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusInternalServerError)
+		return
+	}
+
+	// if len(fileLists) == 0 {
+	// 	w.Header().Set("Content-Type", "text/plain")
+	// 	// TODO return error status?
+	// 	fmt.Fprintf(w, "no utterance lists for '%s'\n", userName)
+	// 	return
+	// }
+
+	//uttListsJSON, err := json.Marshal(uttLists)
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "text/plain")
+	for _, f := range files {
+		if !f.IsDir() {
+			fmt.Fprintf(w, "%s\n", f.Name())
+		}
+	}
+
 }

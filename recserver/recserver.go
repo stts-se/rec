@@ -221,7 +221,8 @@ func analyzeAudio(audioFile string, input rec.ProcessInput) ([]rec.ProcessRespon
 		res = append(res, r0)
 	}
 	// HB testing - currently a dummy return value
-	r0, err := runExternalKaldiDecoder(audioFile, input)
+	//r0, err := runExternalKaldiDecoder(audioFile, input)
+	r0, err := runExternalPocketsphinxDecoder(audioFile, input)
 	if err != nil {
 		return res, fmt.Errorf("%s failed decoding audio file : %v", "external kaldi", err)
 	}

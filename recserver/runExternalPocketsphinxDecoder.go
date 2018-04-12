@@ -11,10 +11,10 @@ import (
 	"github.com/stts-se/rec"
 )
 
-func runExternalPocketsphinxDecoder(wavFilePath string, input rec.ProcessInput) (processResponse, error) {
+func runExternalPocketsphinxDecoder(wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
 
 	methodName := "pocketsphinx"
-	res := processResponse{RecordingID: input.RecordingID}
+	res := rec.ProcessResponse{RecordingID: input.RecordingID}
 
 	_, pErr := exec.LookPath("python")
 	if pErr != nil {
@@ -47,4 +47,3 @@ func runExternalPocketsphinxDecoder(wavFilePath string, input rec.ProcessInput) 
 	res.Message = fmt.Sprintf("[%s] %s", methodName, msg)
 	return res, nil
 }
-

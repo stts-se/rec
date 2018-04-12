@@ -20,7 +20,7 @@ func generateNextFileNum(dirPath, fileNameBase string) string {
 
 	//fmt.Println("HEJ DIN FAN PATH: ", filepath.Join(dirPath, fileNameBase+"*"))
 
-	matches, err := filepath.Glob(filepath.Join(dirPath, fileNameBase+"*"))
+	matches, err := filepath.Glob(filepath.Join(dirPath, fileNameBase+"_[0-9][0-9][0-9][0-9].*"))
 	if err != nil {
 		log.Printf("generateNextFileNum: failed to list files, returning default")
 		return res
@@ -34,7 +34,7 @@ func generateNextFileNum(dirPath, fileNameBase string) string {
 		//fmt.Println("HEJ DI FAN FILE: ", m)
 		numStr := numRE.FindStringSubmatch(m)
 		if len(numStr) != 2 {
-			log.Printf("generateNextFileNum failed to match number in file name: '%s'\n", numStr)
+			log.Printf("generateNextFileNum failed to match number in file name: '%s'\n", m)
 			continue
 		}
 		i, err := strconv.Atoi(numStr[1])

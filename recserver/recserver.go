@@ -253,11 +253,8 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 	if ext == "" {
 		ext = defaultExtension
 	}
-	audioDir := rec.AudioDir{BaseDir: audioDir, UserDir: userName}
-	audioPath := rec.AudioRef{Dir: audioDir, BaseName: utteranceID}
-	audioFile := rec.AudioFile{BasePath: audioPath, Extension: "." + ext}
-	//audioFile := filepath.Join(audioDir, userName, utteranceID+"."+ext)
-	_, err := os.Stat(audioDir.Path())
+	audioFile := rec.NewAudioFile(audioDir, userName, utteranceID, ext)
+	_, err := os.Stat(audioFile.AudioDir().Path())
 	if os.IsNotExist(err) {
 		msg := fmt.Sprintf("get_audio: no audio for user '%s'", userName)
 		log.Print(msg)

@@ -45,6 +45,11 @@ type AudioRef struct {
 	BaseName string // without file extension
 }
 
+func NewAudioRef(baseDir string, userDir string, baseName string) AudioRef {
+	dir := AudioDir{BaseDir: baseDir, UserDir: userDir}
+	return AudioRef{Dir: dir, BaseName: baseName}
+}
+
 func (ar AudioRef) Path(extension string) string {
 	fName := ar.fileName(extension)
 	return filepath.Join(ar.Dir.Path(), fName)
@@ -59,9 +64,18 @@ type AudioFile struct {
 	Extension string
 }
 
+func NewAudioFile(baseDir string, userDir string, baseName string, extension string) AudioFile {
+	audioRef := NewAudioRef(baseDir, userDir, baseName)
+	return AudioFile{BasePath: audioRef, Extension: extension}
+}
+
 func (af AudioFile) Path() string {
 	fName := af.BasePath.fileName(af.Extension)
 	return filepath.Join(af.BasePath.Dir.Path(), fName)
+}
+
+func (af AudioFile) AudioDir() AudioDir {
+	return af.BasePath.Dir
 }
 
 type ProcessResponse struct {

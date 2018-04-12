@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"os"
 	//"path"
-	//"path/filepath"
+	"path/filepath"
 	"sort"
 	"strings"
 	"sync"
@@ -235,6 +235,7 @@ type audioResponse struct {
 	Message  string `json:"message"`
 }
 
+// TODO Protect with mutex?
 func getAudio(w http.ResponseWriter, r *http.Request) {
 	var res audioResponse
 	vars := mux.Vars(r)
@@ -264,6 +265,16 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 
 	_, err = os.Stat(audioFile.Path())
 	if os.IsNotExist(err) {
+		// No exact match of file name. Try to list files with same base name + running number
+		basePath := filepath.Join(audioDir, userName, utteranceID)
+		files, err := filepath.Glob(basePath + "_[0-9][0-9][0-9][0-9]." + ext)
+		if err != nil {
+			log.Printf("getAudio: problem listing files : %v\n", err)
+		}
+		for _, f := range files {
+			log.Println("AN GLAD APA ", f)
+		}
+
 		msg := fmt.Sprintf("get_audio: no audio for utterance '%s'", utteranceID)
 		log.Print(msg)
 		http.Error(w, msg, http.StatusBadRequest)

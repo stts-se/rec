@@ -90,7 +90,7 @@ func generateDoc(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	processResp := processResponse{
+	processResp := rec.ProcessResponse{
 		Ok:                true,
 		Confidence:        0.0,
 		RecognitionResult: "string",

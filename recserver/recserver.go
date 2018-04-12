@@ -8,8 +8,8 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"path"
-	"path/filepath"
+	//"path"
+	//"path/filepath"
 	"sort"
 	"strings"
 	"sync"
@@ -52,38 +52,6 @@ func mimeType(ext string) string {
 	return fmt.Sprintf("audio/%s", ext)
 }
 
-// Definition below moved to rec/structs.go
-// type audio struct {
-// 	FileType string `json:"file_type"`
-// 	Data     string `json:"data"`
-// }
-
-// TODO: processResponse in a better way
-
-// {username, audio, text, (recording_id if overwriting)}
-// Definition below moved to rec/structs.go
-// type ProcessInput struct {
-// 	UserName    string `json:"username"`
-// 	Audio       audio  `json:"audio"`
-// 	Text        string `json:"text"`
-// 	RecordingID string `json:"recording_id"`
-// }
-
-//	{
-//	 "ok": true|false,
-//	 ? "confidence": <percent-value>,
-//	 ? "recognition_result": <text-string>,
-//	 ? "recording_id": <uri>
-//	}
-// TODO: insert "Source" field here
-type processResponse struct {
-	Ok                bool    `json:"ok"`
-	Confidence        float32 `json:"confidence"`
-	RecognitionResult string  `json:"recognition_result"`
-	RecordingID       string  `json:"recording_id"`
-	Message           string  `json:"message"`
-}
-
 func checkProcessInput(input rec.ProcessInput) error {
 	var errMsg []string
 
@@ -111,15 +79,15 @@ func checkProcessInput(input rec.ProcessInput) error {
 	return nil
 }
 
-func process(w http.ResponseWriter, r *http.Request) {
-	processInternal(w, r, false)
+func processToOneResult(w http.ResponseWriter, r *http.Request) {
+	process0(w, r, false)
 }
 
-func processDev(w http.ResponseWriter, r *http.Request) {
-	processInternal(w, r, true)
+func processToResultList(w http.ResponseWriter, r *http.Request) {
+	process0(w, r, true)
 }
 
-func processInternal(w http.ResponseWriter, r *http.Request, returnList bool) {
+func process0(w http.ResponseWriter, r *http.Request, returnList bool) {
 	body, err := ioutil.ReadAll(r.Body)
 
 	if err != nil {
@@ -152,6 +120,7 @@ func processInternal(w http.ResponseWriter, r *http.Request, returnList bool) {
 
 	log.Printf("GOT username: %s\ttext: %s\t recording id: %s\n", input.UserName, input.Text, input.RecordingID)
 
+	audioDir := rec.AudioDir{BaseDir: audioDir, UserDir: input.UserName}
 	// writeAudioFile uses writeMutex internally
 	audioFile, err := writeAudioFile(audioDir, input)
 	if err != nil {
@@ -161,7 +130,7 @@ func processInternal(w http.ResponseWriter, r *http.Request, returnList bool) {
 		return
 	}
 
-	res, err := analyzeAudio(audioFile, input)
+	res, err := analyzeAudio(audioFile.Path(), input)
 	//log.Print("analyzeAudio.res =", res)
 	if err != nil {
 		msg := err.Error()
@@ -170,18 +139,15 @@ func processInternal(w http.ResponseWriter, r *http.Request, returnList bool) {
 		return
 	}
 
-	// TODO This is weird. Structs 'processInput' and
-	// 'processResponse' and 'infoFile' should probably be a single
-	// struct
-
-	//TODO  Clean up how base file name + dirs and exts are handled
-	baseFileName := strings.TrimSuffix(path.Base(audioFile), path.Ext(audioFile))
+	// baseFileName := strings.TrimSuffix(path.Base(audioFile), path.Ext(audioFile))
+	// audioRef = rec.AudioRef{Dir: audioDir, BaseName: baseFileName}
+	audioRef := audioFile.BasePath
 
 	// writeJSONInfoFile defined in writeJSONInfoFile.go
 	// uses writeMutex internally
 
 	for _, r := range res {
-		err = writeJSONInfoFile(audioDir, baseFileName, input, r)
+		err = writeJSONInfoFile(audioRef, input, r)
 		if err != nil {
 			msg := fmt.Sprintf("failed writing info file : %v", err)
 			log.Print(msg)
@@ -211,11 +177,11 @@ func processInternal(w http.ResponseWriter, r *http.Request, returnList bool) {
 		fmt.Fprintf(w, "%s\n", string(resJSON))
 	} else {
 		log.Printf("recserver debug, longer list was: %-v\n", res)
-		var r1 processResponse
+		var r1 rec.ProcessResponse
 		if len(res) > 0 {
 			r1 = res[0]
 		} else {
-			r1 = processResponse{Ok: false,
+			r1 = rec.ProcessResponse{Ok: false,
 				RecordingID:       input.RecordingID,
 				Message:           "No result from server",
 				RecognitionResult: ""}
@@ -234,8 +200,8 @@ func processInternal(w http.ResponseWriter, r *http.Request, returnList bool) {
 
 }
 
-func analyzeAudio(audioFile string, input rec.ProcessInput) ([]processResponse, error) {
-	res := []processResponse{}
+func analyzeAudio(audioFile string, input rec.ProcessInput) ([]rec.ProcessResponse, error) {
+	res := []rec.ProcessResponse{}
 	if len(config.MyConfig.TensorflowCmd) > 0 {
 		r0, err := runTensorflowCommand(config.MyConfig.TensorflowCmd, audioFile, input)
 		if err != nil {
@@ -287,7 +253,11 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 	if ext == "" {
 		ext = defaultExtension
 	}
-	_, err := os.Stat(filepath.Join(audioDir, userName))
+	audioDir := rec.AudioDir{BaseDir: audioDir, UserDir: userName}
+	audioPath := rec.AudioRef{Dir: audioDir, BaseName: utteranceID}
+	audioFile := rec.AudioFile{BasePath: audioPath, Extension: "." + ext}
+	//audioFile := filepath.Join(audioDir, userName, utteranceID+"."+ext)
+	_, err := os.Stat(audioDir.Path())
 	if os.IsNotExist(err) {
 		msg := fmt.Sprintf("get_audio: no audio for user '%s'", userName)
 		log.Print(msg)
@@ -295,8 +265,7 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	audioFile := filepath.Join(audioDir, userName, utteranceID+"."+ext)
-	_, err = os.Stat(audioFile)
+	_, err = os.Stat(audioFile.Path())
 	if os.IsNotExist(err) {
 		msg := fmt.Sprintf("get_audio: no audio for utterance '%s'", utteranceID)
 		log.Print(msg)
@@ -308,7 +277,7 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 	// with added running number, _[0-9]{4}[.][^0-9]$, and return
 	// highest
 
-	bytes, err := ioutil.ReadFile(audioFile)
+	bytes, err := ioutil.ReadFile(audioFile.Path())
 	if err != nil {
 		msg := fmt.Sprintf("get_audio: failed to read audio file : %v", err)
 		log.Print(msg)
@@ -390,8 +359,8 @@ func main() {
 	r := mux.NewRouter()
 	r.StrictSlash(true)
 	r.HandleFunc("/rec/", index)
-	r.HandleFunc("/rec/process/", process).Methods("POST")
-	r.HandleFunc("/rec/process_dev/", processDev).Methods("POST") // return a list of results instead
+	r.HandleFunc("/rec/process/", processToOneResult).Methods("POST")
+	r.HandleFunc("/rec/process_dev/", processToResultList).Methods("POST")
 
 	// see animation.go
 	r.HandleFunc("/rec/animationdemo", animDemo)

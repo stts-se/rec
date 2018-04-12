@@ -11,10 +11,10 @@ import (
 	"github.com/stts-se/rec"
 )
 
-func runExternalKaldiDecoder(wavFilePath string, input rec.ProcessInput) (processResponse, error) {
+func runExternalKaldiDecoder(wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
 
 	methodName := "tensorflow"
-	res := processResponse{RecordingID: input.RecordingID}
+	res := rec.ProcessResponse{RecordingID: input.RecordingID}
 
 	_, pErr := exec.LookPath("python")
 	if pErr != nil {

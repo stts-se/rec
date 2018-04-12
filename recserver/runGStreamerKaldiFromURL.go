@@ -22,10 +22,10 @@ type gstreamerResponse struct {
 	Message    string `json:"message"`
 }
 
-func runGStreamerKaldiFromURL(url string, wavFilePath string, input rec.ProcessInput) (processResponse, error) {
+func runGStreamerKaldiFromURL(url string, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
 
 	methodName := "gstreamer kaldi"
-	res := processResponse{RecordingID: input.RecordingID}
+	res := rec.ProcessResponse{RecordingID: input.RecordingID}
 
 	// curl -T $WAVFILE "http://192.168.0.105:8080/client/dynamic/recognize"
 	// {"status": 0, "hypotheses": [{"utterance": "just three style."}], "id": "80a4a3e6-15ec-41e7-ac5d-fa2ea2386df2"}

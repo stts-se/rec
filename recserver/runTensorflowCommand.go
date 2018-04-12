@@ -23,10 +23,10 @@ var wavFilePlaceHolder = "{wavfile}"
 
 //var scoreRe = regexp.MustCompile("^([^ ]+) [(]score = ([0-9.]+)[)]$")
 
-func runTensorflowCommand(command string, wavFilePath string, input rec.ProcessInput) (processResponse, error) {
+func runTensorflowCommand(command string, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
 
 	methodName := "tensorflow"
-	res := processResponse{RecordingID: input.RecordingID}
+	res := rec.ProcessResponse{RecordingID: input.RecordingID}
 
 	if !strings.Contains(command, wavFilePlaceHolder) {
 		msg := fmt.Sprintf("input tensorflow command must contain wav file variable %s", wavFilePlaceHolder)

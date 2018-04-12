@@ -6,11 +6,13 @@ import (
 	"path/filepath"
 	"regexp"
 	"strconv"
+
+	"github.com/stts-se/rec"
 )
 
 var numRE = regexp.MustCompile("^.*_([0-9]{4})[.][^0-9]+$")
 
-func generateNextFileNum(dirPath, fileNameBase string) string {
+func generateNextFileNum(audioDir rec.AudioDir, fileNameBase string) string {
 	res := "0001"
 
 	//fmt.Println("HEJ DIN FAN 1 ", dirPath)
@@ -20,7 +22,7 @@ func generateNextFileNum(dirPath, fileNameBase string) string {
 
 	//fmt.Println("HEJ DIN FAN PATH: ", filepath.Join(dirPath, fileNameBase+"*"))
 
-	matches, err := filepath.Glob(filepath.Join(dirPath, fileNameBase+"_[0-9][0-9][0-9][0-9].*"))
+	matches, err := filepath.Glob(filepath.Join(audioDir.Path(), fileNameBase+"_[0-9][0-9][0-9][0-9].*"))
 	if err != nil {
 		log.Printf("generateNextFileNum: failed to list files, returning default")
 		return res

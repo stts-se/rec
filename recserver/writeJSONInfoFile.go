@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 
 	"github.com/stts-se/rec"
 )
@@ -17,7 +16,8 @@ type fileInfo struct {
 	RecognitionResult string  `json:"recognition_result"`
 }
 
-func writeJSONInfoFile(audioDir string, fileBaseName string, rec rec.ProcessInput, res processResponse) error {
+//func writeJSONInfoFile(audioDir string, fileBaseName string, rec rec.ProcessInput, res rec.ProcessResponse) error {
+func writeJSONInfoFile(audioRef rec.AudioRef, rec rec.ProcessInput, res rec.ProcessResponse) error {
 
 	// writeMutex declaren in recserver.go
 	writeMutex.Lock()
@@ -25,8 +25,9 @@ func writeJSONInfoFile(audioDir string, fileBaseName string, rec rec.ProcessInpu
 
 	// Add matching info JSON file
 
-	infoFileName := fileBaseName /*rec.RecordingID*/ + ".json"
-	infoFilePath := filepath.Join(audioDir, rec.UserName, infoFileName)
+	//infoFileName := audioRef.BaseName /*rec.RecordingID*/ + ".json"
+	//infoFilePath := filepath.Join(audioRef.BaseDir, audioRef.UserDir, infoFileName)
+	infoFilePath := audioRef.Path(".json")
 	if _, err := os.Stat(infoFilePath); !os.IsNotExist(err) {
 		os.Remove(infoFilePath)
 	} // TODO Check for other err

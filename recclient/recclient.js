@@ -130,7 +130,7 @@ function getPrev() {
     
     
     xhr.onloadend = function () {
-	
+
 	let resp = JSON.parse(xhr.response);
 	
 	document.getElementById("recording_id").innerHTML = resp.recording_id;
@@ -326,6 +326,11 @@ function clearServerSpectrogram() {
 	ele.removeAttribute("src");
 }
 
+function clearJSSpectrogram() {
+    console.log("clearJSSpectrogram()");
+    wavesurfer.empty();
+}
+
 
 function updateAudio(blob) {
     console.log("updateAudio()", blob.size);
@@ -405,6 +410,7 @@ function getAudio() {
 
     console.log("getAudio()");
     clearServerSpectrogram();
+    clearJSSpectrogram();
     
     let userName = document.getElementById('username2').value;
     let utteranceID = document.getElementById('recording_id2').value;

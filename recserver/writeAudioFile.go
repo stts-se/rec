@@ -14,6 +14,7 @@ import (
 	"github.com/stts-se/rec/audioproc"
 )
 
+// TODO Remove noise reduced variants?
 var noiseRedSuffix = "-noisered"
 
 func validAudioFileExtension(ext string) bool {

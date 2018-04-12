@@ -11,6 +11,7 @@ import (
 	//"path"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -241,49 +242,65 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userName := vars["username"]
 	utteranceID := vars["utterance_id"]
+
+	// TODO Remove the "noise reduced" audio variants?
 	noiseRedS := getParam("noise_red", r)
 	useNoiseReduction := false
 	if onRegexp.MatchString(noiseRedS) {
 		useNoiseReduction = true
-	}
-	//log.Printf("recserver getAudio useNoiseReduction: %v (from string '%s')\n", useNoiseReduction, noiseRedS)
-	if useNoiseReduction {
-		utteranceID = utteranceID + noiseRedSuffix
 	}
 	var ext = vars["ext"]
 	if ext == "" {
 		ext = defaultExtension
 	}
 	audioFile := rec.NewAudioFile(audioDir, userName, utteranceID, "."+ext)
-	_, err := os.Stat(audioFile.AudioDir().Path())
+	_, err := os.Stat(audioFile.Path())
 	if os.IsNotExist(err) {
-		msg := fmt.Sprintf("get_audio: no audio for user '%s'", userName)
-		log.Print(msg)
-		http.Error(w, msg, http.StatusBadRequest)
-		return
-	}
 
-	_, err = os.Stat(audioFile.Path())
-	if os.IsNotExist(err) {
 		// No exact match of file name. Try to list files with same base name + running number
 		basePath := filepath.Join(audioDir, userName, utteranceID)
 		files, err := filepath.Glob(basePath + "_[0-9][0-9][0-9][0-9]." + ext)
 		if err != nil {
 			log.Printf("getAudio: problem listing files : %v\n", err)
 		}
+		highest := 0
 		for _, f := range files {
-			log.Println("AN GLAD APA ", f)
+
+			// numRE defined in generateNextFileNum
+			numStr := numRE.FindStringSubmatch(f)
+			if len(numStr) != 2 {
+				log.Printf("getAudio: failed to match number in file name: '%s'\n", f)
+				continue
+			}
+			n, err := strconv.Atoi(numStr[1])
+			if err != nil {
+				log.Printf("getAudio: failed to convert string to number: '%s' : %v\n", numStr, err)
+				continue
+			}
+
+			if n > highest {
+				highest = n
+			}
 		}
 
-		msg := fmt.Sprintf("get_audio: no audio for utterance '%s'", utteranceID)
-		log.Print(msg)
-		http.Error(w, msg, http.StatusBadRequest)
-		return
-	}
+		if highest == 0 {
+			msg := fmt.Sprintf("get_audio: no audio for user '%s'", userName)
+			log.Print(msg)
+			http.Error(w, msg, http.StatusBadRequest)
+			return
+		}
 
-	// TODO If no exact matching file is found, try to match file
-	// with added running number, _[0-9]{4}[.][^0-9]$, and return
-	// highest
+		// We have found a matching file with the highest running number
+		runningNum := fmt.Sprintf("_%04d", highest)
+		if useNoiseReduction {
+			utteranceID = utteranceID + runningNum + noiseRedSuffix
+		} else {
+			utteranceID = utteranceID + runningNum
+		}
+
+		audioFile = rec.NewAudioFile(audioDir, userName, utteranceID, "."+ext)
+
+	}
 
 	bytes, err := ioutil.ReadFile(audioFile.Path())
 	if err != nil {

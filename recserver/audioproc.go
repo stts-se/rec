@@ -29,6 +29,7 @@ func buildSpectrogram(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userName := vars["username"]
 	utteranceID := vars["utterance_id"]
+	// TODO Remove noise reduced variants?
 	noiseRedS := getParam("noise_red", r)
 	var ext = vars["ext"]
 	if ext == "" {

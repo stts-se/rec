@@ -454,6 +454,8 @@ function getAudio() {
 
 }
 
+// TODO Clear old spectrogramme when no audio found for request/before call to generate new spectrogramme
+
 function getAudioForSpectrogram(audioURL, noiseRedSpec) {
     console.log("getAudioForSpectrogram()");
     let audioURLForSpec = audioURL + "?noise_red=" + noiseRedSpec

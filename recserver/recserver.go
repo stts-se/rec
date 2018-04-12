@@ -254,7 +254,7 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 	if ext == "" {
 		ext = defaultExtension
 	}
-	audioFile := rec.NewAudioFile(audioDir, userName, utteranceID, ext)
+	audioFile := rec.NewAudioFile(audioDir, userName, utteranceID, "."+ext)
 	_, err := os.Stat(audioFile.AudioDir().Path())
 	if os.IsNotExist(err) {
 		msg := fmt.Sprintf("get_audio: no audio for user '%s'", userName)

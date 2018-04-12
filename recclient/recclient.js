@@ -146,7 +146,7 @@ function getPrev() {
 function initWavesurferJS() {
     // https://wavesurfer-js.org/doc/class/src/plugin/spectrogram.js~SpectrogramPlugin.html
     wavesurfer = WaveSurfer.create({
-    	container: '#js-wavesurfer',
+    	container: '#js-wavesurfer-wav',
     	waveColor: '#6699FF',
     	progressColor: '#517acc', //'#46B54D',
     	labels: true,
@@ -174,6 +174,7 @@ function initWavesurferJS() {
 
     let maxWidth = "max-width: 1244px";
     document.getElementById("js-wavesurfer").setAttribute("style", maxWidth);
+    document.getElementById("js-wavesurfer-wav").setAttribute("style", maxWidth);
     document.getElementById("js-wavesurfer-spectrogram").setAttribute("style", maxWidth);
     document.getElementById("js-wavesurfer-timeline").setAttribute("style", maxWidth);
 }
@@ -326,9 +327,16 @@ function clearServerSpectrogram() {
 	ele.removeAttribute("src");
 }
 
-function clearJSSpectrogram() {
-    console.log("clearJSSpectrogram()");
-    wavesurfer.empty();
+function showJSSpectrogram() {
+    console.log("showJSSpectrogram()");
+    ele = document.getElementById("js-wavesurfer");
+    ele.style.visibility = "visible";
+}
+
+function hideJSSpectrogram() {
+    console.log("hideJSSpectrogram()");
+    ele = document.getElementById("js-wavesurfer");
+    ele.style.visibility = "hidden";
 }
 
 
@@ -410,7 +418,7 @@ function getAudio() {
 
     console.log("getAudio()");
     clearServerSpectrogram();
-    clearJSSpectrogram();
+    hideJSSpectrogram();
     
     let userName = document.getElementById('username2').value;
     let utteranceID = document.getElementById('recording_id2').value;
@@ -445,9 +453,11 @@ function getAudio() {
 
 	let blob = new Blob([byteArray], {'type' : resp.file_type});
 	audio.src = URL.createObjectURL(blob);
+	console.log("getAudio onloadend")
 	//audio.play();
 
-	if (noiseRedSpec !== true) {
+	if (!noiseRedSpec) {
+	    showJSSpectrogram();
 	    wavesurfer.loadBlob(blob);
 	}
     };
@@ -487,6 +497,7 @@ function getAudioForSpectrogram(audioURL, noiseRedSpec) {
 
 	let blob = new Blob([byteArray], {'type' : resp.file_type});
 
+	showJSSpectrogram();
 	wavesurfer.loadBlob(blob);
     };
   

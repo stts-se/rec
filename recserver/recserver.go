@@ -21,6 +21,8 @@ import (
 	"github.com/stts-se/rec/config"
 )
 
+// TODO Mutex per user, i.e., use lock for a specific user(name), not all users.
+// Something like mutexMap[userName]*sync.Mutex perhaps
 var writeMutex sync.Mutex
 
 func getParam(paramName string, r *http.Request) string {

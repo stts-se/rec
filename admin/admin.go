@@ -44,7 +44,7 @@ func createBaseDir(d string) error {
 	defer mutex.Unlock()
 	err = os.MkdirAll(d, os.ModePerm)
 	if err != nil {
-		return fmt.Errorf("failed to create base dir '%s' : ", d, err)
+		return fmt.Errorf("failed to create base dir '%s' : %v", d, err)
 	}
 
 	return nil

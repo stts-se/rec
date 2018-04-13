@@ -83,5 +83,6 @@ type ProcessResponse struct {
 	Confidence        float32 `json:"confidence"` // value between 0 and 1
 	RecognitionResult string  `json:"recognition_result"`
 	RecordingID       string  `json:"recording_id"`
-	Message           string  `json:"message"`
+	//Source            string  `json:"source"` // add later
+	Message string `json:"message"`
 }

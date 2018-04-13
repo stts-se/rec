@@ -174,6 +174,8 @@ func loadUtteranceLists(dirPath string) /*(utteranceLists,*/ error {
 		return fmt.Errorf("loadUtteranceLists: failed to list user *.utt files : %v", err)
 	}
 
+	uttLists.Lock()
+	defer uttLists.Unlock()
 	for _, f := range files {
 		//fmt.Printf("FN: %s\n", f)
 
@@ -185,8 +187,6 @@ func loadUtteranceLists(dirPath string) /*(utteranceLists,*/ error {
 			return fmt.Errorf("loadUtteranceLists: failed to read file : %v", err)
 		}
 
-		uttLists.Lock()
-		defer uttLists.Unlock()
 		uttLists.uttsForUser[userName] = append(uttLists.uttsForUser[userName], utts...)
 	}
 

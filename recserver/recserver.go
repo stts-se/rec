@@ -147,24 +147,23 @@ func process0(w http.ResponseWriter, r *http.Request, returnList bool) {
 	// writeJSONInfoFile defined in writeJSONInfoFile.go
 	// uses writeMutex internally
 
-	for _, r := range res {
-		err = writeJSONInfoFile(audioRef, input, r)
-		if err != nil {
-			msg := fmt.Sprintf("failed writing info file : %v", err)
-			log.Print(msg)
-			http.Error(w, msg, http.StatusInternalServerError)
-			return
-		}
+	err = writeJSONInfoFile(audioRef, input, res)
+	if err != nil {
+		msg := fmt.Sprintf("failed writing info file : %v", err)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusInternalServerError)
+		return
 	}
+	// for _, r := range res {
+	// 	err = writeJSONInfoFile(audioRef, input, r)
+	// 	if err != nil {
+	// 		msg := fmt.Sprintf("failed writing info file : %v", err)
+	// 		log.Print(msg)
+	// 		http.Error(w, msg, http.StatusInternalServerError)
+	// 		return
+	// 	}
+	// }
 
-	sorter := func(i, j int) bool {
-		if res[i].Ok && res[j].Ok {
-			return res[i].Confidence > res[j].Confidence
-		} else {
-			return res[i].Ok
-		}
-	}
-	sort.Slice(res, sorter)
 	if returnList {
 		resJSON, err := json.Marshal(res)
 		if err != nil {
@@ -224,10 +223,18 @@ func analyzeAudio(audioFile string, input rec.ProcessInput) ([]rec.ProcessRespon
 	//r0, err := runExternalKaldiDecoder(audioFile, input)
 	r0, err := runExternalPocketsphinxDecoder(audioFile, input)
 	if err != nil {
-		return res, fmt.Errorf("%s failed decoding audio file : %v", "external kaldi", err)
+		return res, fmt.Errorf("%s failed decoding audio file : %v", "external pocket sphinx", err)
 	}
 	res = append(res, r0)
 	//log.Print("runExternalKaldiDecoder.res =", res)
+	sorter := func(i, j int) bool {
+		if res[i].Ok && res[j].Ok {
+			return res[i].Confidence > res[j].Confidence
+		} else {
+			return res[i].Ok
+		}
+	}
+	sort.Slice(res, sorter)
 	return res, nil
 }
 
@@ -379,6 +386,7 @@ func main() {
 		log.Print(msg)
 		os.Exit(1)
 	}
+	//log.Printf("recserver Loaded utts\n")
 	//uttLists = uls
 
 	p := config.MyConfig.ServerPort

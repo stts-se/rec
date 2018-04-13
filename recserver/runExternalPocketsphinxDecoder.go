@@ -54,7 +54,7 @@ func runExternalPocketsphinxDecoder(wavFilePath string, input rec.ProcessInput) 
 }
 
 type sphinxResp struct {
-	recognisedUtterance string `json:"recognised_utterance string"`
+	recognisedUtterance string `json:"recognised_utterance"`
 }
 
 func callExternalPocketsphinxDecoderServer(wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {

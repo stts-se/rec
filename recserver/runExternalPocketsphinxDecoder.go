@@ -54,7 +54,7 @@ func runExternalPocketsphinxDecoder(wavFilePath string, input rec.ProcessInput) 
 }
 
 type sphinxResp struct {
-	recognisedUtterance string `json:"recognised_utterance"`
+	RecognisedUtterance string `json:"recognised_utterance"`
 }
 
 func callExternalPocketsphinxDecoderServer(wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
@@ -69,6 +69,7 @@ func callExternalPocketsphinxDecoderServer(wavFilePath string, input rec.Process
 	}
 
 	sphinxURL := "http://localhost:8000/rec?audio_file=" + filepath.Join(cd, wavFilePath)
+	fmt.Println(sphinxURL)
 	resp, err := http.Get(sphinxURL)
 	if err != nil {
 		return res, fmt.Errorf("callExternalPocketsphinxDecoderServer: failed get '%s' : %v", sphinxURL, err)
@@ -85,7 +86,7 @@ func callExternalPocketsphinxDecoderServer(wavFilePath string, input rec.Process
 		return res, fmt.Errorf("callExternalPocketsphinxDecoderServer: failed to unmarshal JSON '%s' : %v", string(body), err)
 	}
 
-	recRes := sr.recognisedUtterance
+	recRes := sr.RecognisedUtterance
 
 	log.Printf("RecognitionResult: %s\n", recRes)
 	text := strings.TrimSpace(recRes)

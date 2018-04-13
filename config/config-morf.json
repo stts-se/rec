@@ -1,0 +1,5 @@
+{
+    "sox_command": "sox",
+    "audio_dir": "audio_dir",
+    "server_port": "9993"    
+}

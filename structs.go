@@ -3,6 +3,7 @@ package rec
 import (
 	"fmt"
 	"path/filepath"
+	"regexp"
 )
 
 type Utterance struct {
@@ -87,6 +88,16 @@ type ProcessResponse struct {
 	Message string `json:"message"`
 }
 
+var sourceFromMessageRe = regexp.MustCompile("^(\\[[^\\]]+\\]).*")
+
 func (pr ProcessResponse) String() string {
-	return fmt.Sprintf("%s - %v - %f %s %s", pr.RecognitionResult, pr.Ok, pr.Confidence, pr.Message, pr.RecordingID)
+	source := sourceFromMessageRe.ReplaceAllString(pr.Message, "$1")
+	if source == "" || source == pr.Message {
+		source = "[undef source]"
+	}
+	status := "OK  "
+	if !pr.Ok {
+		status = "FAIL"
+	}
+	return fmt.Sprintf("%-18s %s %s | %f %s %s", source, status, pr.RecognitionResult, pr.Confidence, pr.Message, pr.RecordingID)
 }

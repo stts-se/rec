@@ -157,7 +157,7 @@ func process0(w http.ResponseWriter, r *http.Request, returnList bool) {
 
 	log.Printf("recserver result")
 	for _, r := range res {
-		log.Printf("res: %-v\n", r.String())
+		log.Printf(" %s\n", r.String())
 	}
 	if returnList {
 		resJSON, err := json.Marshal(res)

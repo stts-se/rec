@@ -62,13 +62,14 @@ func callExternalPocketsphinxDecoderServer(wavFilePath string, input rec.Process
 	methodName := "pocketsphinx"
 	res := rec.ProcessResponse{RecordingID: input.RecordingID}
 
-	cd, err := filepath.Abs(filepath.Dir("."))
+	absPath, err := filepath.Abs(wavFilePath)
 	if err != nil {
-		//log.Fatal(err)
-		return res, fmt.Errorf("failed to get path to current dir : %v", err)
+		return res, fmt.Errorf("failed to get absolut path to file : %v", err)
 	}
 
-	sphinxURL := "http://localhost:8000/rec?audio_file=" + filepath.Join(cd, wavFilePath)
+	// workingDir is defined in recserver.go
+	//sphinxURL := "http://localhost:8000/rec?audio_file=" + filepath.Join(workingDir, wavFilePath)
+	sphinxURL := "http://localhost:8000/rec?audio_file=" + absPath
 	fmt.Println(sphinxURL)
 	resp, err := http.Get(sphinxURL)
 	if err != nil {

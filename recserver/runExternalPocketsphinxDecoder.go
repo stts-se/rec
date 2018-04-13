@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"log"
-	"os"
+	//"os"
 	"os/exec"
 	"strings"
 
@@ -22,15 +22,16 @@ func runExternalPocketsphinxDecoder(wavFilePath string, input rec.ProcessInput) 
 		return res, fmt.Errorf("failed to find the external 'python' command : %v", pErr)
 	}
 
-	cmd := exec.Command("python", "/home/harald/git/e-lexia/pocketsphinx/demo_client.py", wavFilePath)
+	cmd := exec.Command("python3", "/home/harald/gitrepos/e-lexia/pocketsphinx/demo_client.py", wavFilePath)
 	var out bytes.Buffer
-	//var sterr bytes.Buffer
+	var sterr bytes.Buffer
 	cmd.Stdout = &out
-	cmd.Stderr = os.Stderr //&sterr
+	cmd.Stderr = &sterr
 
 	err := cmd.Run()
 	if err != nil {
 		log.Printf("failure: %v\n", err /*sterr.String()*/)
+		log.Printf("stderr: %v", sterr.String())
 		return res, fmt.Errorf("runExternalPocketsphinxDecoder failed running '%s': %v\n", cmd.Path, err)
 
 	}

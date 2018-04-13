@@ -200,7 +200,51 @@ func process0(w http.ResponseWriter, r *http.Request, returnList bool) {
 
 }
 
+type recresforchan struct {
+	resp rec.ProcessResponse
+	err  error
+}
+
+// parallell calls
 func analyzeAudio(audioFile string, input rec.ProcessInput) ([]rec.ProcessResponse, error) {
+	var accres = make(chan recresforchan)
+	var n = 0
+	if len(config.MyConfig.TensorflowCmd) > 0 {
+		n++
+		log.Println("starting tflow")
+		go runTensorflowCommandChan(accres, config.MyConfig.TensorflowCmd, audioFile, input)
+	}
+	if len(config.MyConfig.KaldiGStreamerURL) > 0 {
+		n++
+		log.Println("starting gstreamer kaldi")
+		go runGStreamerKaldiFromURLChan(accres, config.MyConfig.KaldiGStreamerURL, audioFile, input)
+	}
+	n++
+	log.Println("starting pocket shpinx")
+	go callExternalPocketsphinxDecoderServerChan(accres, audioFile, input)
+
+	res := []rec.ProcessResponse{}
+	// errs := []error{}
+	for i := 0; i < n; i++ {
+		rr := <-accres
+		if rr.err != nil {
+			return res, rr.err
+		} else {
+			res = append(res, rr.resp)
+		}
+	}
+
+	sorter := func(i, j int) bool {
+		if res[i].Ok && res[j].Ok {
+			return res[i].Confidence > res[j].Confidence
+		} else {
+			return res[i].Ok
+		}
+	}
+	sort.Slice(res, sorter)
+	return res, nil
+}
+func analyzeAudioNonParallell(audioFile string, input rec.ProcessInput) ([]rec.ProcessResponse, error) {
 	res := []rec.ProcessResponse{}
 	if len(config.MyConfig.TensorflowCmd) > 0 {
 		r0, err := runTensorflowCommand(config.MyConfig.TensorflowCmd, audioFile, input)

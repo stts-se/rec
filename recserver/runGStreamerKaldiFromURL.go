@@ -22,6 +22,13 @@ type gstreamerResponse struct {
 	Message    string `json:"message"`
 }
 
+func runGStreamerKaldiFromURLChan(accres chan recresforchan, url string, wavFilePath string, input rec.ProcessInput) {
+	res, err := runGStreamerKaldiFromURL(url, wavFilePath, input)
+	log.Println("completed gstreamer kaldi")
+	rchan := recresforchan{resp: res, err: err}
+	accres <- rchan
+}
+
 func runGStreamerKaldiFromURL(url string, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
 
 	methodName := "gstreamer kaldi"
@@ -30,8 +37,8 @@ func runGStreamerKaldiFromURL(url string, wavFilePath string, input rec.ProcessI
 	// curl -T $WAVFILE "http://192.168.0.105:8080/client/dynamic/recognize"
 	// {"status": 0, "hypotheses": [{"utterance": "just three style."}], "id": "80a4a3e6-15ec-41e7-ac5d-fa2ea2386df2"}
 
-	log.Printf("runKaldiGStreamerFromURL url=%s\n", url)
-	log.Printf("runKaldiGStreamerFromURL wav rel=%s\n", wavFilePath)
+	log.Printf("runGStreamerKaldiFromURL url=%s\n", url)
+	log.Printf("runGStreamerKaldiFromURL wav rel=%s\n", wavFilePath)
 
 	audio, err := ioutil.ReadFile(wavFilePath)
 	if err != nil {
@@ -74,6 +81,6 @@ func runGStreamerKaldiFromURL(url string, wavFilePath string, input rec.ProcessI
 	}
 	res.Message = fmt.Sprintf("[%s] %s", methodName, gsResp.Message)
 
-	log.Printf("runKaldiGStreamerFromURL RecognitionResult: %s\n", res.RecognitionResult)
+	log.Printf("runGStreamerKaldiFromURL RecognitionResult: %s\n", res.RecognitionResult)
 	return res, nil
 }

@@ -57,6 +57,13 @@ type sphinxResp struct {
 	RecognisedUtterance string `json:"recognised_utterance"`
 }
 
+func callExternalPocketsphinxDecoderServerChan(accres chan recresforchan, wavFilePath string, input rec.ProcessInput) {
+	res, err := callExternalPocketsphinxDecoderServer(wavFilePath, input)
+	log.Println("completed pocket sphinx")
+	rchan := recresforchan{resp: res, err: err}
+	accres <- rchan
+}
+
 func callExternalPocketsphinxDecoderServer(wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
 
 	methodName := "pocketsphinx"
@@ -67,10 +74,8 @@ func callExternalPocketsphinxDecoderServer(wavFilePath string, input rec.Process
 		return res, fmt.Errorf("failed to get absolut path to file : %v", err)
 	}
 
-	// workingDir is defined in recserver.go
-	//sphinxURL := "http://localhost:8000/rec?audio_file=" + filepath.Join(workingDir, wavFilePath)
 	sphinxURL := "http://localhost:8000/rec?audio_file=" + absPath
-	fmt.Println(sphinxURL)
+	log.Printf("callExternalPocketsphinxDecoderServer URL: %s\n", sphinxURL)
 	resp, err := http.Get(sphinxURL)
 	if err != nil {
 		return res, fmt.Errorf("callExternalPocketsphinxDecoderServer: failed get '%s' : %v", sphinxURL, err)
@@ -89,7 +94,7 @@ func callExternalPocketsphinxDecoderServer(wavFilePath string, input rec.Process
 
 	recRes := sr.RecognisedUtterance
 
-	log.Printf("RecognitionResult: %s\n", recRes)
+	log.Printf("callExternalPocketsphinxDecoderServer RecognitionResult: %s\n", recRes)
 	text := strings.TrimSpace(recRes)
 	if len(text) > 0 {
 		res.RecognitionResult = text

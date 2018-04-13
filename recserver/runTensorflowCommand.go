@@ -23,6 +23,13 @@ var wavFilePlaceHolder = "{wavfile}"
 
 //var scoreRe = regexp.MustCompile("^([^ ]+) [(]score = ([0-9.]+)[)]$")
 
+func runTensorflowCommandChan(accres chan recresforchan, command string, wavFilePath string, input rec.ProcessInput) {
+	res, err := runTensorflowCommand(command, wavFilePath, input)
+	log.Println("completed tflow")
+	rchan := recresforchan{resp: res, err: err}
+	accres <- rchan
+}
+
 func runTensorflowCommand(command string, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
 
 	methodName := "tensorflow"

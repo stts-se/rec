@@ -86,3 +86,7 @@ type ProcessResponse struct {
 	//Source            string  `json:"source"` // add later
 	Message string `json:"message"`
 }
+
+func (pr ProcessResponse) String() string {
+	return fmt.Sprintf("%s - %v - %f %s %s", pr.RecognitionResult, pr.Ok, pr.Confidence, pr.Message, pr.RecordingID)
+}

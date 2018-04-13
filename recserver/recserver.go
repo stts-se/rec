@@ -154,16 +154,11 @@ func process0(w http.ResponseWriter, r *http.Request, returnList bool) {
 		http.Error(w, msg, http.StatusInternalServerError)
 		return
 	}
-	// for _, r := range res {
-	// 	err = writeJSONInfoFile(audioRef, input, r)
-	// 	if err != nil {
-	// 		msg := fmt.Sprintf("failed writing info file : %v", err)
-	// 		log.Print(msg)
-	// 		http.Error(w, msg, http.StatusInternalServerError)
-	// 		return
-	// 	}
-	// }
 
+	log.Printf("recserver result")
+	for _, r := range res {
+		log.Printf("res: %-v\n", r.String())
+	}
 	if returnList {
 		resJSON, err := json.Marshal(res)
 		if err != nil {
@@ -176,7 +171,6 @@ func process0(w http.ResponseWriter, r *http.Request, returnList bool) {
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintf(w, "%s\n", string(resJSON))
 	} else {
-		log.Printf("recserver debug, longer list was: %-v\n", res)
 		var r1 rec.ProcessResponse
 		if len(res) > 0 {
 			r1 = res[0]

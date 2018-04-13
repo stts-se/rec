@@ -350,7 +350,7 @@ function updateAudio(blob) {
     var audio = document.getElementById('audio');
     // use the blob from the MediaRecorder as source for the audio tag
     audio.src = URL.createObjectURL(blob);
-    audio.play();
+    //audio.play();
     // var xhr = new XMLHttpRequest();
     // xhr.open('GET', audio.src, true);
     // xhr.responseType = 'blob';

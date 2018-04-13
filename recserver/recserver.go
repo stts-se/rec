@@ -417,13 +417,6 @@ func main() {
 	r.HandleFunc("/rec/get_next_utterance/{username}", getNextUtterance).Methods("GET")
 	r.HandleFunc("/rec/get_previous_utterance/{username}", getPreviousUtterance).Methods("GET")
 
-	// Defined in admin.go
-	r.HandleFunc("/rec/admin/list_users", listUsers).Methods("GET")
-	r.HandleFunc("/rec/admin/add_user/{username}", addUser).Methods("GET")
-	r.HandleFunc("/rec/admin/delete_user/{username}", deleteUser).Methods("GET")
-	r.HandleFunc("/rec/admin/get_utts/{username}", getUtts).Methods("GET")
-	r.HandleFunc("/rec/admin/list_files/{username}", listFiles).Methods("GET")
-
 	// List route URLs to use as simple on-line documentation
 	r.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
 		t, err := route.GetPathTemplate()
@@ -435,6 +428,13 @@ func main() {
 	})
 	// Add paths that don't need to be in the generated
 	// documentation after the r.Walk above
+
+	// Defined in admin.go
+	r.HandleFunc("/rec/admin/list_users", listUsers).Methods("GET")
+	r.HandleFunc("/rec/admin/add_user/{username}", addUser).Methods("GET")
+	r.HandleFunc("/rec/admin/delete_user/{username}", deleteUser).Methods("GET")
+	r.HandleFunc("/rec/admin/get_utts/{username}", getUtts).Methods("GET")
+	r.HandleFunc("/rec/admin/list_files/{username}", listFiles).Methods("GET")
 
 	// for ngrok access
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {

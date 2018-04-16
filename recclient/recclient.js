@@ -23,7 +23,7 @@ navigator.getUserMedia = (navigator.getUserMedia ||
 // //
 
 
-let recButton, stopButton, sendButton, getAudioButton, getSpecButton, prevButton, nextButton;
+let recButton, stopButton, sendButton, getAudioButton, /*getSpecButton,*/ prevButton, nextButton;
 let baseURL = window.location.origin +"/rec";
 console.log(baseURL);
 var currentBlob;
@@ -132,13 +132,12 @@ function initWavesurferJS() {
     
     wavesurfer.on('ready', function () {
     	//console.log("wavesurfer.js sample rate", wavesurfer.backend.ac.sampleRate);
-    	var spectrogram = Object.create(WaveSurfer.Spectrogram);
-    	spectrogram.init({
-    	    wavesurfer: wavesurfer,
-    	    container: "#js-wavesurfer-spectrogram",
-    	    //fftSamples: 256, //512,//1024,//1024,
-    	    labels: true,
-    	});
+    	// var spectrogram = Object.create(WaveSurfer.Spectrogram);
+    	// spectrogram.init({
+    	//     wavesurfer: wavesurfer,
+    	//     container: "#js-wavesurfer-spectrogram",
+    	//     labels: true,
+    	// });
     	var timeline = Object.create(WaveSurfer.Timeline);
     	timeline.init({
             wavesurfer: wavesurfer,
@@ -297,14 +296,14 @@ function clearResponse() {
     document.getElementById("response").innerHTML = "";
 }
 
-function showJSSpectrogram() {
-    console.log("showJSSpectrogram()");
+function showJSAudioPane() {
+    console.log("showJSAudioPane()");
     ele = document.getElementById("js-wavesurfer");
     ele.style.visibility = "visible";
 }
 
-function hideJSSpectrogram() {
-    console.log("hideJSSpectrogram()");
+function hideJSAudioPane() {
+    console.log("hideJSAudioPane()");
     ele = document.getElementById("js-wavesurfer");
     ele.style.visibility = "hidden";
 }
@@ -348,7 +347,7 @@ function uint8ArrayToArrayBuffer(input) {
 function getAudio() {
 
     console.log("getAudio()");
-    hideJSSpectrogram();
+    hideJSAudioPane();
     
     let userName = document.getElementById('username2').value;
     let utteranceID = document.getElementById('recording_id2').value;
@@ -387,7 +386,7 @@ function getAudio() {
 	//audio.play();
 
 	//if (!noiseRedSpec) {
-	    //showJSSpectrogram();
+	    //showJSAudioPane();
 	    wavesurfer.loadBlob(blob);
 	//}
     };
@@ -426,7 +425,7 @@ function getAudio() {
 
 // 	let blob = new Blob([byteArray], {'type' : resp.file_type});
 
-// 	showJSSpectrogram();
+// 	showJSAudioPane();
 // 	wavesurfer.loadBlob(blob);
 //     };
   

@@ -80,24 +80,29 @@ func (af AudioFile) AudioDir() AudioDir {
 }
 
 type ProcessResponse struct {
-	Ok                bool    `json:"ok"`
-	Confidence        float32 `json:"confidence"` // value between 0 and 1
-	RecognitionResult string  `json:"recognition_result"`
-	RecordingID       string  `json:"recording_id"`
-	//Source            string  `json:"source"` // add later
-	Message string `json:"message"`
+	Ok                bool              `json:"ok"`
+	Confidence        float32           `json:"confidence"` // value between 0 and 1
+	RecognitionResult string            `json:"recognition_result"`
+	RecordingID       string            `json:"recording_id"`
+	Message           string            `json:"message"`
+	ComponentResults  []ProcessResponse `json:"component_results,omitempty"`
 }
 
-var sourceFromMessageRe = regexp.MustCompile("^(\\[[^\\]]+\\]).*")
+var sourceFromMessageRe = regexp.MustCompile("^\\[([^\\]]+)\\].*")
 
-func (pr ProcessResponse) String() string {
+func (pr ProcessResponse) Source() string {
 	source := sourceFromMessageRe.ReplaceAllString(pr.Message, "$1")
 	if source == "" || source == pr.Message {
 		source = "[undef source]"
 	}
+	return source
+}
+
+func (pr ProcessResponse) String() string {
+	source := pr.Source()
 	status := "OK  "
 	if !pr.Ok {
 		status = "FAIL"
 	}
-	return fmt.Sprintf("%-18s %s %s | %f %s %s", source, status, pr.RecognitionResult, pr.Confidence, pr.Message, pr.RecordingID)
+	return fmt.Sprintf("[%-18s] %s %s | %f %s %s", source, status, pr.RecognitionResult, pr.Confidence, pr.Message, pr.RecordingID)
 }

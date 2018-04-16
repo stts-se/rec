@@ -11,7 +11,6 @@ var MyConfig Config
 
 type Config struct {
 	KaldiGStreamerURL string `json:"kaldi_gstreamer_url"`
-	SoxCommand        string `json:"sox_command"`
 	AudioDir          string `json:"audio_dir"`
 	ServerPort        string `json:"server_port"`
 	TensorflowCmd     string `json:"tensorflow_cmd"`

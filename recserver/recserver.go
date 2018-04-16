@@ -376,6 +376,10 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 // The path to the directory where audio files are saved
 var audioDir string
 
+// Name of subdirectory in which to put the original input audio file
+// recieved from client, before re-coding it into 16 kHz mono wav.
+var inputAudioDir = "input_audio"
+
 // This is filled in by main, listing the URLs handled by the router,
 // so that these can be shown in the generated docs.
 var walkedURLs []string

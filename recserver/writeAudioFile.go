@@ -11,28 +11,28 @@ import (
 	"strings"
 
 	"github.com/stts-se/rec"
-	"github.com/stts-se/rec/audioproc"
+	//"github.com/stts-se/rec/audioproc"
 )
 
 // TODO Remove noise reduced variants?
-var noiseRedSuffix = "-noisered"
+//var noiseRedSuffix = "-noisered"
 
 func validAudioFileExtension(ext string) bool {
 	return ext == "wav"
 	//return (ext == "opus" || ext == "mp3" || ext == "wav")
 }
 
-func noiseReduce(audioFilePathWav string, audioRef rec.AudioRef) error {
-	audioFilePathWavReduced := audioRef.Path(noiseRedSuffix + ".wav")
-	err := audioproc.NoiseReduce(audioFilePathWav, audioFilePathWavReduced)
-	if err != nil {
-		msg := fmt.Sprintf("writeAudioFile failed noise reduction for file : %v", err)
-		log.Print(msg)
-		return fmt.Errorf(msg)
-	}
-	log.Printf("Converted saved file into noise-reduced wav: %s", audioFilePathWavReduced)
-	return nil
-}
+// func noiseReduce(audioFilePathWav string, audioRef rec.AudioRef) error {
+// 	audioFilePathWavReduced := audioRef.Path(noiseRedSuffix + ".wav")
+// 	err := audioproc.NoiseReduce(audioFilePathWav, audioFilePathWavReduced)
+// 	if err != nil {
+// 		msg := fmt.Sprintf("writeAudioFile failed noise reduction for file : %v", err)
+// 		log.Print(msg)
+// 		return fmt.Errorf(msg)
+// 	}
+// 	log.Printf("Converted saved file into noise-reduced wav: %s", audioFilePathWavReduced)
+// 	return nil
+// }
 
 // save the original audio from the client + a set of additional versions
 func writeAudioFile(audioDir rec.AudioDir, input rec.ProcessInput) (rec.AudioFile, error) {

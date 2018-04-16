@@ -9,6 +9,16 @@ import (
 )
 
 const ffmpegCmd = "ffmpeg"
+const soxCmd = "sox"
+
+func soxEnabled() bool {
+	_, pErr := exec.LookPath(soxCmd)
+	if pErr != nil {
+		log.Printf("recserver.FfmpegEnabled(): External '%s' command does not exist!", soxCmd)
+		return false
+	}
+	return true
+}
 
 func ffmpegEnabled() bool {
 	_, pErr := exec.LookPath(ffmpegCmd)

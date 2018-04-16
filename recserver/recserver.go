@@ -289,18 +289,18 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 	userName := vars["username"]
 	utteranceID := vars["utterance_id"]
 
-	// TODO Remove the "noise reduced" audio variants?
-	noiseRedS := getParam("noise_red", r)
-	useNoiseReduction := false
-	if onRegexp.MatchString(noiseRedS) {
-		useNoiseReduction = true
-	}
-	if useNoiseReduction {
-		msg := fmt.Sprintf("get_audio: noise_red option is deprecated")
-		log.Print(msg)
-		http.Error(w, msg, http.StatusBadRequest)
-		return
-	}
+	// // TODO Remove the "noise reduced" audio variants?
+	// noiseRedS := getParam("noise_red", r)
+	// useNoiseReduction := false
+	// if onRegexp.MatchString(noiseRedS) {
+	// 	useNoiseReduction = true
+	// }
+	// if useNoiseReduction {
+	// 	msg := fmt.Sprintf("get_audio: noise_red option is deprecated")
+	// 	log.Print(msg)
+	// 	http.Error(w, msg, http.StatusBadRequest)
+	// 	return
+	// }
 	var ext = vars["ext"]
 	if ext == "" {
 		ext = defaultExtension
@@ -344,11 +344,7 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 
 		// We have found a matching file with the highest running number
 		runningNum := fmt.Sprintf("_%04d", highest)
-		if useNoiseReduction {
-			utteranceID = utteranceID + runningNum + noiseRedSuffix
-		} else {
-			utteranceID = utteranceID + runningNum
-		}
+		utteranceID = utteranceID + runningNum
 
 		audioFile = rec.NewAudioFile(audioDir, userName, utteranceID, "."+ext)
 
@@ -416,7 +412,7 @@ func main() {
 	}
 
 	if !soxEnabled() {
-		log.Printf("Exiting! %s is required! Please install.", config.MyConfig.SoxCommand)
+		log.Printf("Exiting! %s is required! Please install.", soxCmd)
 		os.Exit(1)
 	}
 

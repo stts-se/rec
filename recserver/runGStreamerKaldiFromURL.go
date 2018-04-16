@@ -29,6 +29,14 @@ func runGStreamerKaldiFromURLChan(accres chan recresforchan, name string, url st
 	accres <- rchan
 }
 
+// var gStreamerKaldiReplacements = map[string]string{
+// 	"also": "rose",
+// }
+
+// func gStreamerKaldiReplace(result string) string {
+// 	return string
+// }
+
 func runGStreamerKaldiFromURL(name string, url string, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
 
 	methodName := "gstreamer kaldi"

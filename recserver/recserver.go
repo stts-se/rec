@@ -295,6 +295,12 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 	if onRegexp.MatchString(noiseRedS) {
 		useNoiseReduction = true
 	}
+	if useNoiseReduction {
+		msg := fmt.Sprintf("get_audio: noise_red option is deprecated")
+		log.Print(msg)
+		http.Error(w, msg, http.StatusBadRequest)
+		return
+	}
 	var ext = vars["ext"]
 	if ext == "" {
 		ext = defaultExtension
@@ -409,6 +415,11 @@ func main() {
 		os.Exit(1)
 	}
 
+	if !soxEnabled() {
+		log.Printf("Exiting! %s is required! Please install.", config.MyConfig.SoxCommand)
+		os.Exit(1)
+	}
+
 	// TODO return text prompt etc as well
 
 	//TODO Check Go ffmpeg, or similar, bindings instead of
@@ -449,11 +460,10 @@ func main() {
 	r.HandleFunc("/rec/get_audio/{username}/{utterance_id}", getAudio).Methods("GET") // with default extension
 
 	// audioproc.go
-	r.HandleFunc("/rec/build_spectrogram/{username}/{utterance_id}/{ext}", buildSpectrogram).Methods("GET")
-	r.HandleFunc("/rec/build_spectrogram/{username}/{utterance_id}", buildSpectrogram).Methods("GET")
+	// r.HandleFunc("/rec/build_spectrogram/{username}/{utterance_id}/{ext}", buildSpectrogram).Methods("GET")
+	// r.HandleFunc("/rec/build_spectrogram/{username}/{utterance_id}", buildSpectrogram).Methods("GET")
 	//r.HandleFunc("/rec/analyse_audio/{username}/{utterance_id}/{ext}", analyseAudio).Methods("GET")
 	//r.HandleFunc("/rec/analyse_audio/{username}/{utterance_id}", analyseAudio).Methods("GET")
-	r.HandleFunc("/rec/enabled/sox", soxEnabled).Methods("GET")
 
 	// Defined in getUtterance.go
 	r.HandleFunc("/rec/get_next_utterance/{username}", getNextUtterance).Methods("GET")

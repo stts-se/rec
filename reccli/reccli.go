@@ -24,9 +24,15 @@ func main() {
 
 	flag.Parse()
 
+	if len(flag.Args()) == 0 {
+		fmt.Fprintf(os.Stderr, "reccli <AUDIO FILE> or --help\n")
+		flag.PrintDefaults()
+		os.Exit(0)
+	}
+
 	for _, fileName := range flag.Args() {
 		if fileName == "" {
-			fmt.Fprintf(os.Stderr, "reccli <AUDIO FILE> or --help.\n") //, os.Args[0])
+			fmt.Fprintf(os.Stderr, "reccli <AUDIO FILE> or --help\n") //, os.Args[0])
 			flag.PrintDefaults()
 			//fmt.Fprintf(os.Stderr, "%s\n", flag.PrintDefaults())
 			os.Exit(0)

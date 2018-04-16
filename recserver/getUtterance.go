@@ -215,7 +215,7 @@ func readUttFile(fn string) ([]rec.Utterance, error) {
 			continue
 		}
 		u := rec.Utterance{RecordingID: fs[0], Text: fs[1]}
-		fmt.Printf("%#v\n", u)
+		//fmt.Printf("%#v\n", u)
 		res = append(res, u)
 
 	}

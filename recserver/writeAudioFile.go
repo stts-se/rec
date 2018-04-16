@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	//"path/filepath"
+	"path/filepath"
 	"strings"
 
 	"github.com/stts-se/rec"
@@ -18,9 +18,23 @@ import (
 var noiseRedSuffix = "-noisered"
 
 func validAudioFileExtension(ext string) bool {
-	return (ext == "opus" || ext == "mp3" || ext == "wav")
+	return ext == "wav"
+	//return (ext == "opus" || ext == "mp3" || ext == "wav")
 }
 
+func noiseReduce(audioFilePathWav string, audioRef rec.AudioRef) error {
+	audioFilePathWavReduced := audioRef.Path(noiseRedSuffix + ".wav")
+	err := audioproc.NoiseReduce(audioFilePathWav, audioFilePathWavReduced)
+	if err != nil {
+		msg := fmt.Sprintf("writeAudioFile failed noise reduction for file : %v", err)
+		log.Print(msg)
+		return fmt.Errorf(msg)
+	}
+	log.Printf("Converted saved file into noise-reduced wav: %s", audioFilePathWavReduced)
+	return nil
+}
+
+// save the original audio from the client + a set of additional versions
 func writeAudioFile(audioDir rec.AudioDir, input rec.ProcessInput) (rec.AudioFile, error) {
 
 	// writeMutex declaren in recserver.go
@@ -37,18 +51,22 @@ func writeAudioFile(audioDir rec.AudioDir, input rec.ProcessInput) (rec.AudioFil
 		return rec.AudioFile{}, fmt.Errorf("writeAudioFile: empty input username")
 	}
 
-	dirPath := audioDir.Path()
+	userDir := audioDir.Path()
+	inputAudioDirPath := filepath.Join(userDir, inputAudioDir)
 
-	_, err := os.Stat(dirPath)
+	_, err := os.Stat(userDir)
 	if os.IsNotExist(err) {
 		// First file to save for input.Username, create dir of
 		// user name
-		err = os.MkdirAll(dirPath, os.ModePerm)
+		err = os.MkdirAll(userDir, os.ModePerm)
 		if err != nil {
 			return rec.AudioFile{}, fmt.Errorf("writeAudioFile: failed to create dir : %v", err)
 		}
+	}
+	_, err = os.Stat(inputAudioDirPath)
+	if os.IsNotExist(err) {
 		// create subdir input_audio to keep original audio from client
-		err = os.MkdirAll(filepath.Join(dirPath, inputAudioDir), os.ModePerm)
+		err = os.MkdirAll(inputAudioDirPath, os.ModePerm)
 		if err != nil {
 			return rec.AudioFile{}, fmt.Errorf("writeAudioFile: failed to create dir : %v", err)
 		}
@@ -79,7 +97,7 @@ func writeAudioFile(audioDir rec.AudioDir, input rec.ProcessInput) (rec.AudioFil
 	// declared in generateNextFileNum.go
 	runningNum := generateNextFileNum(audioDir, input.RecordingID)
 	audioRef := rec.AudioRef{Dir: audioDir, BaseName: input.RecordingID + "_" + runningNum}
-	audioFilePath := audioRef.Path("." + ext)
+	//audioFilePath := audioRef.Path("." + ext)
 
 	// If file of same name exists, remove
 	//if _, err = os.Stat(audioFilePath); !os.IsNotExist(err) {
@@ -97,7 +115,10 @@ func writeAudioFile(audioDir rec.AudioDir, input rec.ProcessInput) (rec.AudioFil
 		return rec.AudioFile{}, fmt.Errorf("%s : %v", msg, err)
 	}
 
-	err = ioutil.WriteFile(filepath.Join( /*inputAudioDir, */ audioFilePath), audio, 0644)
+	inputAudioFilePath := filepath.Join(inputAudioDirPath, audioRef.FileName("."+ext))
+
+	// (1) Save original audio input file (whatever extension/format)
+	err = ioutil.WriteFile(inputAudioFilePath, audio, 0644)
 	if err != nil {
 		msg := fmt.Sprintf("failed to write audio file : %v", err)
 		log.Println(msg)
@@ -106,65 +127,48 @@ func writeAudioFile(audioDir rec.AudioDir, input rec.ProcessInput) (rec.AudioFil
 		//http.Error(w, msg, http.StatusBadRequest)
 		return rec.AudioFile{}, fmt.Errorf("%s : %v", msg, err)
 	}
-	log.Printf("AUDIO LEN: %d\n", len(audio))
-	log.Printf("WROTE FILE: %s\n", audioFilePath)
+	//log.Printf("AUDIO LEN: %d\n", len(audio))
+	log.Printf("WROTE FILE: %s\n", inputAudioFilePath)
 
-	// Convert to wav, while we're at it:
-	if ext != "wav" {
-		// ffmpegConvert function is defined in ffmpegConvert.go
-		audioFilePathWav := audioRef.Path(".wav")
-		audioFilePathWavReduced := audioRef.Path(noiseRedSuffix + ".wav")
-		err = ffmpegConvert(audioFilePath, audioFilePathWav, false)
-		if err != nil {
-			msg := fmt.Sprintf("writeAudioFile failed converting from %s to %s : %v", audioFilePath, audioFilePathWav, err)
-			log.Print(msg)
-			return rec.AudioFile{}, fmt.Errorf(msg)
-		}
-		if audioproc.SoxEnabled() {
-			err = audioproc.NoiseReduce(audioFilePathWav, audioFilePathWavReduced)
-			if err != nil {
-				msg := fmt.Sprintf("writeAudioFile failed noise reduction for file : %v", err)
-				log.Print(msg)
-				return rec.AudioFile{}, fmt.Errorf(msg)
-			}
-			log.Printf("Converted saved file into noise-reduced wav: %s", audioFilePathWavReduced)
-		} else { // silently skip generation of wav with noise reduction and remove old noisered file if it exists
-			if _, err = os.Stat(audioFilePathWavReduced); !os.IsNotExist(err) {
-				err = os.Remove(audioFilePathWavReduced)
-				if err != nil {
-					log.Printf("failed to remove file : %v\n", err)
-				}
-			}
-		}
-		log.Printf("Converted saved file into wav: %s", audioFilePathWav)
+	// (2) ALWAYS convert to wav 16kHz MONO
+	// ffmpegConvert function is defined in ffmpegConvert.go
+	audioFilePathWav := audioRef.Path(".wav")
+	err = ffmpegConvert(inputAudioFilePath, audioFilePathWav, false)
+	if err != nil {
+		msg := fmt.Sprintf("writeAudioFile failed converting from %s to %s : %v", inputAudioFilePath, audioFilePathWav, err)
+		log.Print(msg)
+		return rec.AudioFile{}, fmt.Errorf(msg)
 	}
+	log.Printf("Converted saved file into wav: %s", audioFilePathWav)
 
-	// Convert to opus, while we're at it:
-	if defaultExtension == "opus" {
-		if ext != defaultExtension {
-			audioFilePathOpus := audioRef.Path(".opus") // filepath.Join(dirPath, recordingIDFileBase /*rec.RecordingID*/ +".opus")
-			// ffmpegConvert function is defined in ffmpegConvert.go
-			err = ffmpegConvert(audioFilePath, audioFilePathOpus, false)
-			if err != nil {
-				msg := fmt.Sprintf("writeAudioFile failed converting from %s to %s : %v", audioFilePath, audioFilePathOpus, err)
-				log.Print(msg)
-				return rec.AudioFile{}, fmt.Errorf(msg)
-			} // Woohoo, file converted into opus
-			log.Printf("Converted saved file into opus: %s", audioFilePathOpus)
-		}
-	} else if defaultExtension == "mp3" {
-		if ext != defaultExtension+".mp3" {
-			audioFilePathMp3 := audioRef.Path(".mp3") // filepath.Join(dirPath, recordingIDFileBase /*rec.RecordingID*/ +".mp3")
-			// ffmpegConvert function is defined in ffmpegConvert.go
-			err = ffmpegConvert(audioFilePath, audioFilePathMp3, false)
-			if err != nil {
-				msg := fmt.Sprintf("writeAudioFile failed converting from %s to %s : %v", audioFilePath, audioFilePathMp3, err)
-				log.Print(msg)
-				return rec.AudioFile{}, fmt.Errorf(msg)
-			} // Woohoo, file converted into mp3
-			log.Printf("Converted saved file into mp3: %s", audioFilePathMp3)
-		}
-	}
+	// err = noiseReduce(audioFilePathWav, audioRef)
+	// if err != nil {
+	// 	return rec.AudioFile{}, err
+	// }
+
+	// if defaultExtension == "opus" {
+	// 	if ext != defaultExtension {
+	// 		audioFilePathOpus := audioRef.Path(".opus")
+	// 		err = ffmpegConvert(inputAudioFilePath, audioFilePathOpus, false)
+	// 		if err != nil {
+	// 			msg := fmt.Sprintf("writeAudioFile failed converting from %s to %s : %v", inputAudioFilePath, audioFilePathOpus, err)
+	// 			log.Print(msg)
+	// 			return rec.AudioFile{}, fmt.Errorf(msg)
+	// 		}
+	// 		log.Printf("Converted saved file into opus: %s", audioFilePathOpus)
+	// 	}
+	// } else if defaultExtension == "mp3" {
+	// 	if ext != defaultExtension+".mp3" {
+	// 		audioFilePathMp3 := audioRef.Path(".mp3")
+	// 		err = ffmpegConvert(inputAudioFilePath, audioFilePathMp3, false)
+	// 		if err != nil {
+	// 			msg := fmt.Sprintf("writeAudioFile failed converting from %s to %s : %v", inputAudioFilePath, audioFilePathMp3, err)
+	// 			log.Print(msg)
+	// 			return rec.AudioFile{}, fmt.Errorf(msg)
+	// 		}
+	// 		log.Printf("Converted saved file into mp3: %s", audioFilePathMp3)
+	// 	}
+	// }
 
 	if !validAudioFileExtension(defaultExtension) {
 		msg := fmt.Sprintf("writeAudioFile unknown default extension: %s", defaultExtension)
@@ -178,5 +182,6 @@ func writeAudioFile(audioDir rec.AudioDir, input rec.ProcessInput) (rec.AudioFil
 		BasePath:  audioRef,
 		Extension: ("." + defaultExtension),
 	}
+	log.Printf("writeAudioFile: audioFileFinal=%v\n", audioFileFinal)
 	return audioFileFinal, nil
 }

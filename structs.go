@@ -52,11 +52,11 @@ func NewAudioRef(baseDir string, userDir string, baseName string) AudioRef {
 }
 
 func (ar AudioRef) Path(extension string) string {
-	fName := ar.fileName(extension)
+	fName := ar.FileName(extension)
 	return filepath.Join(ar.Dir.Path(), fName)
 }
 
-func (ar AudioRef) fileName(extension string) string {
+func (ar AudioRef) FileName(extension string) string {
 	return fmt.Sprintf("%s%s", ar.BaseName, extension)
 }
 
@@ -71,7 +71,7 @@ func NewAudioFile(baseDir string, userDir string, baseName string, extension str
 }
 
 func (af AudioFile) Path() string {
-	fName := af.BasePath.fileName(af.Extension)
+	fName := af.BasePath.FileName(af.Extension)
 	return filepath.Join(af.BasePath.Dir.Path(), fName)
 }
 

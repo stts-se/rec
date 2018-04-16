@@ -23,7 +23,7 @@ navigator.getUserMedia = (navigator.getUserMedia ||
 // //
 
 
-let recButton, stopButton, sendButton, getAudioButton, /*getSpecButton,*/ prevButton, nextButton;
+let recButton, stopButton, sendButton, getAudioButton, prevButton, nextButton;
 let baseURL = window.location.origin +"/rec";
 console.log(baseURL);
 var currentBlob;
@@ -49,7 +49,6 @@ window.onload = function () {
     stopButton = document.getElementById('stopandsend');
     stopButton.addEventListener('click', function() {
 	stopRecording();
-	//sendAndReceiveBlob(); // => added to dataavailable event listener below
     });
     stopButton.disabled = true;
     
@@ -66,7 +65,6 @@ window.onload = function () {
     
     navigator.mediaDevices.getUserMedia({'audio': true, video: false}).then(function(stream) {
 	source = audioCtx.createMediaStreamSource(stream);
-	//console.log("source.connect(analyser)");
         source.connect(analyser);
 	visualize();	
 	recorder = new MediaRecorder(stream);
@@ -80,8 +78,6 @@ window.onload = function () {
 
     initWavesurferJS();
 
-    //initSoxStatus()
-    
     // TODO Remove temporary initialization
     prevButton.click();
 
@@ -126,7 +122,6 @@ function initWavesurferJS() {
     	waveColor: '#6699FF',
     	progressColor: '#517acc', //'#46B54D',
     	labels: true,
-    	//fftSamples: 256, //512,//1024,//1024,
     	controls: true,
     });
     
@@ -319,19 +314,7 @@ function updateAudio(blob) {
     var audio = document.getElementById('audio');
     // use the blob from the MediaRecorder as source for the audio tag
     audio.src = URL.createObjectURL(blob);
-    //audio.play();
-    // var xhr = new XMLHttpRequest();
-    // xhr.open('GET', audio.src, true);
-    // xhr.responseType = 'blob';
-    // xhr.onload = function(e) {
-    // 	if (this.status == 200) {
-    // 	    currentBlob = this.response;
-    // 	    // myBlob is now the blob that the object URL pointed to.
-    // 	}
-    // };
-    // xhr.send();
-    
-    
+
     //sendButton.disabled = false;
 };
 
@@ -359,9 +342,6 @@ function getAudio() {
     xhr.open("GET", audioURL, true);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 
-    //let noiseRedSpec = document.getElementById('noise_red_spectrogram').checked;
-    //console.log("getAudio noiseRedSpec", noiseRedSpec);
-
     // TODO error handling
     
     
@@ -385,56 +365,13 @@ function getAudio() {
 	console.log("getAudio onloadend")
 	//audio.play();
 
-	//if (!noiseRedSpec) {
-	    //showJSAudioPane();
-	    wavesurfer.loadBlob(blob);
-	//}
+	wavesurfer.loadBlob(blob);
     };
-
-    //if (noiseRedSpec) {
-	//getAudioForSpectrogram(audioURL, noiseRedSpec);
-    //}
     
     xhr.send();
 
 }
 
-
-// function getAudioForSpectrogram(audioURL, noiseRedSpec) {
-//     console.log("getAudioForSpectrogram()");
-//     let audioURLForSpec = audioURL + "?noise_red=" + noiseRedSpec
-//     console.log("getAudio URL for spectrogram " + audioURLForSpec);
-//     let xhr = new XMLHttpRequest();
-//     xhr.open("GET", audioURLForSpec, true);
-//     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-
-//     xhr.onloadend = function () {
-//      	// done
-// 	console.log("STATUS: "+ xhr.statusText);
-// 	audio.src = "";
-// 	let resp = JSON.parse(xhr.response);
-	
-// 	// https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript#16245768
-// 	let byteCharacters = atob(resp.data);  
-	
-// 	var byteNumbers = new Array(byteCharacters.length);
-// 	for (var i = 0; i < byteCharacters.length; i++) {
-// 	    byteNumbers[i] = byteCharacters.charCodeAt(i);
-// 	}
-// 	var byteArray = new Uint8Array(byteNumbers);
-
-// 	let blob = new Blob([byteArray], {'type' : resp.file_type});
-
-// 	showJSAudioPane();
-// 	wavesurfer.loadBlob(blob);
-//     };
-  
-//     xhr.send();
-
-// }
-
-// //
-// //
 //
 // https://github.com/mdn/voice-change-o-matic/blob/gh-pages/scripts/app.js:
 //

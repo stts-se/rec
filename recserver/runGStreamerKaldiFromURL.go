@@ -22,14 +22,14 @@ type gstreamerResponse struct {
 	Message    string `json:"message"`
 }
 
-func runGStreamerKaldiFromURLChan(accres chan recresforchan, url string, wavFilePath string, input rec.ProcessInput) {
-	res, err := runGStreamerKaldiFromURL(url, wavFilePath, input)
-	log.Println("completed gstreamer kaldi")
+func runGStreamerKaldiFromURLChan(accres chan recresforchan, name string, url string, wavFilePath string, input rec.ProcessInput) {
+	res, err := runGStreamerKaldiFromURL(name, url, wavFilePath, input)
+	log.Println("completed gstreamer kaldi: " + name)
 	rchan := recresforchan{resp: res, err: err}
 	accres <- rchan
 }
 
-func runGStreamerKaldiFromURL(url string, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
+func runGStreamerKaldiFromURL(name string, url string, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
 
 	methodName := "gstreamer kaldi"
 	res := rec.ProcessResponse{RecordingID: input.RecordingID}
@@ -79,7 +79,7 @@ func runGStreamerKaldiFromURL(url string, wavFilePath string, input rec.ProcessI
 	if gsResp.Status != 0 {
 		res.Ok = false
 	}
-	res.Message = fmt.Sprintf("[%s] %s", methodName, gsResp.Message)
+	res.Message = fmt.Sprintf("%s: %s", methodName, name)
 
 	log.Printf("runGStreamerKaldiFromURL RecognitionResult: %s\n", res.RecognitionResult)
 	return res, nil

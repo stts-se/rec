@@ -23,14 +23,14 @@ var wavFilePlaceHolder = "{wavfile}"
 
 //var scoreRe = regexp.MustCompile("^([^ ]+) [(]score = ([0-9.]+)[)]$")
 
-func runTensorflowCommandChan(accres chan recresforchan, command string, wavFilePath string, input rec.ProcessInput) {
-	res, err := runTensorflowCommand(command, wavFilePath, input)
-	log.Println("completed tflow")
+func runTensorflowCommandChan(accres chan recresforchan, name string, command string, wavFilePath string, input rec.ProcessInput) {
+	res, err := runTensorflowCommand(name, command, wavFilePath, input)
+	log.Println("completed tensorflow: " + name)
 	rchan := recresforchan{resp: res, err: err}
 	accres <- rchan
 }
 
-func runTensorflowCommand(command string, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
+func runTensorflowCommand(name string, command string, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
 
 	methodName := "tensorflow"
 	res := rec.ProcessResponse{RecordingID: input.RecordingID}
@@ -82,9 +82,7 @@ func runTensorflowCommand(command string, wavFilePath string, input rec.ProcessI
 		res.Confidence = float32(score)
 	}
 
-	msg := "Recognised by external tensorflow recognizer"
-
-	res.Message = fmt.Sprintf("[%s] %s", methodName, msg)
+	res.Message = fmt.Sprintf("%s: %s", methodName, name)
 
 	log.Printf("runTensorflowCommand RecognitionResult: %s\n", res.RecognitionResult)
 	return res, nil

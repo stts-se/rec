@@ -8,9 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	//"path"
 	"path/filepath"
-	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -159,7 +157,7 @@ func process0(w http.ResponseWriter, r *http.Request, devMode bool) {
 
 	log.Printf("recserver result")
 	for _, r := range res {
-		log.Printf(" %s\n", r.String())
+		log.Printf("%s\n", r.String())
 	}
 	final := combineResults(input, res)
 	if devMode {
@@ -187,19 +185,21 @@ type recresforchan struct {
 func analyzeAudio(audioFile string, input rec.ProcessInput) ([]rec.ProcessResponse, error) {
 	var accres = make(chan recresforchan)
 	var n = 0
-	if len(config.MyConfig.TensorflowCmd) > 0 {
+	for name, cmd := range config.MyConfig.TensorFlow {
 		n++
-		log.Println("starting tflow")
-		go runTensorflowCommandChan(accres, config.MyConfig.TensorflowCmd, audioFile, input)
+		log.Println("running tensorflow: " + name)
+		go runTensorflowCommandChan(accres, name, cmd, audioFile, input)
 	}
-	if len(config.MyConfig.KaldiGStreamerURL) > 0 {
+	for name, url := range config.MyConfig.KaldiGStreamer {
 		n++
-		log.Println("starting gstreamer kaldi")
-		go runGStreamerKaldiFromURLChan(accres, config.MyConfig.KaldiGStreamerURL, audioFile, input)
+		log.Println("running gstreamer kaldi: " + name)
+		go runGStreamerKaldiFromURLChan(accres, name, url, audioFile, input)
 	}
-	n++
-	log.Println("starting pocket shpinx")
-	go callExternalPocketsphinxDecoderServerChan(accres, audioFile, input)
+	for name, url := range config.MyConfig.PocketSphinx {
+		n++
+		log.Println("running pocketshpinx: " + name)
+		go callExternalPocketsphinxDecoderServerChan(accres, name, url, audioFile, input)
+	}
 
 	res := []rec.ProcessResponse{}
 	// errs := []error{}
@@ -212,43 +212,6 @@ func analyzeAudio(audioFile string, input rec.ProcessInput) ([]rec.ProcessRespon
 		}
 	}
 
-	return res, nil
-}
-func analyzeAudioNonParallell(audioFile string, input rec.ProcessInput) ([]rec.ProcessResponse, error) {
-	res := []rec.ProcessResponse{}
-	if len(config.MyConfig.TensorflowCmd) > 0 {
-		r0, err := runTensorflowCommand(config.MyConfig.TensorflowCmd, audioFile, input)
-		if err != nil {
-			return res, fmt.Errorf("%s failed for input audio file : %v", "tensorflow", err)
-		}
-		//log.Print("runGStreamerKaldiFromURL.res =", res)
-		res = append(res, r0)
-	}
-	if len(config.MyConfig.KaldiGStreamerURL) > 0 {
-		//HL testing - gstreamer kaldi currently running with English model on Nikolaj's PC
-		r0, err := runGStreamerKaldiFromURL(config.MyConfig.KaldiGStreamerURL, audioFile, input)
-		if err != nil {
-			return res, fmt.Errorf("%s failed decoding audio file : %v", "gstreamer kaldi", err)
-		}
-		//log.Print("runGStreamerKaldiFromURL.res =", res)
-		res = append(res, r0)
-	}
-	// HB testing - currently a dummy return value
-	//r0, err := runExternalKaldiDecoder(audioFile, input)
-	r0, err := callExternalPocketsphinxDecoderServer(audioFile, input) //runExternalPocketsphinxDecoder(audioFile, input)
-	if err != nil {
-		return res, fmt.Errorf("%s failed decoding audio file : %v", "external pocket sphinx", err)
-	}
-	res = append(res, r0)
-	//log.Print("runExternalKaldiDecoder.res =", res)
-	sorter := func(i, j int) bool {
-		if res[i].Ok && res[j].Ok {
-			return res[i].Confidence > res[j].Confidence
-		} else {
-			return res[i].Ok
-		}
-	}
-	sort.Slice(res, sorter)
 	return res, nil
 }
 
@@ -376,6 +339,7 @@ func main() {
 		os.Exit(1)
 	}
 	config.MyConfig = cfg
+	log.Printf("Loaded recognizers from config: " + strings.Join(cfg.ListRecognizers(), ", "))
 
 	if !validAudioFileExtension(defaultExtension) {
 		log.Printf("Exiting! Unknown default audio file extension: %s", defaultExtension)

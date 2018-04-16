@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/stts-se/rec"
 	"sort"
-	"strings"
 )
 
 func combineResults(input rec.ProcessInput, results []rec.ProcessResponse) rec.ProcessResponse {
@@ -18,11 +17,7 @@ func combineResults(input rec.ProcessInput, results []rec.ProcessResponse) rec.P
 	var r1 rec.ProcessResponse
 	if len(results) > 0 {
 		r1 = results[0]
-		sources := []string{}
-		for _, r := range results {
-			sources = append(sources, r.Source())
-		}
-		r1.Message = "Sources: " + strings.Join(sources, ", ")
+		r1.Message = ""
 	} else {
 		r1 = rec.ProcessResponse{Ok: false,
 			RecordingID:       input.RecordingID,

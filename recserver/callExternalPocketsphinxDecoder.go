@@ -57,24 +57,32 @@ type sphinxResp struct {
 	RecognisedUtterance string `json:"recognised_utterance"`
 }
 
-func callExternalPocketsphinxDecoderServerChan(accres chan recresforchan, wavFilePath string, input rec.ProcessInput) {
-	res, err := callExternalPocketsphinxDecoderServer(wavFilePath, input)
-	log.Println("completed pocket sphinx")
+func callExternalPocketsphinxDecoderServerChan(accres chan recresforchan, name string, url string, wavFilePath string, input rec.ProcessInput) {
+	res, err := callExternalPocketsphinxDecoderServer(name, url, wavFilePath, input)
+	log.Println("completed pocketsphinx: " + name)
 	rchan := recresforchan{resp: res, err: err}
 	accres <- rchan
 }
 
-func callExternalPocketsphinxDecoderServer(wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
+func callExternalPocketsphinxDecoderServer(name string, url string, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
 
 	methodName := "pocketsphinx"
 	res := rec.ProcessResponse{RecordingID: input.RecordingID}
 
-	absPath, err := filepath.Abs(wavFilePath)
-	if err != nil {
-		return res, fmt.Errorf("failed to get absolut path to file : %v", err)
+	if !strings.Contains(url, wavFilePlaceHolder) {
+		msg := fmt.Sprintf("input tensorflow command must contain wav file variable %s", wavFilePlaceHolder)
+		log.Printf("failure : %v\n", msg)
+		return res, fmt.Errorf(msg)
 	}
 
-	sphinxURL := "http://localhost:8000/rec?audio_file=" + absPath
+	wavFilePathAbs, err := filepath.Abs(wavFilePath)
+	if err != nil {
+		log.Printf("failure : %v\n", err)
+		return res, fmt.Errorf("failed to get absolut path for wav file : %v", err)
+	}
+
+	//sphinxURL := "http://localhost:8000/rec?audio_file=" + wavFielPathAbs
+	sphinxURL := strings.Replace(url, wavFilePlaceHolder, wavFilePathAbs, -1)
 	log.Printf("callExternalPocketsphinxDecoderServer URL: %s\n", sphinxURL)
 	resp, err := http.Get(sphinxURL)
 	if err != nil {
@@ -102,7 +110,6 @@ func callExternalPocketsphinxDecoderServer(wavFilePath string, input rec.Process
 	} else {
 		res.Ok = false
 	}
-	msg := "Recognised by external pocketsphinx recognizer"
-	res.Message = fmt.Sprintf("[%s] %s", methodName, msg)
+	res.Message = fmt.Sprintf("%s: %s", methodName, name)
 	return res, nil
 }

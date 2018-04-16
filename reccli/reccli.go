@@ -63,7 +63,7 @@ func main() {
 			os.Exit(1)
 		}
 
-		resp, err := http.Post(flagURL, "application/json", bytes.NewBuffer(pl))
+		resp, err := http.Post(flagURL+"?dev=true", "application/json", bytes.NewBuffer(pl))
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "failed to call server : %v\n", err)
 			os.Exit(1)

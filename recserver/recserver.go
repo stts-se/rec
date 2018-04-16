@@ -80,15 +80,17 @@ func checkProcessInput(input rec.ProcessInput) error {
 	return nil
 }
 
-func processToOneResult(w http.ResponseWriter, r *http.Request) {
-	process0(w, r, false)
+func process(w http.ResponseWriter, r *http.Request) {
+	dev := getParam("dev", r)
+	if dev == "true" {
+		process0(w, r, true)
+	} else {
+		process0(w, r, false)
+	}
 }
 
-func processToResultList(w http.ResponseWriter, r *http.Request) {
-	process0(w, r, true)
-}
-
-func process0(w http.ResponseWriter, r *http.Request, returnList bool) {
+// devMode includes all component results, instead of just one single selected result
+func process0(w http.ResponseWriter, r *http.Request, devMode bool) {
 	body, err := ioutil.ReadAll(r.Body)
 
 	if err != nil {
@@ -159,38 +161,20 @@ func process0(w http.ResponseWriter, r *http.Request, returnList bool) {
 	for _, r := range res {
 		log.Printf(" %s\n", r.String())
 	}
-	if returnList {
-		resJSON, err := json.Marshal(res)
-		if err != nil {
-			msg := fmt.Sprintf("failed to marshal response : %v", err)
-			log.Println(msg)
-
-			http.Error(w, msg, http.StatusBadRequest)
-			return
-		}
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintf(w, "%s\n", string(resJSON))
-	} else {
-		var r1 rec.ProcessResponse
-		if len(res) > 0 {
-			r1 = res[0]
-		} else {
-			r1 = rec.ProcessResponse{Ok: false,
-				RecordingID:       input.RecordingID,
-				Message:           "No result from server",
-				RecognitionResult: ""}
-		}
-		resJSON, err := json.Marshal(r1)
-		if err != nil {
-			msg := fmt.Sprintf("failed to marshal response : %v", err)
-			log.Println(msg)
-
-			http.Error(w, msg, http.StatusBadRequest)
-			return
-		}
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintf(w, "%s\n", string(resJSON))
+	final := combineResults(input, res)
+	if devMode {
+		final.ComponentResults = res
 	}
+	resJSON, err := json.Marshal(final)
+	if err != nil {
+		msg := fmt.Sprintf("failed to marshal response : %v", err)
+		log.Println(msg)
+
+		http.Error(w, msg, http.StatusBadRequest)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Fprintf(w, "%s\n", string(resJSON))
 
 }
 
@@ -228,14 +212,6 @@ func analyzeAudio(audioFile string, input rec.ProcessInput) ([]rec.ProcessRespon
 		}
 	}
 
-	sorter := func(i, j int) bool {
-		if res[i].Ok && res[j].Ok {
-			return res[i].Confidence > res[j].Confidence
-		} else {
-			return res[i].Ok
-		}
-	}
-	sort.Slice(res, sorter)
 	return res, nil
 }
 func analyzeAudioNonParallell(audioFile string, input rec.ProcessInput) ([]rec.ProcessResponse, error) {
@@ -442,8 +418,7 @@ func main() {
 	r := mux.NewRouter()
 	r.StrictSlash(true)
 	r.HandleFunc("/rec/", index)
-	r.HandleFunc("/rec/process/", processToOneResult).Methods("POST")
-	r.HandleFunc("/rec/process_dev/", processToResultList).Methods("POST")
+	r.HandleFunc("/rec/process/", process).Methods("POST")
 
 	// see animation.go
 	r.HandleFunc("/rec/animationdemo", animDemo)

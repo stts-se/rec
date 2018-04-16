@@ -47,6 +47,11 @@ func writeAudioFile(audioDir rec.AudioDir, input rec.ProcessInput) (rec.AudioFil
 		if err != nil {
 			return rec.AudioFile{}, fmt.Errorf("writeAudioFile: failed to create dir : %v", err)
 		}
+		// create subdir input_audio to keep original audio from client
+		err = os.MkdirAll(filepath.Join(dirPath, inputAudioDir), os.ModePerm)
+		if err != nil {
+			return rec.AudioFile{}, fmt.Errorf("writeAudioFile: failed to create dir : %v", err)
+		}
 	}
 
 	if strings.TrimSpace(input.Audio.FileType) == "" {
@@ -92,7 +97,7 @@ func writeAudioFile(audioDir rec.AudioDir, input rec.ProcessInput) (rec.AudioFil
 		return rec.AudioFile{}, fmt.Errorf("%s : %v", msg, err)
 	}
 
-	err = ioutil.WriteFile(audioFilePath, audio, 0644)
+	err = ioutil.WriteFile(filepath.Join( /*inputAudioDir, */ audioFilePath), audio, 0644)
 	if err != nil {
 		msg := fmt.Sprintf("failed to write audio file : %v", err)
 		log.Println(msg)

@@ -40,7 +40,7 @@ func NewConfig(filePath string) (Config, error) {
 		log.Printf("failure : %v\n", err)
 		return res, fmt.Errorf("failed to unmarshal : %v", err)
 	}
-	log.Printf("Loaded config: %#v\n", res)
+	//log.Printf("Loaded config: %#v\n", res)
 	return res, nil
 
 }

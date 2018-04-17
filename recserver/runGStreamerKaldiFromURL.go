@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/stts-se/rec"
+	"github.com/stts-se/rec/config"
 )
 
 type hypo struct {
@@ -22,27 +23,11 @@ type gstreamerResponse struct {
 	Message    string `json:"message"`
 }
 
-func runGStreamerKaldiFromURLChan(accres chan recresforchan, name string, url string, wavFilePath string, input rec.ProcessInput) {
-	res, err := runGStreamerKaldiFromURL(name, url, wavFilePath, input)
-	log.Println("completed gstreamer kaldi: " + name)
-	rchan := recresforchan{resp: res, err: err}
-	accres <- rchan
-}
-
-// var gStreamerKaldiReplacements = map[string]string{
-// 	"also": "rose",
-// }
-
-// func gStreamerKaldiReplace(result string) string {
-// 	return string
-// }
-
-func runGStreamerKaldiFromURL(name string, url string, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
-
-	methodName := "gstreamer kaldi"
+func runGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
+	url := rc.Cmd
 	res := rec.ProcessResponse{RecordingID: input.RecordingID}
 
-	// curl -T $WAVFILE "http://192.168.0.105:8080/client/dynamic/recognize"
+	// curl -T $WAVFILE "http://192.168.0.105:8080/client/dynamic/recognise"
 	// {"status": 0, "hypotheses": [{"utterance": "just three style."}], "id": "80a4a3e6-15ec-41e7-ac5d-fa2ea2386df2"}
 
 	log.Printf("runGStreamerKaldiFromURL url=%s\n", url)
@@ -87,8 +72,7 @@ func runGStreamerKaldiFromURL(name string, url string, wavFilePath string, input
 	if gsResp.Status != 0 {
 		res.Ok = false
 	}
-	res.Message = fmt.Sprintf("%s: %s", methodName, name)
-
+	res.Message = rc.LongName()
 	log.Printf("runGStreamerKaldiFromURL RecognitionResult: %s\n", res.RecognitionResult)
 	return res, nil
 }

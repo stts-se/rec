@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/stts-se/rec"
+	"github.com/stts-se/rec/config"
 )
 
 func runExternalPocketsphinxDecoder(wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
@@ -48,7 +49,7 @@ func runExternalPocketsphinxDecoder(wavFilePath string, input rec.ProcessInput) 
 	} else {
 		res.Ok = false
 	}
-	msg := "Recognised by external pocketsphinx recognizer"
+	msg := "Recognised by external pocketsphinx recogniser"
 	res.Message = fmt.Sprintf("[%s] %s", methodName, msg)
 	return res, nil
 }
@@ -57,16 +58,9 @@ type sphinxResp struct {
 	RecognisedUtterance string `json:"recognised_utterance"`
 }
 
-func callExternalPocketsphinxDecoderServerChan(accres chan recresforchan, name string, url string, wavFilePath string, input rec.ProcessInput) {
-	res, err := callExternalPocketsphinxDecoderServer(name, url, wavFilePath, input)
-	log.Println("completed pocketsphinx: " + name)
-	rchan := recresforchan{resp: res, err: err}
-	accres <- rchan
-}
+func callExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
 
-func callExternalPocketsphinxDecoderServer(name string, url string, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
-
-	methodName := "pocketsphinx"
+	url := rc.Cmd
 	res := rec.ProcessResponse{RecordingID: input.RecordingID}
 
 	if !strings.Contains(url, wavFilePlaceHolder) {
@@ -110,6 +104,6 @@ func callExternalPocketsphinxDecoderServer(name string, url string, wavFilePath 
 	} else {
 		res.Ok = false
 	}
-	res.Message = fmt.Sprintf("%s: %s", methodName, name)
+	res.Message = rc.LongName()
 	return res, nil
 }

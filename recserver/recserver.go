@@ -155,7 +155,7 @@ func process0(w http.ResponseWriter, r *http.Request, devMode bool) {
 		return
 	}
 
-	log.Printf("recserver result")
+	log.Printf("recserver result below:")
 	for _, r := range res {
 		log.Printf("%s\n", r.String())
 	}
@@ -181,28 +181,37 @@ type recresforchan struct {
 	err  error
 }
 
+func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, wavFilePath string, input rec.ProcessInput) {
+	log.Printf("running recogniser %s", rc.LongName())
+	var res rec.ProcessResponse
+	var err error
+	switch rc.Type {
+	case config.Tensorflow:
+		res, err = runTensorflowCommand(rc, wavFilePath, input)
+	case config.KaldiGStreamer:
+		res, err = runGStreamerKaldiFromURL(rc, wavFilePath, input)
+	case config.PocketSphinx:
+		res, err = callExternalPocketsphinxDecoderServer(rc, wavFilePath, input)
+	default:
+		err = fmt.Errorf("unknown recogniser type: %s", rc.Type)
+	}
+	rchan := recresforchan{resp: res, err: err}
+	accres <- rchan
+	log.Printf("completed recogniser %s", rc.LongName())
+}
+
 // parallell calls
 func analyzeAudio(audioFile string, input rec.ProcessInput) ([]rec.ProcessResponse, error) {
 	var accres = make(chan recresforchan)
 	var n = 0
-	for name, cmd := range config.MyConfig.TensorFlow {
-		n++
-		log.Println("running tensorflow: " + name)
-		go runTensorflowCommandChan(accres, name, cmd, audioFile, input)
-	}
-	for name, url := range config.MyConfig.KaldiGStreamer {
-		n++
-		log.Println("running gstreamer kaldi: " + name)
-		go runGStreamerKaldiFromURLChan(accres, name, url, audioFile, input)
-	}
-	for name, url := range config.MyConfig.PocketSphinx {
-		n++
-		log.Println("running pocketshpinx: " + name)
-		go callExternalPocketsphinxDecoderServerChan(accres, name, url, audioFile, input)
+	for _, rc := range config.MyConfig.Recognisers {
+		if !rc.Disabled {
+			n++
+			go runRecogniserChan(accres, rc, audioFile, input)
+		}
 	}
 
 	res := []rec.ProcessResponse{}
-	// errs := []error{}
 	for i := 0; i < n; i++ {
 		rr := <-accres
 		if rr.err != nil {
@@ -333,13 +342,18 @@ func main() {
 		os.Exit(1)
 	}
 
-	cfg, cErr := config.NewConfig(os.Args[1])
+	cfgFile := os.Args[1]
+	cfg, cErr := config.NewConfig(cfgFile)
 	if cErr != nil {
 		log.Printf("Exiting. Failed to read config file : %v", cErr)
 		os.Exit(1)
 	}
+	if len(cfg.Recognisers) == 0 {
+		log.Printf("Exiting. No recognisers defined in config file : %s", cfgFile)
+		os.Exit(1)
+	}
 	config.MyConfig = cfg
-	log.Printf("Loaded recognizers from config: " + strings.Join(cfg.ListRecognizers(), ", "))
+	log.Printf("Loaded recognisers from config: " + strings.Join(cfg.RecogniserNames(), ", "))
 
 	if !validAudioFileExtension(defaultExtension) {
 		log.Printf("Exiting! Unknown default audio file extension: %s", defaultExtension)
@@ -438,14 +452,15 @@ func main() {
 
 	r.PathPrefix("/rec/recclient/").Handler(http.StripPrefix("/rec/recclient/", http.FileServer(http.Dir("../recclient"))))
 
+	ps := fmt.Sprintf("%d", p)
 	srv := &http.Server{
 		Handler: r,
-		Addr:    "127.0.0.1:" + p,
+		Addr:    fmt.Sprintf("127.0.0.1:%s", ps),
 		// Good practice: enforce timeouts for servers you create!
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
-	log.Println("rec server started on localhost:" + p + "/rec")
+	log.Println("rec server started on localhost:" + ps + "/rec")
 	log.Fatal(srv.ListenAndServe())
 	fmt.Println("No fun")
 }

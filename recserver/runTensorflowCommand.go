@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/stts-se/rec"
+	"github.com/stts-se/rec/config"
 )
 
 type tensorflowResponse struct {
@@ -21,18 +22,9 @@ type tensorflowResponse struct {
 
 var wavFilePlaceHolder = "{wavfile}"
 
-//var scoreRe = regexp.MustCompile("^([^ ]+) [(]score = ([0-9.]+)[)]$")
+func runTensorflowCommand(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
 
-func runTensorflowCommandChan(accres chan recresforchan, name string, command string, wavFilePath string, input rec.ProcessInput) {
-	res, err := runTensorflowCommand(name, command, wavFilePath, input)
-	log.Println("completed tensorflow: " + name)
-	rchan := recresforchan{resp: res, err: err}
-	accres <- rchan
-}
-
-func runTensorflowCommand(name string, command string, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
-
-	methodName := "tensorflow"
+	command := rc.Cmd
 	res := rec.ProcessResponse{RecordingID: input.RecordingID}
 
 	if !strings.Contains(command, wavFilePlaceHolder) {
@@ -82,8 +74,7 @@ func runTensorflowCommand(name string, command string, wavFilePath string, input
 		res.Confidence = float32(score)
 	}
 
-	res.Message = fmt.Sprintf("%s: %s", methodName, name)
-
+	res.Message = rc.LongName()
 	log.Printf("runTensorflowCommand RecognitionResult: %s\n", res.RecognitionResult)
 	return res, nil
 }

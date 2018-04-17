@@ -1,15 +1,58 @@
 {
-    "kaldi_gstreamer": {
-	"default": "http://192.168.0.105:8080/client/dynamic/recognize"
-    },
-    "tensorflow_DISABLED": {
-	"elexia_20180412": "bash /home/hanna/go/src/github.com/stts-se/audioproc/tensorflow/scripts/classify.sh /home/hanna/progz/tensorflow/simple_audio_recognition/e-lexia-20180412/my_frozen_graph.pb /home/hanna/progz/tensorflow/simple_audio_recognition/e-lexia-20180412/speech_commands_train/conv_labels.txt {wavfile}",
-	"nst-aeneas-4": "bash /home/hanna/go/src/github.com/stts-se/audioproc/tensorflow/scripts/classify.sh /home/hanna/progz/tensorflow/simple_audio_recognition/danish-test-aeneas-4/my_frozen_graph.pb /home/hanna/progz/tensorflow/simple_audio_recognition/danish-test-aeneas-4/speech_commands_train/conv_labels.txt {wavfile}"
-    },
-    "pocketsphinx": {
-	"nst_10000_adapted_182/8000": "http://localhost:8000/rec?audio_file={wavfile}",
-	"elexia_448/9999": "http://localhost:9999/rec?audio_file={wavfile}"
-    },
     "audio_dir": "audio_dir",
-    "server_port": "9993"    
+    "server_port": 9993,
+    "recognisers": [
+	{
+	    "name": "default",
+	    "type": "kaldigstreamer",
+	    "cmd": "http://192.168.0.105:8080/client/dynamic/recognise",
+	    "weights": {
+		"char": 0.7,
+		"default": 0.7,
+		"word": 0.7
+	    }
+	},
+	{
+	    "name": "elexia_20180412",
+	    "type": "tensorflow",
+	    "disabled": true,
+	    "cmd": "bash /home/hanna/go/src/github.com/stts-se/audioproc/tensorflow/scripts/classify.sh /home/hanna/progz/tensorflow/simple_audio_recognition/e-lexia-20180412/my_frozen_graph.pb /home/hanna/progz/tensorflow/simple_audio_recognition/e-lexia-20180412/speech_commands_train/conv_labels.txt {wavfile}",
+	    "weights": {
+		"char": 0,
+		"default": 0.7,
+		"word": 0.7
+	    }
+	},
+	{
+	    "name": "nst-aeneas-4",
+	    "type": "tensorflow",
+	    "disabled": true,
+	    "cmd": "bash /home/hanna/go/src/github.com/stts-se/audioproc/tensorflow/scripts/classify.sh /home/hanna/progz/tensorflow/simple_audio_recognition/danish-test-aeneas-4/my_frozen_graph.pb /home/hanna/progz/tensorflow/simple_audio_recognition/danish-test-aeneas-4/speech_commands_train/conv_labels.txt {wavfile}",
+	    "weights": {
+		"char": 0,
+		"default": 0.7,
+		"word": 0.7
+	    }
+	},
+	{
+	    "name": "nst_10000_adapted_182/8000",
+	    "type": "pocketsphinx",
+	    "cmd": "http://localhost:8000/rec?audio_file={wavfile}",
+	    "weights": {
+		"char": 0.7,
+		"default": 0.7,
+		"word": 0
+	    }
+	},
+	{
+	    "name": "elexia_448/9999",
+	    "type": "pocketsphinx",
+	    "cmd": "http://localhost:9999/rec?audio_file={wavfile}",
+	    "weights": {
+		"char": 0,
+		"default": 0.7,
+		"word": 0.7
+	    }
+	}
+    ]
 }

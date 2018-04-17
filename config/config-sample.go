@@ -12,7 +12,7 @@ var ConfigSample = Config{
 				"char":    0.7,
 				"default": 0.7,
 			},
-			Cmd: "http://192.168.0.105:8080/client/dynamic/recognise",
+			Cmd: "http://192.168.0.105:8080/client/dynamic/recognize",
 		},
 		Recogniser{
 			Name:     "elexia_20180412",

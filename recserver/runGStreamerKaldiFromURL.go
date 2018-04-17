@@ -27,7 +27,7 @@ func runGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input re
 	url := rc.Cmd
 	res := rec.ProcessResponse{RecordingID: input.RecordingID}
 
-	// curl -T $WAVFILE "http://192.168.0.105:8080/client/dynamic/recognise"
+	// curl -T $WAVFILE "http://192.168.0.105:8080/client/dynamic/recognize"
 	// {"status": 0, "hypotheses": [{"utterance": "just three style."}], "id": "80a4a3e6-15ec-41e7-ac5d-fa2ea2386df2"}
 
 	log.Printf("runGStreamerKaldiFromURL url=%s\n", url)

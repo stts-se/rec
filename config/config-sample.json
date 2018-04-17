@@ -5,7 +5,7 @@
 	{
 	    "name": "default",
 	    "type": "kaldigstreamer",
-	    "cmd": "http://192.168.0.105:8080/client/dynamic/recognise",
+	    "cmd": "http://192.168.0.105:8080/client/dynamic/recognize",
 	    "weights": {
 		"char": 0.7,
 		"default": 0.7,

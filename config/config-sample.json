@@ -15,24 +15,24 @@
 	{
 	    "name": "elexia_20180412",
 	    "type": "tensorflow",
-	    "disabled": true,
 	    "cmd": "bash /home/hanna/go/src/github.com/stts-se/audioproc/tensorflow/scripts/classify.sh /home/hanna/progz/tensorflow/simple_audio_recognition/e-lexia-20180412/my_frozen_graph.pb /home/hanna/progz/tensorflow/simple_audio_recognition/e-lexia-20180412/speech_commands_train/conv_labels.txt {wavfile}",
 	    "weights": {
 		"char": 0,
 		"default": 0.7,
 		"word": 0.7
-	    }
+	    },
+	    "disabled": true
 	},
 	{
 	    "name": "nst-aeneas-4",
 	    "type": "tensorflow",
-	    "disabled": true,
 	    "cmd": "bash /home/hanna/go/src/github.com/stts-se/audioproc/tensorflow/scripts/classify.sh /home/hanna/progz/tensorflow/simple_audio_recognition/danish-test-aeneas-4/my_frozen_graph.pb /home/hanna/progz/tensorflow/simple_audio_recognition/danish-test-aeneas-4/speech_commands_train/conv_labels.txt {wavfile}",
 	    "weights": {
 		"char": 0,
 		"default": 0.7,
 		"word": 0.7
-	    }
+	    },
+	    "disabled": true
 	},
 	{
 	    "name": "nst_10000_adapted_182/8000",

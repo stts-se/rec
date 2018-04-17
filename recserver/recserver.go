@@ -336,6 +336,10 @@ var walkedURLs []string
 
 func main() {
 
+	// /* print config sample instance to json */
+	// fmt.Println(config.ConfigSample.PrettyString())
+	// os.Exit(1)
+
 	if len(os.Args) != 2 {
 		fmt.Println("USAGE: go run recserver.go <json-config-file>")
 		fmt.Println("sample config file: config/config-sample.json")

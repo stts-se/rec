@@ -19,7 +19,7 @@ type Recogniser struct {
 	Type     string             `json:"type"`
 	Cmd      string             `json:"cmd"`
 	Weights  map[string]float64 `json:"weights,omitempty"`
-	Disabled bool               `json:"disabled"`
+	Disabled bool               `json:"disabled,omitempty"`
 }
 type Config struct {
 	AudioDir    string       `json:"audio_dir"`
@@ -45,7 +45,7 @@ func NewConfig(filePath string) (Config, error) {
 
 }
 
-func (cfg Config) String() string {
+func (cfg Config) PrettyString() string {
 	bts, err := json.Marshal(cfg)
 	if err != nil {
 		log.Printf("failed to process JSON : %v\n", err)

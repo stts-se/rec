@@ -29,19 +29,11 @@ func combineResults(input rec.ProcessInput, results []rec.ProcessResponse) (rec.
 	for _, res := range results {
 		res2Freq[res.RecognitionResult] += 1
 	}
-
-	//log.Printf("res2Freq: %#v\n", res2Freq)
-
-	var err error
-
-	applyWeights := func(res rec.ProcessResponse) float32 {
+	var wConf = make(map[string]float32)
+	for _, res := range results {
 		rc, ok := recName2Weights[res.Source()]
 		if !ok {
-			err = fmt.Errorf("no recogniser configured for %s", res.Source())
-		}
-		conf := res.Confidence
-		if conf == 0.0 {
-			conf = 0.65 // default
+			return rec.ProcessResponse{}, fmt.Errorf("no recogniser configured for %s", res.Source())
 		}
 		weight := rc.Weights["default"]
 		if w, ok := rc.Weights["char"]; ok && isChar(input.Text) {
@@ -50,31 +42,50 @@ func combineResults(input rec.ProcessInput, results []rec.ProcessResponse) (rec.
 		} else if w, ok := rc.Weights["word"]; ok && isWord(input.Text) {
 			weight = w
 		}
+		conf := res.Confidence
+		if conf <= 0.0 {
+			conf = 0.65 // default
+		}
 		freq := res2Freq[res.RecognitionResult]
-		wConf := weight * conf * float32(freq)
-		log.Printf("combineResults [%s] '%s' - w=%f c=%f f=%d => %f", res.Source(), res.RecognitionResult, weight, conf, freq, wConf)
-		return wConf
+		freqNormed := float32(freq) / float32(len(results))
+		wc := weight * conf * freqNormed
+		wConf[res.Source()] = wc
+		log.Printf("combineResults [%s] '%s' | w=%f c=%f f=%f => %f", res.Source(), res.RecognitionResult, weight, conf, freqNormed, wc)
 	}
 
-	if err != nil {
-		return rec.ProcessResponse{}, nil
-	}
+	var err error
 
 	sorter := func(i, j int) bool {
-		wI := applyWeights(results[i])
-		wJ := applyWeights(results[j])
-
 		if results[i].Ok != results[j].Ok {
 			return results[i].Ok
 		} else {
+			wI, ok := wConf[results[i].Source()]
+			if !ok {
+				err = fmt.Errorf("no weighted confidence for %s", results[i].Source())
+			}
+			wJ, ok := wConf[results[j].Source()]
+			if !ok {
+				err = fmt.Errorf("no weighted confidence for %s", results[j].Source())
+			}
+
 			return wI > wJ
 		}
 	}
 	sort.Slice(results, sorter)
+	if err != nil {
+		return rec.ProcessResponse{}, nil
+	}
+
 	var r1 rec.ProcessResponse
 	if len(results) > 0 {
 		r1 = results[0]
+		wc, ok := wConf[r1.Source()]
+		if !ok {
+			return r1, fmt.Errorf("no weighted confidence for %s", r1.Source())
+		}
+		r1.Confidence = wc
 		r1.Message = ""
+
 	} else {
 		r1 = rec.ProcessResponse{Ok: false,
 			RecordingID:       input.RecordingID,

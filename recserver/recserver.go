@@ -159,7 +159,13 @@ func process0(w http.ResponseWriter, r *http.Request, devMode bool) {
 	for _, r := range res {
 		log.Printf("%s\n", r.String())
 	}
-	final := combineResults(input, res)
+	final, err := combineResults(input, res)
+	if err != nil {
+		msg := fmt.Sprintf("failed to combine results : %v", err)
+		log.Println(msg)
+		http.Error(w, msg, http.StatusBadRequest)
+		return
+	}
 	if devMode {
 		final.ComponentResults = res
 	}
@@ -167,7 +173,6 @@ func process0(w http.ResponseWriter, r *http.Request, devMode bool) {
 	if err != nil {
 		msg := fmt.Sprintf("failed to marshal response : %v", err)
 		log.Println(msg)
-
 		http.Error(w, msg, http.StatusBadRequest)
 		return
 	}

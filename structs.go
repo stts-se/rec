@@ -88,6 +88,10 @@ type ProcessResponse struct {
 	ComponentResults  []ProcessResponse `json:"component_results,omitempty"`
 }
 
+func (pr ProcessResponse) Source() string {
+	return pr.Message
+}
+
 func (pr ProcessResponse) String() string {
 	status := "OK"
 	if !pr.Ok {

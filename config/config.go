@@ -18,7 +18,7 @@ type Recogniser struct {
 	Name     string             `json:"name"`
 	Type     string             `json:"type"`
 	Cmd      string             `json:"cmd"`
-	Weights  map[string]float64 `json:"weights,omitempty"`
+	Weights  map[string]float32 `json:"weights,omitempty"`
 	Disabled bool               `json:"disabled,omitempty"`
 }
 type Config struct {

@@ -9,6 +9,6 @@ fi
 cd $dir
 
 for wav in $*; do
-   play $wav &> /dev/null &
+   play $wav &> /dev/null
    go run reccli.go -u tmptestxx $wav
 done

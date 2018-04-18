@@ -50,7 +50,7 @@ func combineResults(input rec.ProcessInput, results []rec.ProcessResponse) (rec.
 		}
 		conf := res.Confidence
 		if conf < 0.0 { // confidence below zero => confidence unknown/undefined; confidence zero => kept as is
-			conf = 0.65
+			conf = 1.0
 		}
 		freq := res2Freq[res.RecognitionResult]
 		freqNormed := float32(freq) / float32(len(results))

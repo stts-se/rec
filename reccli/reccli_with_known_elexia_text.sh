@@ -34,7 +34,7 @@ run_reccli() {
     target_text=$1
     tmpfile="/tmp/reccli-$uid.out"
     reccli_cmd="go run reccli.go -u elexia_test -t \"$target_text\" $abswav" 1>&2
-    if go run reccli.go -u elexia_test -t "$target_text" $abswav >& $tmpfile; then
+    if go run reccli.go -u elexia_test -t "$target_text" $abswav > $tmpfile; then
 	result=`cat $tmpfile | egrep recognition_result | head -1 | sed 's/.*recognition_result": *"\([^"]*\)",.*$/\1/'`
 	echo "$result"
 	if [ $verbose -eq 1 ]; then
@@ -78,4 +78,5 @@ for wav in $*; do
 	echo "FAILED:  $result"
 	exit 1
     fi
+    sleep 1
 done

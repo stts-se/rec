@@ -16,11 +16,13 @@ import (
 )
 
 func main() {
-	var flagUserName, flagRecordingID, flagURL, flagText string
+	var cmdName = "reccli"
+	var flagUserName, flagRecordingID, flagURL, flagText, flagURLParams string
 	flag.StringVar(&flagURL, "url", "http://localhost:9993/rec/process/", "URL for calling rec server.")
 	flag.StringVar(&flagUserName, "u", "tmpuser0", "user name to be sent to server along with sound file.")
 	flag.StringVar(&flagRecordingID, "r", "tmprecid0", "recording ID to be sent to server along with sound file.")
 	flag.StringVar(&flagText, "t", "DUMMY_TEXT0", "text to be sent to server along with sound file.")
+	flag.StringVar(&flagURLParams, "p", "verb=true", "extra URL params to send to the process call.")
 
 	flag.Parse()
 
@@ -44,6 +46,8 @@ func main() {
 			os.Exit(1)
 		}
 
+		fmt.Fprintf(os.Stdout, "[%s] AUDIO %s\n", cmdName, fileName)
+
 		aud := base64.StdEncoding.EncodeToString(bts)
 		ext := strings.TrimPrefix(path.Ext(path.Base(fileName)), ".")
 
@@ -63,7 +67,9 @@ func main() {
 			os.Exit(1)
 		}
 
-		resp, err := http.Post(flagURL+"?verb=true", "application/json", bytes.NewBuffer(pl))
+		url := flagURL + "?" + flagURLParams
+		fmt.Fprintf(os.Stdout, "[%s] URL %s\n", cmdName, url)
+		resp, err := http.Post(url, "application/json", bytes.NewBuffer(pl))
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "failed to call server : %v\n", err)
 			os.Exit(1)
@@ -93,7 +99,6 @@ func main() {
 			os.Exit(1)
 		}
 
-		fmt.Fprintf(os.Stdout, "%s\n", fileName)
-		fmt.Fprintf(os.Stdout, "%s\n", string(prettyBody.Bytes()))
+		fmt.Fprintf(os.Stdout, "[%s] RESPONSE %s\n", cmdName, string(prettyBody.Bytes()))
 	}
 }

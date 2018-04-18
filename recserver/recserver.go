@@ -120,7 +120,9 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 
 	input := rec.ProcessInput{}
 	input.Weights = weights
-	log.Printf("user set weights for %v\n", input.Weights)
+	if len(input.Weights) > 0 {
+		log.Printf("user set weights : %-v\n", input.Weights)
+	}
 	err = json.Unmarshal(body, &input)
 	if err != nil {
 		msg := fmt.Sprintf("failed to unmarshal incoming JSON : %v", err)

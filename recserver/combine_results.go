@@ -70,12 +70,12 @@ func combineResults(input rec.ProcessInput, inputResults []rec.ProcessResponse, 
 		}
 		userWeight := getUserWeight(input, res)
 		freq := res2Freq[res.RecognitionResult]
-		freqNormed := float32(freq) / float32(len(results))
-		wc := conf * freqNormed * configWeight * userWeight
+		freqWeight := float32(freq) / float32(len(results))
+		wc := conf * freqWeight * configWeight * userWeight
 		//wConf[res.Source()] = wc
 		res.Confidence = wc
 		results[i] = res // hmm
-		log.Printf("combineResults [%s] '%s' | c=%f f=%f cw=%f uw=%f => %f", res.Source(), res.RecognitionResult, conf, freqNormed, configWeight, userWeight, wc)
+		log.Printf("combineResults [%s] '%s' | co=%f fw=%f cw=%f uw=%f => %f", res.Source(), res.RecognitionResult, conf, freqWeight, configWeight, userWeight, wc)
 	}
 
 	sorter := func(i, j int) bool {

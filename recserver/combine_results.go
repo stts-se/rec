@@ -18,7 +18,8 @@ func isWord(s string) bool {
 }
 
 // TODO: UNIT TESTS FOR THIS ALGORITHM!
-func combineResults(input rec.ProcessInput, results []rec.ProcessResponse) (rec.ProcessResponse, error) {
+func combineResults(input rec.ProcessInput, inputResults []rec.ProcessResponse, includeOriginalResponses bool) (rec.ProcessResponse, error) {
+	results := inputResults
 	var recName2Weights = make(map[string]config.Recogniser)
 	var res2Freq = make(map[string]int)
 	for _, rc := range config.MyConfig.Recognisers {
@@ -30,7 +31,7 @@ func combineResults(input rec.ProcessInput, results []rec.ProcessResponse) (rec.
 		res2Freq[res.RecognitionResult] += 1
 	}
 	var wConf = make(map[string]float32)
-	for _, res := range results {
+	for i, res := range results {
 		rc, ok := recName2Weights[res.Source()]
 		if !ok {
 			return rec.ProcessResponse{}, fmt.Errorf("no recogniser configured for %s", res.Source())
@@ -56,6 +57,8 @@ func combineResults(input rec.ProcessInput, results []rec.ProcessResponse) (rec.
 		freqNormed := float32(freq) / float32(len(results))
 		wc := weight * conf * freqNormed
 		wConf[res.Source()] = wc
+		res.Confidence = wc
+		results[i] = res // hmm
 		log.Printf("combineResults [%s] '%s' | w=%f c=%f f=%f => %f", res.Source(), res.RecognitionResult, weight, conf, freqNormed, wc)
 	}
 
@@ -82,21 +85,23 @@ func combineResults(input rec.ProcessInput, results []rec.ProcessResponse) (rec.
 		return rec.ProcessResponse{}, nil
 	}
 
-	var r1 rec.ProcessResponse
+	var selected rec.ProcessResponse
 	if len(results) > 0 {
-		r1 = results[0]
-		wc, ok := wConf[r1.Source()]
+		selected = results[0]
+		wc, ok := wConf[selected.Source()]
 		if !ok {
-			return r1, fmt.Errorf("no weighted confidence for %s", r1.Source())
+			return selected, fmt.Errorf("no weighted confidence for %s", selected.Source())
 		}
-		r1.Confidence = wc
-		r1.Message = ""
-
+		selected.Confidence = wc
+		selected.Message = ""
 	} else {
-		r1 = rec.ProcessResponse{Ok: false,
+		selected = rec.ProcessResponse{Ok: false,
 			RecordingID:       input.RecordingID,
 			Message:           "No result from server",
 			RecognitionResult: ""}
 	}
-	return r1, nil
+	if includeOriginalResponses {
+		selected.ComponentResults = results
+	}
+	return selected, nil
 }

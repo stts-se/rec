@@ -159,15 +159,12 @@ func process0(w http.ResponseWriter, r *http.Request, devMode bool) {
 	for _, r := range res {
 		log.Printf("%s\n", r.String())
 	}
-	final, err := combineResults(input, res)
+	final, err := combineResults(input, res, devMode)
 	if err != nil {
 		msg := fmt.Sprintf("failed to combine results : %v", err)
 		log.Println(msg)
 		http.Error(w, msg, http.StatusBadRequest)
 		return
-	}
-	if devMode {
-		final.ComponentResults = res
 	}
 	resJSON, err := json.Marshal(final)
 	if err != nil {

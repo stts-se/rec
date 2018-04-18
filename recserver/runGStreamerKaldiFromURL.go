@@ -25,16 +25,24 @@ type gstreamerResponse struct {
 }
 
 var gStreamerENMaptable = map[string]string{
-	"ace":   "is",
-	"place": "blæs",
-	"e":     "i",
-	"b":     "bi",
-	"bee":   "bi",
-	"be":    "bi",
-	"small": "sne", //?
+	"all":      "o",
+	"a":        "a",
+	"ace":      "is",
+	"each":     "is",
+	"place":    "blæs",
+	"e":        "i",
+	"b":        "bi",
+	"be":       "bi",
+	"the":      "bi",
+	"small":    "sne",
+	"yes":      "blæs",
+	"all said": "rose",
+	"o":        "o",
+	"is":       "is",
 }
 
-func gStreamerENMapText(s string) (string, float32) {
+func gStreamerENMapText(s0 string) (string, float32) {
+	s := strings.Replace(s0, ".", "", -1)
 	nWds := len(strings.Split(s, " "))
 	if nWds > 2 {
 		return "_other_", 2.0

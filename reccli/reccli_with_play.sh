@@ -1,4 +1,5 @@
 cmd=$0
+wd=`pwd`
 dir=`dirname $cmd`
 
 if [ $# -lt 1 ]; then
@@ -6,9 +7,9 @@ if [ $# -lt 1 ]; then
     exit 1
 fi
 
-cd $dir
-
 for wav in $*; do
-   play $wav &> /dev/null
-   go run reccli.go -u tmptestxx $wav
+    cd $wd
+    abswav=`realpath $wav`
+    play $wav &> /dev/null
+    cd $dir && go run reccli.go -u tmptestxx $abswav
 done

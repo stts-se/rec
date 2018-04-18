@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -63,6 +64,19 @@ func subDirs(dirPath string) []os.FileInfo {
 	return res
 }
 
+var defaultTestUtterances = `testutt_0001_is	is
+testutt_0002_bi	bi
+testutt_0003_rose	rose
+testutt_0004_blaes	blæs
+testutt_0005_mus	mus
+testutt_0006_sne	sne
+testutt_0007_e	e
+testutt_0008_i	i
+testutt_0009_o	o
+testutt_0010_u	u
+testutt_0011_å	å
+`
+
 func AddUser(baseDir, userName string) error {
 	_, err := os.Stat(baseDir)
 	if os.IsNotExist(err) {
@@ -82,8 +96,30 @@ func AddUser(baseDir, userName string) error {
 	if err != nil {
 		return fmt.Errorf("failed to add user '%s'", userName)
 	}
+	log.Printf("[admin] Created folder %s for user %s", userDirName, userName)
+
+	// create default utterance list
+	uttFile := filepath.Join(userDirName, "test_utterances.utt")
+	err = ioutil.WriteFile(uttFile, []byte(defaultTestUtterances), 0644)
+	if err != nil {
+		return fmt.Errorf("couldn't create default utterance file %s for user '%s'", uttFile, userName)
+	}
 
 	return nil
+}
+
+func UserExists(baseDir, userName string) (bool, error) {
+	_, err := os.Stat(baseDir)
+	if os.IsNotExist(err) {
+		return false, fmt.Errorf("dir does not exist '%s'", baseDir)
+	}
+	userName = strings.ToLower(userName)
+	userDirName := filepath.Join(baseDir, userName)
+	_, err = os.Stat(userDirName)
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return true, nil
 }
 
 func DeleteUser(baseDir, userName string) error {

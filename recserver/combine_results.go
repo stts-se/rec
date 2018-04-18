@@ -36,7 +36,7 @@ func combineResults(input rec.ProcessInput, inputResults []rec.ProcessResponse, 
 		if !ok {
 			return rec.ProcessResponse{}, fmt.Errorf("no recogniser configured for %s", res.Source())
 		}
-		var weight = rc.Weights["default"]
+		var weight float32 = 1.0
 		if w, ok := rc.Weights[input.Text]; ok {
 			weight = w
 
@@ -48,6 +48,8 @@ func combineResults(input rec.ProcessInput, inputResults []rec.ProcessResponse, 
 
 		} else if w, ok := rc.Weights["word"]; ok && isWord(input.Text) {
 			weight = w
+		} else {
+			weight = rc.Weights["default"]
 		}
 		conf := res.Confidence
 		if conf < 0.0 { // confidence below zero => confidence unknown/undefined; confidence zero => kept as is

@@ -42,7 +42,7 @@ func gStreamerENMapText(s string) (string, float32) {
 	if mapped, ok := gStreamerENMaptable[s]; ok {
 		return mapped, 0.7
 	}
-	return "_unknown_", 0.0
+	return s, 0.0
 }
 
 func runGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {

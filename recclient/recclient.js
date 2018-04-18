@@ -32,6 +32,14 @@ var wavesurfer;
 
 window.onload = function () {
 
+    var url = new URL(document.URL);
+    var user = url.searchParams.get('username');
+    if (user != null && user != "") {
+	document.getElementById('username').setAttribute('value',user);
+	document.getElementById('username2').setAttribute('value',user);
+	console.log("Setting user", user);
+    }
+    
     prevButton  = document.getElementById('prev_button');
     prevButton.addEventListener('click', getPrev)
     
@@ -106,11 +114,12 @@ function getPrev() {
 	let resp = JSON.parse(xhr.response);
 	
 	document.getElementById("recording_id").innerHTML = resp.recording_id;
+	document.getElementById("recording_id2").setAttribute('value',resp.recording_id);
 	document.getElementById("text").innerHTML = resp.text;
 	document.getElementById("num").innerHTML = resp.num +"/"+ resp.of;
 	document.getElementById("message").innerHTML = resp.message;
     };
-    
+
     xhr.send();
 
 }

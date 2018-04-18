@@ -35,16 +35,22 @@ func combineResults(input rec.ProcessInput, results []rec.ProcessResponse) (rec.
 		if !ok {
 			return rec.ProcessResponse{}, fmt.Errorf("no recogniser configured for %s", res.Source())
 		}
-		weight := rc.Weights["default"]
-		if w, ok := rc.Weights["char"]; ok && isChar(input.Text) {
+		var weight = rc.Weights["default"]
+		if w, ok := rc.Weights[input.Text]; ok {
+			weight = w
+
+		} else if w, ok := rc.Weights[res.RecognitionResult]; ok {
+			weight = w
+
+		} else if w, ok := rc.Weights["char"]; ok && isChar(input.Text) {
 			weight = w
 
 		} else if w, ok := rc.Weights["word"]; ok && isWord(input.Text) {
 			weight = w
 		}
 		conf := res.Confidence
-		if conf <= 0.0 {
-			conf = 0.65 // default
+		if conf < 0.0 { // confidence below zero => confidence unknown/undefined; confidence zero => kept as is
+			conf = 0.65
 		}
 		freq := res2Freq[res.RecognitionResult]
 		freqNormed := float32(freq) / float32(len(results))

@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/stts-se/rec"
 	"github.com/stts-se/rec/config"
@@ -21,6 +22,27 @@ type gstreamerResponse struct {
 	Hypotheses []hypo `json:"hypotheses"`
 	Id         string `json:"id"`
 	Message    string `json:"message"`
+}
+
+var gStreamerENMaptable = map[string]string{
+	"ace":   "is",
+	"place": "blæs",
+	"e":     "i",
+	"b":     "bi",
+	"bee":   "bi",
+	"be":    "bi",
+	"small": "sne", //?
+}
+
+func gStreamerENMapText(s string) (string, float32) {
+	nWds := len(strings.Split(s, " "))
+	if nWds > 2 {
+		return "_other_", 2.0
+	}
+	if mapped, ok := gStreamerENMaptable[s]; ok {
+		return mapped, 0.7
+	}
+	return "_unknown_", 0.0
 }
 
 func runGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
@@ -63,7 +85,9 @@ func runGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input re
 	}
 
 	if len(gsResp.Hypotheses) > 0 {
-		res.RecognitionResult = gsResp.Hypotheses[0].Utterance
+		newRes, conf := gStreamerENMapText(gsResp.Hypotheses[0].Utterance)
+		res.Confidence = conf
+		res.RecognitionResult = newRes
 		res.Ok = true
 	} else {
 		res.RecognitionResult = ""

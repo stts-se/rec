@@ -104,6 +104,7 @@ func callExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath str
 	} else {
 		res.Ok = false
 	}
+	res.Confidence = -1.0
 	res.Message = rc.LongName()
 	return res, nil
 }

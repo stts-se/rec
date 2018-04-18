@@ -37,6 +37,7 @@ func validAudioFileExtension(ext string) bool {
 // save the original audio from the client + a set of additional versions
 func writeAudioFile(audioDir rec.AudioDir, input rec.ProcessInput) (rec.AudioFile, error) {
 
+	var err error
 	// writeMutex declaren in recserver.go
 	writeMutex.Lock()
 	defer writeMutex.Unlock()
@@ -54,8 +55,7 @@ func writeAudioFile(audioDir rec.AudioDir, input rec.ProcessInput) (rec.AudioFil
 	userDir := audioDir.Path()
 	inputAudioDirPath := filepath.Join(userDir, inputAudioDir)
 
-	_, err := os.Stat(userDir)
-	if os.IsNotExist(err) { // user doesn't exist
+	if !admin.UserExists(audioDir.BaseDir, audioDir.UserDir) {
 		err = admin.AddUser(audioDir.BaseDir, audioDir.UserDir) //
 		// // First file to save for input.Username, create dir of
 		// // user name

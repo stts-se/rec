@@ -462,14 +462,16 @@ func main() {
 	r.PathPrefix("/rec/recclient/").Handler(http.StripPrefix("/rec/recclient/", http.FileServer(http.Dir("../recclient"))))
 
 	ps := fmt.Sprintf("%d", p)
+	//addr := fmt.Sprintf("127.0.0.1:%s", ps) // access only from localhost
+	addr := fmt.Sprintf(":%s", ps) // external access
 	srv := &http.Server{
 		Handler: r,
-		Addr:    fmt.Sprintf("127.0.0.1:%s", ps),
+		Addr:    addr,
 		// Good practice: enforce timeouts for servers you create!
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
-	log.Println("rec server started on localhost:" + ps + "/rec")
+	log.Printf("rec server started on %s/rec\n", addr)
 	log.Fatal(srv.ListenAndServe())
 	fmt.Println("No fun")
 }

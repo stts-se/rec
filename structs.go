@@ -26,10 +26,11 @@ type Audio struct {
 }
 
 type ProcessInput struct {
-	UserName    string `json:"username"`
-	Audio       Audio  `json:"audio"`
-	Text        string `json:"text"`
-	RecordingID string `json:"recording_id"`
+	UserName    string             `json:"username"`
+	Audio       Audio              `json:"audio"`
+	Text        string             `json:"text"`
+	RecordingID string             `json:"recording_id"`
+	Weights     map[string]float32 `json:"weights,omitempty"`
 }
 
 type AudioDir struct {

@@ -89,6 +89,24 @@ func process(w http.ResponseWriter, r *http.Request) {
 
 // devMode includes all component results, instead of just one single selected result
 func process0(w http.ResponseWriter, r *http.Request, devMode bool) {
+
+	weights := make(map[string]float32)
+
+	for _, rc := range config.MyConfig.Recognisers {
+		name := rc.LongName()
+		ws := getParam(name, r)
+		if ws != "" {
+			wf, err := strconv.ParseFloat(ws, 64)
+			if err != nil {
+				msg := fmt.Sprintf("failed to parse weight into float : %v", err)
+				log.Println(msg)
+				http.Error(w, msg, http.StatusBadRequest)
+				return
+			}
+			weights[name] = float32(wf)
+		}
+	}
+
 	body, err := ioutil.ReadAll(r.Body)
 
 	if err != nil {
@@ -101,6 +119,8 @@ func process0(w http.ResponseWriter, r *http.Request, devMode bool) {
 	}
 
 	input := rec.ProcessInput{}
+	input.Weights = weights
+	log.Printf("user set weights for %v\n", input.Weights)
 	err = json.Unmarshal(body, &input)
 	if err != nil {
 		msg := fmt.Sprintf("failed to unmarshal incoming JSON : %v", err)

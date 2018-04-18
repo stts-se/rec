@@ -25,7 +25,7 @@ AUDIO.sendBlob = function(audioBlob, username, text, recording_id, onLoadEndFunc
 
 AUDIO.sendJSON = function(payload, onLoadEndFunc) {
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", baseURL + "/process/", true);
+    xhr.open("POST", baseURL + "/process/?dev=true", true);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');   
     xhr.onloadend = onLoadEndFunc
     xhr.send(JSON.stringify(payload));

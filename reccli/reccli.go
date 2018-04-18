@@ -10,19 +10,31 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"strconv"
 	"strings"
 
 	"github.com/stts-se/rec"
 )
 
+func plPretty(pl0 rec.ProcessInput) string {
+	pl := pl0
+	pl.Audio.Data = ""
+	bytes, err := json.MarshalIndent(pl, "", "\t")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "failed to process rec.ProcessInput '%v': %v\n", pl, err)
+		os.Exit(1)
+	}
+	return string(bytes)
+}
+
 func main() {
 	var cmdName = "reccli"
-	var flagUserName, flagRecordingID, flagURL, flagText, flagURLParams string
-	flag.StringVar(&flagURL, "url", "http://localhost:9993/rec/process/", "URL for calling rec server.")
+	var flagUserName, flagRecordingID, flagURL, flagText, flagWeights string
+	flag.StringVar(&flagURL, "url", "http://localhost:9993/rec/process/?verb=true", "URL for calling rec server.")
 	flag.StringVar(&flagUserName, "u", "tmpuser0", "user name to be sent to server along with sound file.")
 	flag.StringVar(&flagRecordingID, "r", "tmprecid0", "recording ID to be sent to server along with sound file.")
 	flag.StringVar(&flagText, "t", "DUMMY_TEXT0", "text to be sent to server along with sound file.")
-	flag.StringVar(&flagURLParams, "p", "verb=true", "extra URL params to send to the process call.")
+	flag.StringVar(&flagWeights, "w", "", "user defined weights for recognisers (& separated list: NAME1=WEIGHT1&NAME2=WRIGHT2).")
 
 	flag.Parse()
 
@@ -51,6 +63,24 @@ func main() {
 		aud := base64.StdEncoding.EncodeToString(bts)
 		ext := strings.TrimPrefix(path.Ext(path.Base(fileName)), ".")
 
+		weights := make(map[string]float32)
+		if len(flagWeights) > 0 {
+			for _, w0 := range strings.Split(flagWeights, "&") {
+				x := strings.Split(w0, "=")
+				if len(x) != 2 {
+					fmt.Fprintf(os.Stderr, "couldn't parse input weights %s\n", flagWeights)
+					os.Exit(1)
+				}
+				rcName := x[0]
+				w, err := strconv.ParseFloat(x[1], 64)
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "couldn't parse input weights %s : %v\n", flagWeights, err)
+					os.Exit(1)
+				}
+				weights[rcName] = float32(w)
+			}
+		}
+
 		payload := rec.ProcessInput{
 			UserName:    flagUserName,
 			RecordingID: flagRecordingID,
@@ -59,7 +89,10 @@ func main() {
 				Data:     aud,
 				FileType: "audio/" + ext,
 			},
+			Weights: weights,
 		}
+
+		fmt.Fprintf(os.Stderr, "[%s] INPUT %s\n", cmdName, plPretty(payload))
 
 		pl, err := json.Marshal(payload)
 		if err != nil {
@@ -67,9 +100,8 @@ func main() {
 			os.Exit(1)
 		}
 
-		url := flagURL + "?" + flagURLParams
-		fmt.Fprintf(os.Stdout, "[%s] URL %s\n", cmdName, url)
-		resp, err := http.Post(url, "application/json", bytes.NewBuffer(pl))
+		fmt.Fprintf(os.Stdout, "[%s] URL %s\n", cmdName, flagURL)
+		resp, err := http.Post(flagURL, "application/json", bytes.NewBuffer(pl))
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "failed to call server : %v\n", err)
 			os.Exit(1)

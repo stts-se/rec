@@ -90,23 +90,6 @@ func process(w http.ResponseWriter, r *http.Request) {
 // verbMode includes all component results, instead of just one single selected result
 func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 
-	weights := make(map[string]float32)
-
-	for _, rc := range config.MyConfig.Recognisers {
-		name := rc.LongName()
-		ws := getParam(name, r)
-		if ws != "" {
-			wf, err := strconv.ParseFloat(ws, 64)
-			if err != nil {
-				msg := fmt.Sprintf("failed to parse weight into float : %v", err)
-				log.Println(msg)
-				http.Error(w, msg, http.StatusBadRequest)
-				return
-			}
-			weights[name] = float32(wf)
-		}
-	}
-
 	body, err := ioutil.ReadAll(r.Body)
 
 	if err != nil {
@@ -119,10 +102,6 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 	}
 
 	input := rec.ProcessInput{}
-	input.Weights = weights
-	if len(input.Weights) > 0 {
-		log.Printf("user set weights : %-v\n", input.Weights)
-	}
 	err = json.Unmarshal(body, &input)
 	if err != nil {
 		msg := fmt.Sprintf("failed to unmarshal incoming JSON : %v", err)
@@ -131,6 +110,9 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 		//res.Message = msg
 		http.Error(w, msg, http.StatusBadRequest)
 		return
+	}
+	if len(input.Weights) > 0 {
+		log.Printf("user set weights: %-v\n", input.Weights)
 	}
 
 	err = checkProcessInput(input)
@@ -427,7 +409,7 @@ func main() {
 	r.StrictSlash(true)
 	r.HandleFunc("/rec/", index)
 	r.HandleFunc("/rec/process/", process).Methods("POST")
-	docs["/rec/process/"] = "verbose reponse: verb=true; user defined weights: recognisername=weight"
+	docs["/rec/process/"] = "send param verb=true for verbose response"
 
 	// see animation.go
 	r.HandleFunc("/rec/animationdemo", animDemo)

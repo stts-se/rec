@@ -22,7 +22,7 @@ type UttList struct {
 
 type Audio struct {
 	FileType string `json:"file_type"`
-	Data     string `json:"data"`
+	Data     string `json:"data,omitempty"`
 }
 
 type ProcessInput struct {

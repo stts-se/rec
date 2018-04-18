@@ -79,16 +79,16 @@ func checkProcessInput(input rec.ProcessInput) error {
 }
 
 func process(w http.ResponseWriter, r *http.Request) {
-	dev := getParam("dev", r)
-	if dev == "true" {
+	verb := getParam("verb", r)
+	if verb == "true" {
 		process0(w, r, true)
 	} else {
 		process0(w, r, false)
 	}
 }
 
-// devMode includes all component results, instead of just one single selected result
-func process0(w http.ResponseWriter, r *http.Request, devMode bool) {
+// verbMode includes all component results, instead of just one single selected result
+func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 
 	weights := make(map[string]float32)
 
@@ -179,7 +179,7 @@ func process0(w http.ResponseWriter, r *http.Request, devMode bool) {
 	for _, r := range res {
 		log.Printf("%s\n", r.String())
 	}
-	final, err := combineResults(input, res, devMode)
+	final, err := combineResults(input, res, verbMode)
 	if err != nil {
 		msg := fmt.Sprintf("failed to combine results : %v", err)
 		log.Println(msg)
@@ -418,11 +418,14 @@ func main() {
 	//log.Printf("recserver Loaded utts\n")
 	//uttLists = uls
 
+	docs := make(map[string]string)
+
 	p := config.MyConfig.ServerPort
 	r := mux.NewRouter()
 	r.StrictSlash(true)
 	r.HandleFunc("/rec/", index)
 	r.HandleFunc("/rec/process/", process).Methods("POST")
+	docs["/rec/process/"] = "verbose reponse: verb=true; user defined weights: recognisername=weight"
 
 	// see animation.go
 	r.HandleFunc("/rec/animationdemo", animDemo)
@@ -449,6 +452,9 @@ func main() {
 		t, err := route.GetPathTemplate()
 		if err != nil {
 			return err
+		}
+		if info, ok := docs[t]; ok {
+			t = fmt.Sprintf("%s - %s", t, info)
 		}
 		walkedURLs = append(walkedURLs, t)
 		return nil

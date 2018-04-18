@@ -11,7 +11,7 @@ import (
 	"strings"
 
 	"github.com/stts-se/rec"
-	//"github.com/stts-se/rec/audioproc"
+	"github.com/stts-se/rec/admin"
 )
 
 // TODO Remove noise reduced variants?
@@ -55,10 +55,11 @@ func writeAudioFile(audioDir rec.AudioDir, input rec.ProcessInput) (rec.AudioFil
 	inputAudioDirPath := filepath.Join(userDir, inputAudioDir)
 
 	_, err := os.Stat(userDir)
-	if os.IsNotExist(err) {
-		// First file to save for input.Username, create dir of
-		// user name
-		err = os.MkdirAll(userDir, os.ModePerm)
+	if os.IsNotExist(err) { // user doesn't exist
+		err = admin.AddUser(audioDir.BaseDir, audioDir.UserDir) //
+		// // First file to save for input.Username, create dir of
+		// // user name
+		// err = os.MkdirAll(userDir, os.ModePerm)
 		if err != nil {
 			return rec.AudioFile{}, fmt.Errorf("writeAudioFile: failed to create dir : %v", err)
 		}

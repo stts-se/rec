@@ -38,6 +38,7 @@ run_reccli() {
 	result=`cat $tmpfile | egrep recognition_result | head -1 | sed 's/.*recognition_result": *"\([^"]*\)",.*$/\1/'`
 	echo "$result"
 	if [ $verbose -eq 1 ]; then
+	    echo "-- verbose output --"
 	    cat $tmpfile
 	fi
 	rm $tmpfile
@@ -63,13 +64,14 @@ for wav in $*; do
     target_text=`cat $jsonfile | egrep 'target_utt' | sed 's/.*": "\([^"]*\)".*/\1/'`
     echo "WAV:     $abswav"
     echo "JSON:    $jsonfile"
-    echo "TARGET:  <$target_text>"
-    if result=$(run_reccli $target_text); then
+    echo "TARGET:  $target_text"
+    if resp=$(run_reccli $target_text); then
+	result=`echo $resp | sed 's/\s-- verbose output.*//'`
 	correct="NO"
 	if [[ $result == $target_text ]]; then
 	    correct="YES"
 	fi
-	echo "RESULT:  <$result>"
+	echo "RESULT:  $resp"
 	echo "CORRECT: $correct"
 	echo ""
     else

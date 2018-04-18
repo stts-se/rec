@@ -108,18 +108,14 @@ func AddUser(baseDir, userName string) error {
 	return nil
 }
 
-func UserExists(baseDir, userName string) (bool, error) {
-	_, err := os.Stat(baseDir)
-	if os.IsNotExist(err) {
-		return false, fmt.Errorf("dir does not exist '%s'", baseDir)
-	}
+func UserExists(baseDir, userName string) bool {
 	userName = strings.ToLower(userName)
 	userDirName := filepath.Join(baseDir, userName)
-	_, err = os.Stat(userDirName)
+	_, err := os.Stat(userDirName)
 	if os.IsNotExist(err) {
-		return false, nil
+		return false
 	}
-	return true, nil
+	return true
 }
 
 func DeleteUser(baseDir, userName string) error {

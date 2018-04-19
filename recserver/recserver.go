@@ -136,7 +136,7 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 	}
 
 	res, err := analyzeAudio(audioFile.Path(), input)
-	//log.Print("analyzeAudio.res =", res)
+	log.Printf("analyzeAudio.res = %s err= %v\n", res, err)
 	if err != nil {
 		msg := err.Error()
 		log.Print(msg)

@@ -31,6 +31,7 @@ func getUserWeight(input rec.ProcessInput, res rec.ProcessResponse) float64 {
 }
 
 func getConfigWeight(input rec.ProcessInput, res rec.ProcessResponse, recName2Weights map[string]config.Recogniser) float64 {
+	//panic("testar panic, hur fånga?")
 	rc, ok := recName2Weights[res.Source()]
 	if !ok {
 		msg := fmt.Sprintf("no recogniser defined for %s", res.Source())

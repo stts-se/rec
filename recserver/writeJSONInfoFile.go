@@ -31,7 +31,7 @@ func writeJSONInfoFile(audioRef rec.AudioRef, rec rec.ProcessInput, res0 rec.Pro
 		os.Remove(infoFilePath)
 	} // TODO Check for other err
 
-	fmt.Printf("writeJSONInfoFile DEBUG : %#v", res0)
+	//fmt.Printf("writeJSONInfoFile DEBUG : %#v", res0)
 
 	info := fileInfo{
 		TargetUtterance:   rec.Text,

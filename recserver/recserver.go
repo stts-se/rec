@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -194,6 +195,10 @@ func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, index in
 	default:
 		err = fmt.Errorf("unknown recogniser type: %s", rc.Type)
 	}
+	if math.IsNaN(res.Confidence) {
+		res.Confidence = 0.0
+	}
+
 	rchan := recresforchan{resp: res, err: err, index: index}
 	accres <- rchan
 	if err != nil {
@@ -206,7 +211,6 @@ func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, index in
 // runs parallell calls (using chan)
 func analyzeAudio(audioFile string, input rec.ProcessInput, verbMode bool) (rec.ProcessResponse, error) {
 	//fmt.Printf("analyzeAudio input : %s\n", input)
-
 	var accres = make(chan recresforchan)
 	var n = 0
 	for index, rc := range config.MyConfig.EnabledRecognisers() {

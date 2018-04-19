@@ -58,6 +58,7 @@ func gStreamerENMapText(s0 string) (string, float64) {
 }
 
 func runGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
+	name := rc.LongName()
 	url := rc.Cmd
 	res := rec.ProcessResponse{RecordingID: input.RecordingID}
 
@@ -70,7 +71,7 @@ func runGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input re
 	audio, err := ioutil.ReadFile(wavFilePath)
 	if err != nil {
 		log.Printf("failure : %v\n", err)
-		return res, fmt.Errorf("failed to read audio into byte array : %v", err)
+		return res, fmt.Errorf("[%s] failed to read audio into byte array : %v", name, err)
 	}
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(audio))
@@ -79,13 +80,13 @@ func runGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input re
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Printf("failure : %v\n", err)
-		return res, fmt.Errorf("failed to send post request : %v", err)
+		return res, fmt.Errorf("[%s] failed to send post request : %v", name, err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		log.Printf("failure : %v\n", err)
-		return res, fmt.Errorf("failed to run kaldi gstreamer, got %s", resp.Status)
+		return res, fmt.Errorf("[%s] failed to run kaldi gstreamer, got %s", name, resp.Status)
 	}
 
 	body, _ := ioutil.ReadAll(resp.Body)
@@ -93,7 +94,7 @@ func runGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input re
 	err = json.Unmarshal(body, &gsResp)
 	if err != nil {
 		log.Printf("failure : %v\n", err)
-		return res, fmt.Errorf("failed to unmarshal : %v", err)
+		return res, fmt.Errorf("[%s] failed to unmarshal : %v", name, err)
 	}
 
 	if len(gsResp.Hypotheses) > 0 {

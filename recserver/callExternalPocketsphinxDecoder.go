@@ -59,12 +59,13 @@ type sphinxResp struct {
 }
 
 func callExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
+	name := rc.LongName()
 
 	url := rc.Cmd
 	res := rec.ProcessResponse{RecordingID: input.RecordingID}
 
 	if !strings.Contains(url, wavFilePlaceHolder) {
-		msg := fmt.Sprintf("input tensorflow command must contain wav file variable %s", wavFilePlaceHolder)
+		msg := fmt.Sprintf("[%s] input command must contain wav file variable %s", name, wavFilePlaceHolder)
 		log.Printf("failure : %v\n", msg)
 		return res, fmt.Errorf(msg)
 	}
@@ -72,7 +73,7 @@ func callExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath str
 	wavFilePathAbs, err := filepath.Abs(wavFilePath)
 	if err != nil {
 		log.Printf("failure : %v\n", err)
-		return res, fmt.Errorf("failed to get absolut path for wav file : %v", err)
+		return res, fmt.Errorf("failed to get absolut path for wav file : %v", name, err)
 	}
 
 	//sphinxURL := "http://localhost:8000/rec?audio_file=" + wavFielPathAbs
@@ -80,23 +81,22 @@ func callExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath str
 	log.Printf("callExternalPocketsphinxDecoderServer URL: %s\n", sphinxURL)
 	resp, err := http.Get(sphinxURL)
 	if err != nil {
-		return res, fmt.Errorf("callExternalPocketsphinxDecoderServer: failed get '%s' : %v", sphinxURL, err)
+		return res, fmt.Errorf("[%s] failed get '%s' : %v", name, sphinxURL, err)
 	}
 
 	sr := sphinxResp{}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return res, fmt.Errorf("callExternalPocketsphinxDecoderServer: failed to read response : %v", err)
+		return res, fmt.Errorf("[%s] failed to read response : %v", name, err)
 	}
 
 	err = json.Unmarshal(body, &sr)
 	if err != nil {
-		return res, fmt.Errorf("callExternalPocketsphinxDecoderServer: failed to unmarshal JSON '%s' : %v", string(body), err)
+		return res, fmt.Errorf("[%s] failed to unmarshal JSON '%s' : %v", name, string(body), err)
 	}
 
 	recRes := sr.RecognisedUtterance
 
-	log.Printf("callExternalPocketsphinxDecoderServer RecognitionResult: %s\n", recRes)
 	text := strings.TrimSpace(recRes)
 	if len(text) > 0 {
 		res.RecognitionResult = text
@@ -106,5 +106,6 @@ func callExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath str
 	}
 	res.Confidence = -1.0
 	res.Message = rc.LongName()
+	log.Printf("[%s] RecognitionResult: %s\n", name, res.RecognitionResult)
 	return res, nil
 }

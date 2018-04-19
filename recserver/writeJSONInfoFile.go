@@ -17,7 +17,7 @@ type fileInfo struct {
 	Message           string  `json:"message"`
 }
 
-func writeJSONInfoFile(audioRef rec.AudioRef, rec rec.ProcessInput, reses []rec.ProcessResponse) error {
+func writeJSONInfoFile(audioRef rec.AudioRef, rec rec.ProcessInput, res0 rec.ProcessResponse) error {
 
 	infos := []fileInfo{}
 
@@ -31,7 +31,15 @@ func writeJSONInfoFile(audioRef rec.AudioRef, rec rec.ProcessInput, reses []rec.
 		os.Remove(infoFilePath)
 	} // TODO Check for other err
 
-	for _, res := range reses {
+	info := fileInfo{
+		TargetUtterance:   rec.Text,
+		Status:            "recogniser",
+		Confidence:        res0.Confidence,
+		RecognitionResult: res0.RecognitionResult,
+		Message:           res0.Message,
+	}
+	infos = append(infos, info)
+	for _, res := range res0.ComponentResults {
 
 		info := fileInfo{
 			TargetUtterance:   rec.Text,

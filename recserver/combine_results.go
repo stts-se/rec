@@ -76,6 +76,7 @@ func combineResults(input rec.ProcessInput, inputResults []rec.ProcessResponse, 
 
 	// compute initial weights (recogniser conf * config defined conf * user defined conf)
 	var totalConf = 0.0
+	var anyOk = false
 	for i, res := range results {
 		inputConf := res.Confidence // input confidence from recogniser
 		if inputConf < 0.0 {        // below zero => unknown/undefined => default value 1.0
@@ -87,7 +88,9 @@ func combineResults(input rec.ProcessInput, inputResults []rec.ProcessResponse, 
 		}
 		userWeight := getUserWeight(input, res)
 		intermWeight := inputConf * configWeight * userWeight // intermediate weight
-		if !res.Ok {
+		if res.Ok {
+			anyOk = true
+		} else {
 			intermWeight = 0.0
 		}
 		res.Confidence = intermWeight
@@ -108,13 +111,16 @@ func combineResults(input rec.ProcessInput, inputResults []rec.ProcessResponse, 
 	if resErr != nil {
 		return rec.ProcessResponse{}, nil
 	}
+	if !anyOk {
+		return rec.ProcessResponse{}, fmt.Errorf("no results available")
+	}
 
 	var selected rec.ProcessResponse
 	if len(results) > 0 {
 		bestGuess, weight := getBestGuess(totalConfs)
 		selected = rec.ProcessResponse{Ok: true,
 			RecordingID:       input.RecordingID,
-			Message:           "",
+			Message:           "selected result",
 			RecognitionResult: bestGuess,
 			Confidence:        weight}
 	} else {

@@ -133,7 +133,7 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 		return
 	}
 
-	res, err := analyzeAudio(audioFile.Path(), input)
+	res, err := analyzeAudio(audioFile.Path(), input, verbMode)
 	//log.Printf("analyzeAudio.res = %s err= %v\n", res, err)
 	if err != nil {
 		msg := err.Error()
@@ -158,17 +158,11 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 	}
 
 	log.Printf("recserver result below:")
-	for _, r := range res {
+	log.Printf("%s\n", res)
+	for _, r := range res.ComponentResults {
 		log.Printf("%s\n", r.String())
 	}
-	final, err := combineResults(input, res, verbMode)
-	if err != nil {
-		msg := fmt.Sprintf("failed to combine results : %v", err)
-		log.Println(msg)
-		http.Error(w, msg, http.StatusBadRequest)
-		return
-	}
-	resJSON, err := json.Marshal(final)
+	resJSON, err := json.Marshal(res)
 	if err != nil {
 		msg := fmt.Sprintf("failed to marshal response : %v", err)
 		log.Println(msg)
@@ -209,8 +203,10 @@ func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, index in
 	}
 }
 
-// parallell calls
-func analyzeAudio(audioFile string, input rec.ProcessInput) ([]rec.ProcessResponse, error) {
+// runs parallell calls (using chan)
+func analyzeAudio(audioFile string, input rec.ProcessInput, verbMode bool) (rec.ProcessResponse, error) {
+	//fmt.Printf("analyzeAudio input : %s\n", input)
+
 	var accres = make(chan recresforchan)
 	var n = 0
 	for index, rc := range config.MyConfig.EnabledRecognisers() {
@@ -223,12 +219,17 @@ func analyzeAudio(audioFile string, input rec.ProcessInput) ([]rec.ProcessRespon
 	for i := 0; i < n; i++ {
 		rr := <-accres
 		if rr.err != nil {
-			return []rec.ProcessResponse{}, rr.err
+			return rec.ProcessResponse{}, rr.err
 		} else {
 			res[rr.index] = rr.resp
 		}
 	}
-	return res, nil
+
+	final, err := combineResults(input, res, verbMode)
+	if err != nil {
+		return rec.ProcessResponse{}, fmt.Errorf("failed to combine results : %v", err)
+	}
+	return final, nil
 }
 
 type audioResponse struct {
@@ -328,6 +329,25 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(w, "%s\n", string(resJSON))
+}
+
+func testRecognisers() error {
+	var err error
+	log.Println("=== RUNNING INIT TESTS OF RECOGNISERS ====")
+	fileName := filepath.Join(audioDir, "silence_used_for_recserver_init_tests.wav")
+	input := rec.ProcessInput{
+		UserName:    "tmpuser0",
+		Text:        "DUMMY_TEXT0",
+		RecordingID: "tmprecid0",
+		Audio:       rec.Audio{Data: "", FileType: "audio/wav"}}
+	_, err = analyzeAudio(fileName, input, true)
+	if err != nil {
+		log.Printf("testRecognisers() failed : %v\n", err)
+	} else {
+		log.Println("testRecognisers() success")
+	}
+	log.Println("=== COMPLETED INIT TESTS OF RECOGNISERS ====")
+	return err
 }
 
 // The path to the directory where audio files are saved
@@ -480,6 +500,12 @@ func main() {
 		ReadTimeout:  15 * time.Second,
 	}
 	log.Printf("rec server started on %s/rec\n", addr)
+	err = testRecognisers()
+	if err != nil {
+		log.Printf("Exiting! Recogniser tests failed : %v", err)
+		os.Exit(1)
+	}
 	log.Fatal(srv.ListenAndServe())
+
 	fmt.Println("No fun")
 }

@@ -33,8 +33,7 @@ var ConfigSample = Config{
 			Name: "nst_10000_adapted_467",
 			Type: PocketSphinx,
 			Weights: map[string]float64{
-				"char":    0.0,
-				"default": 1.0,
+				"char": 0.0,
 			},
 			Cmd: "http://localhost:8000/rec?audio_file={wavfile}",
 		},

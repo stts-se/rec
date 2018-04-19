@@ -32,8 +32,7 @@
 	    "type": "pocketsphinx",
 	    "cmd": "http://localhost:8000/rec?audio_file={wavfile}",
 	    "weights": {
-		"char": 0.0,
-		"default": 1.0
+		"char": 0.0
 	    }
 	},
 	{

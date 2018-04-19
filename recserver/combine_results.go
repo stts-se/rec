@@ -30,26 +30,25 @@ func getUserWeight(input rec.ProcessInput, res rec.ProcessResponse) float64 {
 	return 1.0
 }
 
-func getConfigWeight(input rec.ProcessInput, res rec.ProcessResponse, recName2Weights map[string]config.Recogniser) float64 {
-	//panic("testar panic, hur fånga?")
+func getConfigWeight(input rec.ProcessInput, res rec.ProcessResponse, recName2Weights map[string]config.Recogniser) (float64, error) {
 	rc, ok := recName2Weights[res.Source()]
 	if !ok {
 		msg := fmt.Sprintf("no recogniser defined for %s", res.Source())
-		panic(msg)
+		return 0.0, fmt.Errorf("%s", msg)
 	}
 	ws := rc.Weights
 	if w, ok := ws[input.Text]; ok {
-		return w
+		return w, nil
 		// } else if w, ok := ws[res.RecognitionResult]; ok {
 		// 	return w
 	} else if w, ok := ws["char"]; ok && (isChar(input.Text)) { // || isChar(res.RecognitionResult)) {
-		return w
+		return w, nil
 	} else if w, ok := ws["word"]; ok && (isWord(input.Text)) { // || isWord(res.RecognitionResult)) {
-		return w
+		return w, nil
 	} else if w, ok := ws["default"]; ok {
-		return w
+		return w, nil
 	}
-	return 1.0
+	return 1.0, nil
 }
 
 func getBestGuess(totalConfs map[string]float64) (string, float64) {
@@ -82,7 +81,10 @@ func combineResults(input rec.ProcessInput, inputResults []rec.ProcessResponse, 
 		if inputConf < 0.0 {        // below zero => unknown/undefined => default value 1.0
 			inputConf = 1.0
 		}
-		configWeight := getConfigWeight(input, res, recName2Weights)
+		configWeight, err := getConfigWeight(input, res, recName2Weights)
+		if err != nil {
+			return rec.ProcessResponse{}, fmt.Errorf("combineResults failed : %v", err)
+		}
 		userWeight := getUserWeight(input, res)
 		intermWeight := inputConf * configWeight * userWeight // intermediate weight
 		if !res.Ok {

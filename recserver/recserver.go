@@ -219,13 +219,19 @@ func analyzeAudio(audioFile string, input rec.ProcessInput) ([]rec.ProcessRespon
 	}
 	nRecs := len(config.MyConfig.Recognisers)
 	res := make([]rec.ProcessResponse, nRecs, nRecs)
+
+	var err error
 	for i := 0; i < n; i++ {
 		rr := <-accres
 		if rr.err != nil {
-			return res, rr.err
+			err = rr.err
+			break
 		} else {
 			res[rr.index] = rr.resp
 		}
+	}
+	if err != nil {
+		return []rec.ProcessResponse{}, err
 	}
 
 	return res, nil

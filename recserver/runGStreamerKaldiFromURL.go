@@ -37,6 +37,7 @@ var gStreamerENMaptable = map[string]string{
 	"each":     "is",
 	"he's":     "is",
 	"is":       "is",
+	"most":     "mos",
 	"o":        "o",
 	"place":    "blæs",
 	"small":    "sne",

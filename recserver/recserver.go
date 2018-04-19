@@ -183,11 +183,12 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 }
 
 type recresforchan struct {
-	resp rec.ProcessResponse
-	err  error
+	resp  rec.ProcessResponse
+	err   error
+	index int
 }
 
-func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, wavFilePath string, input rec.ProcessInput) {
+func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, index int, wavFilePath string, input rec.ProcessInput) {
 	log.Printf("running recogniser %s", rc.LongName())
 	var res rec.ProcessResponse
 	var err error
@@ -201,7 +202,7 @@ func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, wavFileP
 	default:
 		err = fmt.Errorf("unknown recogniser type: %s", rc.Type)
 	}
-	rchan := recresforchan{resp: res, err: err}
+	rchan := recresforchan{resp: res, err: err, index: index}
 	accres <- rchan
 	log.Printf("completed recogniser %s", rc.LongName())
 }
@@ -210,20 +211,20 @@ func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, wavFileP
 func analyzeAudio(audioFile string, input rec.ProcessInput) ([]rec.ProcessResponse, error) {
 	var accres = make(chan recresforchan)
 	var n = 0
-	for _, rc := range config.MyConfig.Recognisers {
+	for index, rc := range config.MyConfig.Recognisers {
 		if !rc.Disabled {
 			n++
-			go runRecogniserChan(accres, rc, audioFile, input)
+			go runRecogniserChan(accres, rc, index, audioFile, input)
 		}
 	}
-
-	res := []rec.ProcessResponse{}
+	nRecs := len(config.MyConfig.Recognisers)
+	res := make([]rec.ProcessResponse, nRecs, nRecs)
 	for i := 0; i < n; i++ {
 		rr := <-accres
 		if rr.err != nil {
 			return res, rr.err
 		} else {
-			res = append(res, rr.resp)
+			res[rr.index] = rr.resp
 		}
 	}
 

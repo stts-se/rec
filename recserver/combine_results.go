@@ -69,6 +69,9 @@ func getBestGuess(totalConfs map[string]float64) (string, float64) {
 			bestGuess = guess
 		}
 	}
+	if bestConf == 1 { // we can never be 100% sure
+		bestConf = 0.99
+	}
 	return bestGuess, bestConf
 }
 

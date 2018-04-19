@@ -202,6 +202,7 @@ func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, index in
 	default:
 		err = fmt.Errorf("unknown recogniser type: %s", rc.Type)
 	}
+	log.Printf("[RECSERVER DEBUG] runRecChan for %s => %v (err: %v)\n", rc.LongName(), res, err)
 	rchan := recresforchan{resp: res, err: err, index: index}
 	accres <- rchan
 	log.Printf("completed recogniser %s", rc.LongName())

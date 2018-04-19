@@ -27,18 +27,21 @@ func runTensorflowCommand(rc config.Recogniser, wavFilePath string, input rec.Pr
 	command := rc.Cmd
 	res := rec.ProcessResponse{RecordingID: input.RecordingID}
 
+	log.Println("TENSORFLOW DEBUG 1")
 	if !strings.Contains(command, wavFilePlaceHolder) {
 		msg := fmt.Sprintf("input tensorflow command must contain wav file variable %s", wavFilePlaceHolder)
 		log.Printf("failure : %v\n", msg)
 		return res, fmt.Errorf(msg)
 	}
 
+	log.Println("TENSORFLOW DEBUG 2")
 	wavFilePathAbs, err := filepath.Abs(wavFilePath)
 	if err != nil {
 		log.Printf("failure : %v\n", err)
 		return res, fmt.Errorf("failed to get absolut path for wav file : %v", err)
 	}
 
+	log.Println("TENSORFLOW DEBUG 3")
 	command = strings.Replace(command, wavFilePlaceHolder, wavFilePathAbs, -1)
 
 	log.Printf("runTensorflowCommand cmd=%s\n", command)
@@ -46,6 +49,8 @@ func runTensorflowCommand(rc config.Recogniser, wavFilePath string, input rec.Pr
 	cmdSplit := strings.Fields(command)
 	cmd := exec.Command(cmdSplit[0], cmdSplit[1:]...)
 
+	log.Println("TENSORFLOW DEBUG 4")
+	command = strings.Replace(command, wavFilePlaceHolder, wavFilePathAbs, -1)
 	var out bytes.Buffer
 	var stderr bytes.Buffer
 	cmd.Stdout = &out
@@ -53,10 +58,12 @@ func runTensorflowCommand(rc config.Recogniser, wavFilePath string, input rec.Pr
 
 	err = cmd.Run()
 	if err != nil {
+		log.Println("TENSORFLOW DEBUG 4b")
 		log.Printf(stderr.String())
 		log.Printf("failure : %v\n", err)
 		return res, fmt.Errorf("failed running command %v : %v", cmd, err)
 	}
+	log.Println("TENSORFLOW DEBUG 5")
 
 	// FILE TAB RES TAB SCORE
 	res0 := strings.Split(strings.TrimSpace(out.String()), "\t")
@@ -66,6 +73,7 @@ func runTensorflowCommand(rc config.Recogniser, wavFilePath string, input rec.Pr
 		log.Printf("failure : %v\n", err)
 		return res, fmt.Errorf("failed parsing score to float64 : %v", err)
 	}
+	log.Println("TENSORFLOW DEBUG 6")
 	if text == "FAIL" {
 		res.Ok = false
 	} else {

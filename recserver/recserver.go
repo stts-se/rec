@@ -224,6 +224,7 @@ func analyzeAudio(audioFile string, input rec.ProcessInput) ([]rec.ProcessRespon
 	for i := 0; i < n; i++ {
 		rr := <-accres
 		if rr.err != nil {
+			fmt.Printf("got error from %s : %v\n", rr.resp, err)
 			err = rr.err
 			break
 		} else {

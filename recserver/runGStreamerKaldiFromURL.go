@@ -46,7 +46,10 @@ var gStreamerENMaptable = map[string]string{
 }
 
 func gStreamerENMapText(s0 string) (string, float64) {
-	s := strings.Replace(s0, ".", "", -1)
+	s := strings.TrimSpace(strings.Replace(s0, ".", "", -1))
+	if s == "" {
+		return "_silence_", 1.0
+	}
 	nWds := len(strings.Split(s, " "))
 	if nWds > 2 {
 		return "_other_", 2.0

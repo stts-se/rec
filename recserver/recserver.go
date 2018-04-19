@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"math"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -195,12 +194,6 @@ func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, index in
 	default:
 		err = fmt.Errorf("unknown recogniser type: %s", rc.Type)
 	}
-	log.Printf("recserver DEBUG res.Confidence checking NaN : %-v", res)
-	if math.IsNaN(res.Confidence) {
-		log.Printf("recserver DEBUG res.Confidence was NaN : %-v", res)
-		res.Confidence = 0.0
-	}
-
 	rchan := recresforchan{resp: res, err: err, index: index}
 	accres <- rchan
 	if err != nil {

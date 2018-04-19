@@ -73,7 +73,7 @@ func callExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath str
 	wavFilePathAbs, err := filepath.Abs(wavFilePath)
 	if err != nil {
 		log.Printf("failure : %v\n", err)
-		return res, fmt.Errorf("failed to get absolut path for wav file : %v", name, err)
+		return res, fmt.Errorf("[%s] failed to get absolut path for wav file : %v", name, err)
 	}
 
 	//sphinxURL := "http://localhost:8000/rec?audio_file=" + wavFielPathAbs
@@ -98,12 +98,11 @@ func callExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath str
 	recRes := sr.RecognisedUtterance
 
 	text := strings.TrimSpace(recRes)
-	if len(text) > 0 {
-		res.RecognitionResult = text
-		res.Ok = true
-	} else {
-		res.Ok = false
+	if len(text) == 0 {
+		text = "_silence_"
 	}
+	res.RecognitionResult = text
+	res.Ok = true
 	res.Confidence = -1.0
 	res.Message = rc.LongName()
 	log.Printf("[%s] RecognitionResult: %s\n", name, res.RecognitionResult)

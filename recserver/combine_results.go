@@ -14,7 +14,7 @@ func isChar(s string) bool {
 }
 
 func isWord(s string) bool {
-	return !isChar(s)
+	return len([]rune(s)) > 1
 }
 
 func roundConfidence(fl float64) float64 {
@@ -37,13 +37,20 @@ func getConfigWeight(input rec.ProcessInput, res rec.ProcessResponse, recName2We
 		return 0.0, fmt.Errorf("%s", msg)
 	}
 	ws := rc.Weights
+	fmt.Printf("%s  ws: %v\n", res.Source(), ws)
 	if w, ok := ws[input.Text]; ok {
 		return w, nil
-		// } else if w, ok := ws[res.RecognitionResult]; ok {
-		// 	return w
-	} else if w, ok := ws["char"]; ok && (isChar(input.Text)) { // || isChar(res.RecognitionResult)) {
+	} else if w, ok := ws["input:"+input.Text]; ok {
 		return w, nil
-	} else if w, ok := ws["word"]; ok && (isWord(input.Text)) { // || isWord(res.RecognitionResult)) {
+	} else if w, ok := ws["output:"+res.RecognitionResult]; ok {
+		return w, nil
+	} else if w, ok := ws["input:char"]; ok && isChar(input.Text) {
+		return w, nil
+	} else if w, ok := ws["input:word"]; ok && isWord(input.Text) {
+		return w, nil
+	} else if w, ok := ws["output:char"]; ok && isChar(res.RecognitionResult) {
+		return w, nil
+	} else if w, ok := ws["output:word"]; ok && isWord(res.RecognitionResult) {
 		return w, nil
 	} else if w, ok := ws["default"]; ok {
 		return w, nil
@@ -101,7 +108,10 @@ func combineResults(input rec.ProcessInput, inputResults []rec.ProcessResponse, 
 	// re-compute conf relative to the sum of weights
 	var totalConfs = make(map[string]float64) // result string => sum of confidence measures for responses with this result
 	for i, res := range results {
-		newConf := roundConfidence(res.Confidence / totalConf)
+		newConf := 0.0
+		if totalConf > 0 {
+			newConf = roundConfidence(res.Confidence / totalConf)
+		}
 		res.Confidence = newConf
 		results[i] = res // update the slice with new value
 		totalConfs[res.RecognitionResult] = totalConfs[res.RecognitionResult] + res.Confidence

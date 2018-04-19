@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"strings"
 )
 
 var MyConfig Config
@@ -41,6 +42,24 @@ func NewConfig(filePath string) (Config, error) {
 		return res, fmt.Errorf("failed to unmarshal : %v", err)
 	}
 	//log.Printf("Loaded config: %#v\n", res)
+
+	// SANITY CHECK CONFIG
+	if strings.TrimSpace(res.AudioDir) == "" {
+		return Config{}, fmt.Errorf("empty audio_dir in config file %s", filePath)
+	}
+	for _, rc := range res.Recognisers {
+		if strings.TrimSpace(rc.Name) == "" {
+			return Config{}, fmt.Errorf("empty recogniser name in config file %s", filePath)
+		}
+		switch rc.Type {
+		case Tensorflow:
+		case KaldiGStreamer:
+		case PocketSphinx:
+		default:
+			return Config{}, fmt.Errorf("unknown recogniser type: %s", rc.Type)
+		}
+	}
+
 	return res, nil
 
 }
@@ -77,8 +96,8 @@ func (rec Recogniser) LongName() string {
 
 func (cfg Config) RecogniserNames() []string {
 	res := []string{}
-	for _, rec := range cfg.Recognisers {
-		res = append(res, rec.Name)
+	for _, rc := range cfg.Recognisers {
+		res = append(res, rc.Name)
 	}
 	return res
 }

@@ -27,7 +27,7 @@
 	    "disabled": true,
 	    "cmd": "bash /home/hanna/go/src/github.com/stts-se/audioproc/tensorflow/scripts/classify.sh /home/hanna/progz/tensorflow/simple_audio_recognition/danish-test-aeneas-4/my_frozen_graph.pb /home/hanna/progz/tensorflow/simple_audio_recognition/danish-test-aeneas-4/speech_commands_train/conv_labels.txt {wavfile}",
 	    "weights": {
-		"input:char": 1.0,
+		"input:_char_": 1.0,
 		"output:_silence_": 1.0,
 		"default": 0.0
 	    }
@@ -37,7 +37,7 @@
 	    "type": "pocketsphinx",
 	    "cmd": "http://localhost:8000/rec?audio_file={wavfile}",
 	    "weights": {
-		"input:char": 0.0,
+		"input:_char_": 0.0,
 		"output:_silence_": 0.5
 	    }
 	},

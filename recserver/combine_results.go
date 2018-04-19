@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"math"
+	"strings"
 
 	"github.com/stts-se/rec"
 	"github.com/stts-se/rec/config"
@@ -15,6 +16,10 @@ func isChar(s string) bool {
 
 func isWord(s string) bool {
 	return len([]rune(s)) > 1
+}
+
+func isEntity(s string) bool {
+	return strings.HasPrefix(s, "_") && strings.HasSuffix(s, "_")
 }
 
 func roundConfidence(fl float64) float64 {
@@ -37,20 +42,17 @@ func getConfigWeight(input rec.ProcessInput, res rec.ProcessResponse, recName2We
 		return 0.0, fmt.Errorf("%s", msg)
 	}
 	ws := rc.Weights
-	fmt.Printf("%s  ws: %v\n", res.Source(), ws)
-	if w, ok := ws[input.Text]; ok {
+	if w, ok := ws["input:"+input.Text]; ok { // && !isEntity(input.Text) {
 		return w, nil
-	} else if w, ok := ws["input:"+input.Text]; ok {
+	} else if w, ok := ws["output:"+res.RecognitionResult]; ok { // && !isEntity(res.RecognitionResult) {
 		return w, nil
-	} else if w, ok := ws["output:"+res.RecognitionResult]; ok {
+	} else if w, ok := ws["input:_char_"]; ok && isChar(input.Text) {
 		return w, nil
-	} else if w, ok := ws["input:char"]; ok && isChar(input.Text) {
+	} else if w, ok := ws["input:_word_"]; ok && isWord(input.Text) {
 		return w, nil
-	} else if w, ok := ws["input:word"]; ok && isWord(input.Text) {
+	} else if w, ok := ws["output:_char_"]; ok && isChar(res.RecognitionResult) {
 		return w, nil
-	} else if w, ok := ws["output:char"]; ok && isChar(res.RecognitionResult) {
-		return w, nil
-	} else if w, ok := ws["output:word"]; ok && isWord(res.RecognitionResult) {
+	} else if w, ok := ws["output:_word_"]; ok && isWord(res.RecognitionResult) {
 		return w, nil
 	} else if w, ok := ws["default"]; ok {
 		return w, nil
@@ -103,7 +105,7 @@ func combineResults(input rec.ProcessInput, inputResults []rec.ProcessResponse, 
 		res.Confidence = intermWeight
 		totalConf += roundConfidence(res.Confidence)
 		results[i] = res // update the slice with new value
-		log.Printf("combineResults:1 [%s] '%s' | conf=%f rw=%f uw=%f => %f", res.Source(), res.RecognitionResult, inputConf, configWeight, userWeight, intermWeight)
+		log.Printf("combineResults:1 [%s] '%s' | conf=%f cw=%f uw=%f => %f", res.Source(), res.RecognitionResult, inputConf, configWeight, userWeight, intermWeight)
 	}
 	// re-compute conf relative to the sum of weights
 	var totalConfs = make(map[string]float64) // result string => sum of confidence measures for responses with this result

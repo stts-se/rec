@@ -25,20 +25,23 @@ type gstreamerResponse struct {
 }
 
 var gStreamerENMaptable = map[string]string{
-	"all":      "o",
 	"a":        "a",
 	"ace":      "is",
-	"each":     "is",
-	"place":    "blæs",
-	"e":        "i",
+	"all said": "rose",
+	"all":      "o",
+	"also":     "rose",
+	"and also": "rose",
 	"b":        "bi",
 	"be":       "bi",
-	"the":      "bi",
-	"small":    "sne",
-	"yes":      "blæs",
-	"all said": "rose",
-	"o":        "o",
+	"e":        "i",
+	"each":     "is",
+	"he's":     "is",
 	"is":       "is",
+	"o":        "o",
+	"place":    "blæs",
+	"small":    "sne",
+	"the":      "bi",
+	"yes":      "blæs",
 }
 
 func gStreamerENMapText(s0 string) (string, float64) {
@@ -93,7 +96,8 @@ func runGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input re
 	}
 
 	if len(gsResp.Hypotheses) > 0 {
-		newRes, conf := gStreamerENMapText(gsResp.Hypotheses[0].Utterance)
+		res0 := strings.ToLower(gsResp.Hypotheses[0].Utterance)
+		newRes, conf := gStreamerENMapText(res0)
 		res.Confidence = conf
 		res.RecognitionResult = newRes
 		res.Ok = true

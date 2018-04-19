@@ -18,12 +18,12 @@ type Recogniser struct {
 	Name     string             `json:"name"`
 	Type     string             `json:"type"`
 	Cmd      string             `json:"cmd"`
-	Weights  map[string]float32 `json:"weights,omitempty"`
+	Weights  map[string]float64 `json:"weights,omitempty"`
 	Disabled bool               `json:"disabled,omitempty"`
 }
 type Config struct {
 	AudioDir    string       `json:"audio_dir"`
-	ServerPort  int32        `json:"server_port"`
+	ServerPort  int          `json:"server_port"`
 	Recognisers []Recogniser `json:"recognisers,omitempty"`
 }
 
@@ -68,7 +68,7 @@ func (rec Recogniser) LongName() string {
 func (cfg Config) RecogniserNames() []string {
 	res := []string{}
 	for _, rec := range cfg.Recognisers {
-		res = append(res, rec.LongName())
+		res = append(res, rec.Name)
 	}
 	return res
 }

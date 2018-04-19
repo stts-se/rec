@@ -71,7 +71,7 @@ func runTensorflowCommand(rc config.Recogniser, wavFilePath string, input rec.Pr
 	} else {
 		res.Ok = true
 		res.RecognitionResult = text
-		res.Confidence = float32(score)
+		res.Confidence = score
 	}
 
 	res.Message = rc.LongName()

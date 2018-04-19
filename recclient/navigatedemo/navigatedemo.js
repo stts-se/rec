@@ -164,7 +164,7 @@ function showError(data) {
 
 //     type processResponse struct {
 // 	Ok                bool    `json:"ok"`
-// 	Confidence        float32 `json:"confidence"`
+// 	Confidence        float64 `json:"confidence"`
 // 	RecognitionResult string  `json:"recognition_result"`
 // 	RecordingID       string  `json:"recording_id"`
 // 	Message           string  `json:"message"`

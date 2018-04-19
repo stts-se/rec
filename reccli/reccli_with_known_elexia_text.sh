@@ -28,6 +28,11 @@ if [ $# -lt 1 ]; then
     exit 0
 fi
 
+outprefix=""
+if [ $verbose -eq 1 ]; then
+    outprefix="[$cmd]\t"
+fi
+
 run_reccli() {
     uid=$(uuidgen)
     cd $dir
@@ -39,9 +44,8 @@ run_reccli() {
 	echo "$result"
 	if [ $verbose -eq 1 ]; then
 	    echo "-- verbose output --"
-	    cat $tmpfile
+	    echo $tmpfile
 	fi
-	rm $tmpfile
     else
 	echo $reccli_cmd
 	cat $tmpfile
@@ -62,20 +66,20 @@ for wav in $*; do
 	exit 1
     fi
     target_text=`cat $jsonfile | egrep 'target_utt' | sed 's/.*": "\([^"]*\)".*/\1/'`
-    echo "WAV:     $abswav"
-    echo "JSON:    $jsonfile"
-    echo "TARGET:  $target_text"
     if resp=$(run_reccli $target_text); then
 	result=`echo $resp | sed 's/\s-- verbose output.*//'`
+	tmpfile=`echo $resp | sed 's/.*verbose output --//'`
 	correct="NO"
 	if [[ $result == $target_text ]]; then
 	    correct="YES"
 	fi
-	echo "RESULT:  $resp"
-	echo "CORRECT: $correct"
-	echo ""
+	printf "$outprefix$wav\t$target_text\t$result\t$correct\n"
+	if [ $verbose -eq 1 ]; then
+	    echo "-- verbose output --"
+	    cat $tmpfile
+	fi
     else
-	echo "FAILED:  $result"
+	echo "FAILED $wav" 1>&2
 	exit 1
     fi
     sleep 1

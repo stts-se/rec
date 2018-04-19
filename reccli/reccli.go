@@ -63,7 +63,7 @@ func main() {
 		aud := base64.StdEncoding.EncodeToString(bts)
 		ext := strings.TrimPrefix(path.Ext(path.Base(fileName)), ".")
 
-		weights := make(map[string]float32)
+		weights := make(map[string]float64)
 		if len(flagWeights) > 0 {
 			for _, w0 := range strings.Split(flagWeights, "&") {
 				x := strings.Split(w0, "=")
@@ -77,7 +77,7 @@ func main() {
 					fmt.Fprintf(os.Stderr, "couldn't parse input weights %s : %v\n", flagWeights, err)
 					os.Exit(1)
 				}
-				weights[rcName] = float32(w)
+				weights[rcName] = w
 			}
 		}
 
@@ -92,7 +92,7 @@ func main() {
 			Weights: weights,
 		}
 
-		fmt.Fprintf(os.Stderr, "[%s] INPUT %s\n", cmdName, plPretty(payload))
+		fmt.Fprintf(os.Stdout, "[%s] INPUT %s\n", cmdName, plPretty(payload))
 
 		pl, err := json.Marshal(payload)
 		if err != nil {

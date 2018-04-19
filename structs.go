@@ -30,7 +30,7 @@ type ProcessInput struct {
 	Audio       Audio              `json:"audio"`
 	Text        string             `json:"text"`
 	RecordingID string             `json:"recording_id"`
-	Weights     map[string]float32 `json:"weights,omitempty"`
+	Weights     map[string]float64 `json:"weights,omitempty"`
 }
 
 type AudioDir struct {
@@ -82,7 +82,7 @@ func (af AudioFile) AudioDir() AudioDir {
 
 type ProcessResponse struct {
 	Ok                bool              `json:"ok"`
-	Confidence        float32           `json:"confidence"` // value between 0 and 1
+	Confidence        float64           `json:"confidence"` // value between 0 and 1
 	RecognitionResult string            `json:"recognition_result"`
 	RecordingID       string            `json:"recording_id"`
 	Message           string            `json:"message"`

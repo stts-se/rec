@@ -12,7 +12,7 @@ type fileInfo struct {
 	ActualUtterance   string  `json:"actual_utterance"`
 	Status            string  `json:"status"`
 	Ok                bool    `json:"ok"`
-	Confidence        float32 `json:"confidence"`
+	Confidence        float64 `json:"confidence"`
 	RecognitionResult string  `json:"recognition_result"`
 	Message           string  `json:"message"`
 }

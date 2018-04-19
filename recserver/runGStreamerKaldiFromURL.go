@@ -41,14 +41,14 @@ var gStreamerENMaptable = map[string]string{
 	"is":       "is",
 }
 
-func gStreamerENMapText(s0 string) (string, float32) {
+func gStreamerENMapText(s0 string) (string, float64) {
 	s := strings.Replace(s0, ".", "", -1)
 	nWds := len(strings.Split(s, " "))
 	if nWds > 2 {
 		return "_other_", 2.0
 	}
 	if mapped, ok := gStreamerENMaptable[s]; ok {
-		return mapped, 0.7
+		return mapped, 1.0
 	}
 	return s, 0.0
 }

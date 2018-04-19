@@ -160,10 +160,10 @@ func TestWriteSimpleUttFile(t *testing.T) {
 	if err != nil {
 		t.Errorf("expected nil, got %v", err)
 	}
-	if w, g := 1, len(uttList); w != g {
+	if w, g := 2, len(uttList); w != g { // one utt list created as default when AddUser is called
 		t.Errorf("wanted %d, got %d", w, g)
 	}
-	if w, g := 3, len(uttList[0].Utts); w != g {
+	if w, g := 3, len(uttList[1].Utts); w != g { // we want to check the 2nd utt list, which is the one we created here
 		t.Errorf("wanted %d, got %d", w, g)
 	}
 

@@ -45,6 +45,16 @@ func NewConfig(filePath string) (Config, error) {
 
 }
 
+func (cfg Config) EnabledRecognisers() []Recogniser {
+	res := []Recogniser{}
+	for _, rc := range cfg.Recognisers {
+		if !rc.Disabled {
+			res = append(res, rc)
+		}
+	}
+	return res
+}
+
 func (cfg Config) PrettyString() string {
 	bts, err := json.Marshal(cfg)
 	if err != nil {

@@ -68,7 +68,7 @@ func combineResults(input rec.ProcessInput, inputResults []rec.ProcessResponse, 
 	var resErr error
 	var results = inputResults
 	var recName2Weights = make(map[string]config.Recogniser)
-	for _, rc := range config.MyConfig.Recognisers {
+	for _, rc := range config.MyConfig.EnabledRecognisers() {
 		if !rc.Disabled {
 			recName2Weights[rc.LongName()] = rc
 		}

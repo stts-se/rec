@@ -106,8 +106,6 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 	if err != nil {
 		msg := fmt.Sprintf("failed to unmarshal incoming JSON : %v", err)
 		log.Println(msg)
-		// or return JSON response with error message?
-		//res.Message = msg
 		http.Error(w, msg, http.StatusBadRequest)
 		return
 	}
@@ -136,7 +134,7 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 	}
 
 	res, err := analyzeAudio(audioFile.Path(), input)
-	log.Printf("analyzeAudio.res = %s err= %v\n", res, err)
+	//log.Printf("analyzeAudio.res = %s err= %v\n", res, err)
 	if err != nil {
 		msg := err.Error()
 		log.Print(msg)
@@ -190,7 +188,7 @@ type recresforchan struct {
 
 func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, index int, wavFilePath string, input rec.ProcessInput) {
 	log.Printf("running recogniser %s", rc.LongName())
-	var res rec.ProcessResponse
+	var res rec.ProcessResponse = rec.ProcessResponse{Message: rc.LongName()}
 	var err error
 	switch rc.Type {
 	case config.Tensorflow:
@@ -202,40 +200,34 @@ func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, index in
 	default:
 		err = fmt.Errorf("unknown recogniser type: %s", rc.Type)
 	}
-	log.Printf("[RECSERVER DEBUG] runRecChan for %s => %v (err: %v)\n", rc.LongName(), res, err)
 	rchan := recresforchan{resp: res, err: err, index: index}
 	accres <- rchan
-	log.Printf("completed recogniser %s", rc.LongName())
+	if err != nil {
+		log.Printf("completed recogniser %s with an error : %v", rc.LongName(), err)
+	} else {
+		log.Printf("completed recogniser %s => %v", rc.LongName(), res)
+	}
 }
 
 // parallell calls
 func analyzeAudio(audioFile string, input rec.ProcessInput) ([]rec.ProcessResponse, error) {
 	var accres = make(chan recresforchan)
 	var n = 0
-	for index, rc := range config.MyConfig.Recognisers {
-		if !rc.Disabled {
-			n++
-			go runRecogniserChan(accres, rc, index, audioFile, input)
-		}
+	for index, rc := range config.MyConfig.EnabledRecognisers() {
+		n++
+		go runRecogniserChan(accres, rc, index, audioFile, input)
 	}
-	nRecs := len(config.MyConfig.Recognisers)
+	nRecs := len(config.MyConfig.EnabledRecognisers())
 	res := make([]rec.ProcessResponse, nRecs, nRecs)
 
-	var err error
 	for i := 0; i < n; i++ {
 		rr := <-accres
 		if rr.err != nil {
-			fmt.Printf("got error from %s : %v\n", rr.resp, err)
-			err = rr.err
-			break
+			return []rec.ProcessResponse{}, rr.err
 		} else {
 			res[rr.index] = rr.resp
 		}
 	}
-	if err != nil {
-		return []rec.ProcessResponse{}, err
-	}
-
 	return res, nil
 }
 

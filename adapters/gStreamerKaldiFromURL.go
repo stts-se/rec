@@ -62,10 +62,10 @@ func gStreamerENMapText(s0 string) (string, float64) {
 	return s, 0.0
 }
 
-func RunGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.SubProcessResponse, error) {
+func RunGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.RecogniserResponse, error) {
 	name := rc.LongName()
 	url := rc.Cmd
-	res := rec.SubProcessResponse{RecordingID: input.RecordingID, Source: rc.LongName()}
+	res := rec.RecogniserResponse{RecordingID: input.RecordingID, Source: rc.LongName()}
 
 	// curl -T $WAVFILE "http://192.168.0.105:8080/client/dynamic/recognize"
 	// {"status": 0, "hypotheses": [{"utterance": "just three style."}], "id": "80a4a3e6-15ec-41e7-ac5d-fa2ea2386df2"}
@@ -85,25 +85,31 @@ func RunGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input re
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Printf("[%s] failure : %v\n", name, err)
-		res.Message = "SERVER ERROR"
-		return res, fmt.Errorf("[%s] failed to send post request : %v", name, err)
+		msg := fmt.Sprintf("failed to send post request : %v", err)
+		log.Printf("[%s] failure : %s\n", name, msg)
+		res.Message = msg
+		res.Status = false
+		return res, fmt.Errorf("[%s] %s", name, msg)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		log.Printf("[%s] failure : %v\n", name, resp.StatusCode)
-		res.Message = "SERVER ERROR"
-		return res, fmt.Errorf("[%s] failed to run kaldi gstreamer, got %s", name, resp.Status)
+		msg := fmt.Sprintf("failed to run kaldi gstreamer, got %s", resp.Status)
+		log.Printf("[%s] failure : %s\n", name, msg)
+		res.Message = msg
+		res.Status = false
+		return res, fmt.Errorf("[%s] %s", name, msg)
 	}
 
 	body, _ := ioutil.ReadAll(resp.Body)
 	gsResp := gstreamerResponse{}
 	err = json.Unmarshal(body, &gsResp)
 	if err != nil {
-		log.Printf("[%s] failure : %v\n", name, err)
-		res.Message = "SERVER ERROR"
-		return res, fmt.Errorf("[%s] failed to unmarshal : %v", name, err)
+		msg := fmt.Sprintf("failed to unmarshal JSON : %v", err)
+		log.Printf("[%s] failure : %s\n", name, msg)
+		res.Message = msg
+		res.Status = false
+		return res, fmt.Errorf("[%s] %s", name, msg)
 	}
 
 	if len(gsResp.Hypotheses) > 0 {
@@ -111,17 +117,13 @@ func RunGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input re
 		newRes, conf := gStreamerENMapText(res0)
 		res.Confidence = conf
 		res.RecognitionResult = newRes
-		if res.RecognitionResult == input.Text {
-			res.Ok = true
-		} else {
-			res.Ok = false
-		}
+		res.Status = true
 	} else {
 		res.RecognitionResult = ""
-		res.Ok = false
+		res.Status = false
 	}
 	if gsResp.Status != 0 {
-		res.Ok = false
+		res.Status = false
 	}
 	log.Printf("runGStreamerKaldiFromURL RecognitionResult: %s\n", res.RecognitionResult)
 	return res, nil

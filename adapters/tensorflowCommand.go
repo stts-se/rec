@@ -22,23 +22,26 @@ type tensorflowResponse struct {
 
 var wavFilePlaceHolder = "{wavfile}"
 
-func RunTensorflowCommand(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.SubProcessResponse, error) {
+func RunTensorflowCommand(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.RecogniserResponse, error) {
 	name := rc.LongName()
 	command := rc.Cmd
-	res := rec.SubProcessResponse{RecordingID: input.RecordingID, Source: rc.LongName()}
+	res := rec.RecogniserResponse{RecordingID: input.RecordingID, Source: rc.LongName()}
 
 	if !strings.Contains(command, wavFilePlaceHolder) {
-		msg := fmt.Sprintf("[%s] input command must contain wav file variable %s", name, wavFilePlaceHolder)
-		log.Printf("[%s] failure : %v\n", name, msg)
-		res.Message = "SERVER ERROR"
-		return res, fmt.Errorf(msg)
+		msg := fmt.Sprintf("input command must contain wav file variable %s", wavFilePlaceHolder)
+		log.Printf("[%s] failure : %s\n", name, msg)
+		res.Message = msg
+		res.Status = false
+		return res, fmt.Errorf("[%s] %s", name, msg)
 	}
 
 	wavFilePathAbs, err := filepath.Abs(wavFilePath)
 	if err != nil {
-		log.Printf("[%s] failure : %v\n", name, err)
-		res.Message = "SERVER ERROR"
-		return res, fmt.Errorf("[%s] failed to get absolute path for wav file : %v", name, err)
+		msg := fmt.Sprintf("failed to get absolute path for wav file : %v", err)
+		log.Printf("[%s] failure : %s\n", name, msg)
+		res.Message = msg
+		res.Status = false
+		return res, fmt.Errorf("[%s] %s", name, msg)
 	}
 
 	command = strings.Replace(command, wavFilePlaceHolder, wavFilePathAbs, -1)
@@ -54,10 +57,11 @@ func RunTensorflowCommand(rc config.Recogniser, wavFilePath string, input rec.Pr
 
 	err = cmd.Run()
 	if err != nil {
-		log.Printf(stderr.String())
-		log.Printf("[%s] failure : %v\n", name, err)
-		res.Message = "SERVER ERROR"
-		return res, fmt.Errorf("[%s] failed running command %v : %v", name, cmd, err)
+		msg := fmt.Sprintf("failed running command %v : %v", cmd, stderr.String())
+		log.Printf("[%s] failure : %s\n", name, msg)
+		res.Message = msg
+		res.Status = false
+		return res, fmt.Errorf("[%s] %s", name, msg)
 	}
 
 	// FILE TAB RES TAB SCORE
@@ -65,19 +69,16 @@ func RunTensorflowCommand(rc config.Recogniser, wavFilePath string, input rec.Pr
 	res0 := strings.Split(strings.TrimSpace(outS), "\t")
 	text := res0[1]
 	if text == "FAIL" {
-		res.Ok = false
+		res.Status = false
 	} else {
-		if text == input.Text {
-			res.Ok = true
-		} else {
-			res.Ok = false
-		}
-
+		res.Status = true
 		score, err := strconv.ParseFloat(res0[2], 64)
 		if err != nil {
-			log.Printf("[%s] failure : %v\n", name, err)
-			res.Message = "SERVER ERROR"
-			return res, fmt.Errorf("[%s] failed parsing score to float64 : %v", name, err)
+			msg := fmt.Sprintf("failed parsing score to float64 : %v", err)
+			log.Printf("[%s] failure : %s\n", name, msg)
+			res.Message = msg
+			res.Status = false
+			return res, fmt.Errorf("[%s] %s", name, msg)
 		}
 		res.RecognitionResult = text
 		res.Confidence = score

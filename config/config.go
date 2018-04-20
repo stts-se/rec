@@ -23,9 +23,10 @@ type Recogniser struct {
 	Disabled bool               `json:"disabled,omitempty"`
 }
 type Config struct {
-	AudioDir    string       `json:"audio_dir"`
-	ServerPort  int          `json:"server_port"`
-	Recognisers []Recogniser `json:"recognisers,omitempty"`
+	AudioDir              string       `json:"audio_dir"`
+	ServerPort            int          `json:"server_port"`
+	FailOnRecogniserError bool         `json:"fail_on_recogniser_error"`
+	Recognisers           []Recogniser `json:"recognisers,omitempty"`
 }
 
 func NewConfig(filePath string) (Config, error) {

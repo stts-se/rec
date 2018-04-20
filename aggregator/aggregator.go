@@ -27,7 +27,7 @@ func roundConfidence(fl float64) float64 {
 	return math.Round(fl/unit) * unit
 }
 
-func getUserWeight(input rec.ProcessInput, res rec.SubProcessResponse) float64 {
+func getUserWeight(input rec.ProcessInput, res rec.RecogniserResponse) float64 {
 	rcName := res.Source
 	if w, ok := input.Weights[rcName]; ok {
 		return w
@@ -35,7 +35,7 @@ func getUserWeight(input rec.ProcessInput, res rec.SubProcessResponse) float64 {
 	return 1.0
 }
 
-func getConfigWeight(input rec.ProcessInput, res rec.SubProcessResponse, recName2Weights map[string]config.Recogniser) (float64, error) {
+func getConfigWeight(input rec.ProcessInput, res rec.RecogniserResponse, recName2Weights map[string]config.Recogniser) (float64, error) {
 	rc, ok := recName2Weights[res.Source]
 	if !ok {
 		msg := fmt.Sprintf("no recogniser defined for %s", res.Source)
@@ -70,12 +70,12 @@ func getBestGuess(totalConfs map[string]float64) (string, float64) {
 		}
 	}
 	if bestConf == 1 { // we can never be 100% sure
-		bestConf = 0.99
+		bestConf = roundConfidence(0.9999)
 	}
 	return bestGuess, bestConf
 }
 
-func CombineResults(input rec.ProcessInput, inputResults []rec.SubProcessResponse, includeOriginalResponses bool) (rec.ProcessResponse, error) {
+func CombineResults(input rec.ProcessInput, inputResults []rec.RecogniserResponse, includeOriginalResponses bool) (rec.ProcessResponse, error) {
 	var resErr error
 	var convertedResults = inputResults
 	var recName2Weights = make(map[string]config.Recogniser)
@@ -87,7 +87,11 @@ func CombineResults(input rec.ProcessInput, inputResults []rec.SubProcessRespons
 
 	// compute initial weights (recogniser conf * config defined conf * user defined conf)
 	var totalConf = 0.0
+	var nProcessFail = 0
 	for i, res := range convertedResults {
+		if !res.Status == true {
+			nProcessFail += 1
+		}
 		recogConf := res.Confidence // input confidence from recogniser
 		if recogConf < 0.0 {        // below zero => unknown/undefined => default value 1.0
 			recogConf = 1.0
@@ -104,8 +108,8 @@ func CombineResults(input rec.ProcessInput, inputResults []rec.SubProcessRespons
 			"user":       userWeight,
 			"product":    product,
 		}
-		res.Confidence = product // the intermediate confidence value
-		convertedResults[i] = res
+		res.Confidence = product  // the intermediate confidence value
+		convertedResults[i] = res // update the slice with new values
 		totalConf += roundConfidence(res.Confidence)
 	}
 	// re-compute conf relative to the sum of weights
@@ -118,11 +122,7 @@ func CombineResults(input rec.ProcessInput, inputResults []rec.SubProcessRespons
 		res.Confidence = newConf
 		convertedResults[i] = res // update the slice with new value
 		totalConfs[res.RecognitionResult] = totalConfs[res.RecognitionResult] + res.Confidence
-		recogConf := res.InputConfidence["recogniser"]
-		configWeight := res.InputConfidence["config"]
-		userWeight := res.InputConfidence["user"]
-		product := res.InputConfidence["product"]
-		log.Printf("CombineResults [%s] '%s' %v | rc=%f cw=%f uw=%f %f => %f ", res.Source, res.RecognitionResult, res.Ok, recogConf, configWeight, userWeight, product, res.Confidence)
+		log.Printf("CombineResults %v", res)
 	}
 
 	if resErr != nil {
@@ -130,18 +130,19 @@ func CombineResults(input rec.ProcessInput, inputResults []rec.SubProcessRespons
 	}
 
 	var selected rec.ProcessResponse
+	var failInfo = fmt.Sprintf("%d out of %d recognisers failed", nProcessFail, len(convertedResults))
 	if len(convertedResults) > 0 {
 		bestGuess, weight := getBestGuess(totalConfs)
 		selected = rec.ProcessResponse{
 			Ok:                bestGuess == input.Text,
 			RecordingID:       input.RecordingID,
-			Message:           "selected result",
+			Message:           failInfo,
 			RecognitionResult: bestGuess,
 			Confidence:        weight}
 	} else {
 		selected = rec.ProcessResponse{Ok: false,
 			RecordingID:       input.RecordingID,
-			Message:           "No result from server",
+			Message:           fmt.Sprintf("no result from server; %s", failInfo),
 			RecognitionResult: ""}
 	}
 	if includeOriginalResponses {

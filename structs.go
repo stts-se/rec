@@ -86,11 +86,11 @@ type ProcessResponse struct {
 	RecognitionResult string               `json:"recognition_result"`
 	RecordingID       string               `json:"recording_id"`
 	Message           string               `json:"message"`
-	ComponentResults  []SubProcessResponse `json:"component_results,omitempty"`
+	ComponentResults  []RecogniserResponse `json:"component_results,omitempty"`
 }
 
-type SubProcessResponse struct {
-	Ok                bool               `json:"ok"`
+type RecogniserResponse struct {
+	Status            bool               `json:"status"`
 	InputConfidence   map[string]float64 `json:"input_confidence,omitempty"` // recogniser, config, user, product
 	Confidence        float64            `json:"confidence"`                 // value between 0 and 1
 	RecognitionResult string             `json:"recognition_result"`
@@ -105,12 +105,12 @@ func (pr ProcessResponse) Source() string {
 	return spaceAndAfter.ReplaceAllString(pr.Message, "")
 }
 
-func (pr SubProcessResponse) String() string {
+func (pr RecogniserResponse) String() string {
 	status := "OK"
-	if !pr.Ok {
+	if !pr.Status {
 		status = "FAIL"
 	}
-	return fmt.Sprintf("[%s] %s |  %s %f %s %s", pr.Source, pr.RecognitionResult, status, pr.Confidence, pr.RecordingID, pr.Message)
+	return fmt.Sprintf("[%s] %s |  %s %f %v %s %s", pr.Source, pr.RecognitionResult, status, pr.Confidence, pr.InputConfidence, pr.RecordingID, pr.Message)
 }
 
 func (pr ProcessResponse) String() string {

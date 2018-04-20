@@ -60,23 +60,26 @@ type sphinxResp struct {
 	RecognisedUtterance string `json:"recognised_utterance"`
 }
 
-func CallExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.SubProcessResponse, error) {
+func CallExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.RecogniserResponse, error) {
 	name := rc.LongName()
 	url := rc.Cmd
-	res := rec.SubProcessResponse{RecordingID: input.RecordingID, Source: rc.LongName()}
+	res := rec.RecogniserResponse{RecordingID: input.RecordingID, Source: rc.LongName()}
 
 	if !strings.Contains(url, wavFilePlaceHolder) {
-		msg := fmt.Sprintf("[%s] input command must contain wav file variable %s", name, wavFilePlaceHolder)
-		log.Printf("[%s] failure : %v\n", name, msg)
-		res.Message = "SERVER ERROR"
-		return res, fmt.Errorf(msg)
+		msg := fmt.Sprintf("input command must contain wav file variable %s", wavFilePlaceHolder)
+		log.Printf("[%s] failure : %s\n", name, msg)
+		res.Status = false
+		res.Message = msg
+		return res, fmt.Errorf("[%s] %s", name, msg)
 	}
 
 	wavFilePathAbs, err := filepath.Abs(wavFilePath)
 	if err != nil {
-		log.Printf("[%s] failure : %v\n", name, err)
-		res.Message = "SERVER ERROR"
-		return res, fmt.Errorf("[%s] failed to get absolut path for wav file : %v", name, err)
+		msg := fmt.Sprintf("failed to get absolut path for wav file : %v\n", err)
+		log.Printf("[%s] failure : %s\n", name, msg)
+		res.Status = false
+		res.Message = msg
+		return res, fmt.Errorf("[%s] %s", name, msg)
 	}
 
 	//sphinxURL := "http://localhost:8000/rec?audio_file=" + wavFielPathAbs
@@ -88,21 +91,30 @@ func CallExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath str
 	log.Printf("callExternalPocketsphinxDecoderServer URL: %s\n", sphinxURL)
 	resp, err := http.Get(sphinxURL)
 	if err != nil {
-		res.Message = "SERVER ERROR"
-		return res, fmt.Errorf("[%s] failed get '%s' : %v", name, sphinxURL, err)
+		msg := fmt.Sprintf("failed to call URL : %v", err)
+		log.Printf("[%s] failure : %s\n", name, msg)
+		res.Message = msg
+		res.Status = false
+		return res, fmt.Errorf("[%s] %s", name, msg)
 	}
 
 	sr := sphinxResp{}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		res.Message = "SERVER ERROR"
-		return res, fmt.Errorf("[%s] failed to read response : %v", name, err)
+		msg := fmt.Sprintf("failed to read response : %v", err)
+		log.Printf("[%s] failure : %s\n", name, msg)
+		res.Message = msg
+		res.Status = false
+		return res, fmt.Errorf("[%s] %s", name, msg)
 	}
 
 	err = json.Unmarshal(body, &sr)
 	if err != nil {
-		res.Message = "SERVER ERROR"
-		return res, fmt.Errorf("[%s] failed to unmarshal JSON '%s' : %v", name, string(body), err)
+		msg := fmt.Sprintf("failed to unmarshal JSON : %v", err)
+		log.Printf("[%s] failure : %s\n", name, msg)
+		res.Message = msg
+		res.Status = false
+		return res, fmt.Errorf("[%s] %s", name, msg)
 	}
 
 	recRes := sr.RecognisedUtterance
@@ -111,12 +123,7 @@ func CallExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath str
 	if len(text) == 0 {
 		text = "_silence_"
 	}
-	if text == input.Text {
-		res.Ok = true
-	} else {
-		res.Ok = false
-	}
-
+	res.Status = true
 	res.RecognitionResult = text
 	res.Confidence = -1.0
 	log.Printf("[%s] RecognitionResult: %s\n", name, res.RecognitionResult)

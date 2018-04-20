@@ -1,6 +1,7 @@
 {
     "audio_dir": "audio_dir",
     "server_port": 9993,
+    "fail_on_recogniser_error": true,
     "recognisers": [
 	{
 	    "name": "english",

@@ -87,6 +87,7 @@ func process(w http.ResponseWriter, r *http.Request) {
 	} else {
 		process0(w, r, false)
 	}
+
 }
 
 // verbMode includes all component results, instead of just one single selected result
@@ -135,7 +136,7 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 		return
 	}
 
-	res, err := analyzeAudio(audioFile.Path(), input, verbMode)
+	res, err := analyzeAudio(audioFile.Path(), input, verbMode, config.MyConfig.FailOnRecogniserError)
 	//log.Printf("analyzeAudio.res = %s err= %v\n", res, err)
 	if err != nil {
 		msg := err.Error()
@@ -177,14 +178,14 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 }
 
 type recresforchan struct {
-	resp  rec.SubProcessResponse
+	resp  rec.RecogniserResponse
 	err   error
 	index int
 }
 
 func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, index int, wavFilePath string, input rec.ProcessInput) {
 	log.Printf("running recogniser %s", rc.LongName())
-	var res rec.SubProcessResponse
+	var res rec.RecogniserResponse
 	var err error
 	switch rc.Type {
 	case config.Tensorflow:
@@ -206,7 +207,7 @@ func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, index in
 }
 
 // runs parallell calls (using chan)
-func analyzeAudio(audioFile string, input rec.ProcessInput, verbMode bool) (rec.ProcessResponse, error) {
+func analyzeAudio(audioFile string, input rec.ProcessInput, verbMode bool, failOnRecogError bool) (rec.ProcessResponse, error) {
 	//fmt.Printf("analyzeAudio input : %s\n", input)
 	var accres = make(chan recresforchan)
 	var n = 0
@@ -215,15 +216,14 @@ func analyzeAudio(audioFile string, input rec.ProcessInput, verbMode bool) (rec.
 		go runRecogniserChan(accres, rc, index, audioFile, input)
 	}
 	nRecs := len(config.MyConfig.EnabledRecognisers())
-	res := make([]rec.SubProcessResponse, nRecs, nRecs)
+	res := make([]rec.RecogniserResponse, nRecs, nRecs)
 
 	for i := 0; i < n; i++ {
 		rr := <-accres
-		pr := rr.resp
-		if rr.err != nil {
-			log.Printf("failure from %s : %v\n", pr.Source, rr.err)
-		}
 		res[rr.index] = rr.resp
+		if rr.err != nil && failOnRecogError {
+			return rec.ProcessResponse{}, rr.err
+		}
 	}
 
 	final, err := aggregator.CombineResults(input, res, verbMode)
@@ -332,23 +332,46 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%s\n", string(resJSON))
 }
 
-func testRecognisers() error {
+func pingRecognisers(w http.ResponseWriter, r *http.Request) {
+	res, err := testRecognisers(false)
+	if err != nil {
+		msg := fmt.Sprintf("server error : %v", err)
+		http.Error(w, msg, http.StatusInternalServerError)
+		return
+	}
+	html := "<table style=\"border-collapse: separate; border-spacing: 5px;\"><thead><tr><td><b>Server name</b></td><td><b>Status</b></td><td><b>Message</b></td></tr></thead><tbody>"
+	for _, cr := range res.ComponentResults {
+		var status string
+		if cr.Status == true {
+			status = "<font style=\"color:green\">OK</font>"
+		} else {
+			status = "<font style=\"color:red\">Not OK</font>"
+		}
+		html += fmt.Sprintf("<tr><td>%s</td><td>%s</td><td>%s</td></tr>", cr.Source, status, cr.Message)
+	}
+	html += "</tbody></table>"
+	w.Header().Set("Content-Type", "text/html")
+	fmt.Fprintf(w, "%s\n", html)
+}
+
+func testRecognisers(failOnRecogError bool) (rec.ProcessResponse, error) {
 	var err error
-	log.Println("=== RUNNING INIT TESTS OF RECOGNISERS ====")
+	log.Println("=== RUNNING PING RECOGNISERS ====")
 	fileName := filepath.Join(audioDir, "silence_used_for_recserver_init_tests.wav")
 	input := rec.ProcessInput{
 		UserName:    "tmpuser0",
 		Text:        "_silence_",
 		RecordingID: "tmprecid0",
 		Audio:       rec.Audio{Data: "", FileType: "audio/wav"}}
-	_, err = analyzeAudio(fileName, input, true)
+	verb := true
+	res, err := analyzeAudio(fileName, input, verb, failOnRecogError)
 	if err != nil {
 		log.Printf("testRecognisers() failed : %v\n", err)
 	} else {
 		log.Println("testRecognisers() success")
 	}
-	log.Println("=== COMPLETED INIT TESTS OF RECOGNISERS ====")
-	return err
+	log.Println("=== COMPLETED PING RECOGNISERS ====")
+	return res, err
 }
 
 // The path to the directory where audio files are saved
@@ -468,6 +491,7 @@ func main() {
 	// Defined in admin.go
 	r.HandleFunc("/rec/admin/list_users", listUsers).Methods("GET")
 	r.HandleFunc("/rec/admin/add_user/{username}", addUser).Methods("GET")
+	r.HandleFunc("/rec/admin/ping_recognisers", pingRecognisers).Methods("GET")
 	//r.HandleFunc("/rec/admin/delete_user/{username}", deleteUser).Methods("GET")
 	//r.HandleFunc("/rec/admin/get_utts/{username}", getUtts).Methods("GET")
 	//r.HandleFunc("/rec/admin/list_files/{username}", listFiles).Methods("GET")
@@ -498,7 +522,7 @@ func main() {
 		ReadTimeout:  15 * time.Second,
 	}
 	log.Printf("rec server started on %s/rec\n", addr)
-	err = testRecognisers()
+	_, err = testRecognisers(true)
 	if err != nil {
 		log.Printf("Exiting! Recogniser tests failed : %v", err)
 		os.Exit(1)

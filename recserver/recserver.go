@@ -104,13 +104,14 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 		return
 	}
 
-	log.Printf("[recserver] incoming JSON string : %s\n", string(body))
+	//log.Printf("[recserver] incoming JSON string : %s\n", string(body))
 
 	input := rec.ProcessInput{}
 	err = json.Unmarshal(body, &input)
 	if err != nil {
 		msg := fmt.Sprintf("failed to unmarshal incoming JSON : %v", err)
-		log.Println(msg)
+		log.Println("[recserver] " + msg)
+		log.Printf("[recserver] incoming JSON string : %s\n", string(body))
 		http.Error(w, msg, http.StatusBadRequest)
 		return
 	}

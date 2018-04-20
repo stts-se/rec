@@ -42,9 +42,9 @@ func getConfigWeight(input rec.ProcessInput, res rec.ProcessResponse, recName2We
 		return 0.0, fmt.Errorf("%s", msg)
 	}
 	ws := rc.Weights
-	if w, ok := ws["input:"+input.Text]; ok { // && !isEntity(input.Text) {
+	if w, ok := ws["input:"+input.Text]; ok {
 		return w, nil
-	} else if w, ok := ws["output:"+res.RecognitionResult]; ok { // && !isEntity(res.RecognitionResult) {
+	} else if w, ok := ws["output:"+res.RecognitionResult]; ok {
 		return w, nil
 	} else if w, ok := ws["input:_char_"]; ok && isChar(input.Text) {
 		return w, nil

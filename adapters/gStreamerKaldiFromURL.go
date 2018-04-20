@@ -75,7 +75,7 @@ func RunGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input re
 
 	audio, err := ioutil.ReadFile(wavFilePath)
 	if err != nil {
-		log.Printf("failure : %v\n", err)
+		log.Printf("[%s] failure : %v\n", name, err)
 		res.Message = "SERVER ERROR"
 		return res, fmt.Errorf("[%s] failed to read audio into byte array : %v", name, err)
 	}
@@ -85,14 +85,14 @@ func RunGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input re
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Printf("failure : %v\n", err)
+		log.Printf("[%s] failure : %v\n", name, err)
 		res.Message = "SERVER ERROR"
 		return res, fmt.Errorf("[%s] failed to send post request : %v", name, err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		log.Printf("failure : %v\n", err)
+		log.Printf("[%s] failure : %v\n", name, resp.StatusCode)
 		res.Message = "SERVER ERROR"
 		return res, fmt.Errorf("[%s] failed to run kaldi gstreamer, got %s", name, resp.Status)
 	}
@@ -101,7 +101,7 @@ func RunGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input re
 	gsResp := gstreamerResponse{}
 	err = json.Unmarshal(body, &gsResp)
 	if err != nil {
-		log.Printf("failure : %v\n", err)
+		log.Printf("[%s] failure : %v\n", name, err)
 		res.Message = "SERVER ERROR"
 		return res, fmt.Errorf("[%s] failed to unmarshal : %v", name, err)
 	}

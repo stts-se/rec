@@ -349,7 +349,7 @@ func testRecognisers() error {
 	fileName := filepath.Join(audioDir, "silence_used_for_recserver_init_tests.wav")
 	input := rec.ProcessInput{
 		UserName:    "tmpuser0",
-		Text:        "_silenceX_",
+		Text:        "_silence_",
 		RecordingID: "tmprecid0",
 		Audio:       rec.Audio{Data: "", FileType: "audio/wav"}}
 	_, err = analyzeAudio(fileName, input, true)

@@ -25,7 +25,7 @@ import (
 
 // 	_, pErr := exec.LookPath("python")
 // 	if pErr != nil {
-// 		log.Printf("failure : %v\n", pErr)
+// 		log.Printf("[%s] failure : %v\n", name, pErr)
 // 		return res, fmt.Errorf("failed to find the external 'python' command : %v", pErr)
 // 	}
 
@@ -67,14 +67,14 @@ func CallExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath str
 
 	if !strings.Contains(url, wavFilePlaceHolder) {
 		msg := fmt.Sprintf("[%s] input command must contain wav file variable %s", name, wavFilePlaceHolder)
-		log.Printf("failure : %v\n", msg)
+		log.Printf("[%s] failure : %v\n", name, msg)
 		res.Message = "SERVER ERROR"
 		return res, fmt.Errorf(msg)
 	}
 
 	wavFilePathAbs, err := filepath.Abs(wavFilePath)
 	if err != nil {
-		log.Printf("failure : %v\n", err)
+		log.Printf("[%s] failure : %v\n", name, err)
 		res.Message = "SERVER ERROR"
 		return res, fmt.Errorf("[%s] failed to get absolut path for wav file : %v", name, err)
 	}

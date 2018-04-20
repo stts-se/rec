@@ -29,14 +29,14 @@ func RunTensorflowCommand(rc config.Recogniser, wavFilePath string, input rec.Pr
 
 	if !strings.Contains(command, wavFilePlaceHolder) {
 		msg := fmt.Sprintf("[%s] input command must contain wav file variable %s", name, wavFilePlaceHolder)
-		log.Printf("failure : %v\n", msg)
+		log.Printf("[%s] failure : %v\n", name, msg)
 		res.Message = "SERVER ERROR"
 		return res, fmt.Errorf(msg)
 	}
 
 	wavFilePathAbs, err := filepath.Abs(wavFilePath)
 	if err != nil {
-		log.Printf("failure : %v\n", err)
+		log.Printf("[%s] failure : %v\n", name, err)
 		res.Message = "SERVER ERROR"
 		return res, fmt.Errorf("[%s] failed to get absolute path for wav file : %v", name, err)
 	}
@@ -55,7 +55,7 @@ func RunTensorflowCommand(rc config.Recogniser, wavFilePath string, input rec.Pr
 	err = cmd.Run()
 	if err != nil {
 		log.Printf(stderr.String())
-		log.Printf("failure : %v\n", err)
+		log.Printf("[%s] failure : %v\n", name, err)
 		res.Message = "SERVER ERROR"
 		return res, fmt.Errorf("[%s] failed running command %v : %v", name, cmd, err)
 	}
@@ -75,7 +75,7 @@ func RunTensorflowCommand(rc config.Recogniser, wavFilePath string, input rec.Pr
 
 		score, err := strconv.ParseFloat(res0[2], 64)
 		if err != nil {
-			log.Printf("failure : %v\n", err)
+			log.Printf("[%s] failure : %v\n", name, err)
 			res.Message = "SERVER ERROR"
 			return res, fmt.Errorf("[%s] failed parsing score to float64 : %v", name, err)
 		}

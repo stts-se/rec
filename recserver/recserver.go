@@ -433,9 +433,6 @@ func main() {
 	r.HandleFunc("/rec/process/", process).Methods("POST")
 	docs["/rec/process/"] = "send param verb=true for verbose response"
 
-	// see animation.go
-	r.HandleFunc("/rec/animationdemo", animDemo)
-
 	// generateDoc is definied in file generateDoc.go
 	r.HandleFunc("/rec/doc/", generateDoc).Methods("GET")
 

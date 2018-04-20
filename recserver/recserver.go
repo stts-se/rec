@@ -222,22 +222,11 @@ func analyzeAudio(audioFile string, input rec.ProcessInput, verbMode bool) (rec.
 		pr := rr.resp
 		if rr.err != nil {
 			log.Printf("failure from %s : %v\n", pr.Source, rr.err)
-			// } else {
-			// 	if pr.Ok && pr.RecognitionResult == input.Text {
-			// 		pr.Ok = true
-			// 	} else {
-			// 		pr.Ok = false
-			// 	}
 		}
 		res[rr.index] = rr.resp
 	}
 
 	final, err := aggregator.CombineResults(input, res, verbMode)
-	if final.Ok && final.RecognitionResult == input.Text {
-		final.Ok = true
-	} else {
-		final.Ok = false
-	}
 	if err != nil {
 		return rec.ProcessResponse{}, fmt.Errorf("failed to combine results : %v", err)
 	}

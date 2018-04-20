@@ -132,7 +132,8 @@ func CombineResults(input rec.ProcessInput, inputResults []rec.SubProcessRespons
 	var selected rec.ProcessResponse
 	if len(convertedResults) > 0 {
 		bestGuess, weight := getBestGuess(totalConfs)
-		selected = rec.ProcessResponse{Ok: true,
+		selected = rec.ProcessResponse{
+			Ok:                bestGuess == input.Text,
 			RecordingID:       input.RecordingID,
 			Message:           "selected result",
 			RecognitionResult: bestGuess,

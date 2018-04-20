@@ -87,10 +87,10 @@ func CombineResults(input rec.ProcessInput, inputResults []rec.RecogniserRespons
 
 	// compute initial weights (recogniser conf * config defined conf * user defined conf)
 	var totalConf = 0.0
-	var nProcessFail = 0
+	var nProcessSuccess = 0
 	for i, res := range convertedResults {
-		if !res.Status == true {
-			nProcessFail += 1
+		if res.Status == true {
+			nProcessSuccess += 1
 		}
 		recogConf := res.Confidence // input confidence from recogniser
 		if recogConf < 0.0 {        // below zero => unknown/undefined => default value 1.0
@@ -130,19 +130,19 @@ func CombineResults(input rec.ProcessInput, inputResults []rec.RecogniserRespons
 	}
 
 	var selected rec.ProcessResponse
-	var failInfo = fmt.Sprintf("%d out of %d recognisers failed", nProcessFail, len(convertedResults))
+	var message = fmt.Sprintf("%d out of %d recognisers responded", nProcessSuccess, len(convertedResults))
 	if len(convertedResults) > 0 {
 		bestGuess, weight := getBestGuess(totalConfs)
 		selected = rec.ProcessResponse{
 			Ok:                bestGuess == input.Text,
 			RecordingID:       input.RecordingID,
-			Message:           failInfo,
+			Message:           message,
 			RecognitionResult: bestGuess,
 			Confidence:        weight}
 	} else {
 		selected = rec.ProcessResponse{Ok: false,
 			RecordingID:       input.RecordingID,
-			Message:           fmt.Sprintf("no result from server; %s", failInfo),
+			Message:           fmt.Sprintf("no result from server; %s", message),
 			RecognitionResult: ""}
 	}
 	if includeOriginalResponses {

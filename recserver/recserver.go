@@ -109,6 +109,7 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 	if err != nil {
 		msg := fmt.Sprintf("failed to unmarshal incoming JSON : %v", err)
 		log.Println(msg)
+		log.Println("incoming JSON string : %s", string(body))
 		http.Error(w, msg, http.StatusBadRequest)
 		return
 	}

@@ -38,6 +38,26 @@
 	    "cmd": "http://localhost:8000/rec?audio_file={wavfile}",
 	    "weights": {
 		"input:_char_": 0.0,
+		"output:_silence_": 0.25,
+		"default": 0.5
+	    }
+	},
+	{
+	    "name": "nst_46912",
+	    "type": "pocketsphinx",
+	    "cmd": "http://localhost:9090/rec?audio_file={wavfile}",
+	    "weights": {
+		"input:_char_": 0.0,
+		"output:_silence_": 0.25,
+		"default": 0.5
+	    }
+	},
+	{
+	    "name": "nst_46912_adapted_467",
+	    "type": "pocketsphinx",
+	    "cmd": "http://localhost:9091/rec?audio_file={wavfile}",
+	    "weights": {
+		"input:_char_": 0.0,
 		"output:_silence_": 0.5
 	    }
 	},

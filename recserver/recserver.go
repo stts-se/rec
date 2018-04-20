@@ -81,6 +81,19 @@ func checkProcessInput(input rec.ProcessInput) error {
 }
 
 func process(w http.ResponseWriter, r *http.Request) {
+	/*
+fmt.Printf("%#v\n", r)
+	r.ParseForm()
+	fmt.Printf("%#v\n", r.Form)
+	fmt.Printf("TEXT %#v\n", r.Form["text"])
+	for key, value := range r.Form {
+		fmt.Printf("HEJ %s = %s\n", key, value)
+	}
+	if strings.Contains(r.Header.Get("content-type"), "application/x-www-form-urlencoded") {
+		fmt.Printf("KJHKJHKJ\n")
+	}
+	fmt.Printf("CONTENT TYPE: %s\n", r.Header.Get("content-type"))
+*/	
 	verb := getParam("verb", r)
 	if verb == "true" {
 		process0(w, r, true)
@@ -93,7 +106,14 @@ func process(w http.ResponseWriter, r *http.Request) {
 // verbMode includes all component results, instead of just one single selected result
 func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 
-	body, err := ioutil.ReadAll(r.Body)
+	var body []byte
+	var err error
+	if strings.Contains(r.Header.Get("content-type"), "application/x-www-form-urlencoded") {
+		for key, _ := range r.Form {
+			body = []byte(key)
+		}		
+	} else {
+		body, err = ioutil.ReadAll(r.Body)
 
 	if err != nil {
 		msg := fmt.Sprintf("failed to read request body : %v", err)
@@ -102,6 +122,7 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 		//res.Message = msg
 		http.Error(w, msg, http.StatusBadRequest)
 		return
+	}
 	}
 
 	//log.Printf("[recserver] incoming JSON string : %s\n", string(body))

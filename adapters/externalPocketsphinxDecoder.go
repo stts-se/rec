@@ -8,12 +8,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-<<<<<<< HEAD
-	// "os/exec"
-=======
 	u "net/url"
-	"os/exec"
->>>>>>> 2efbf46108684f1e12a76e197a6e857c185dde09
 	"path/filepath"
 	"strings"
 

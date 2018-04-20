@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	u "net/url"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -79,7 +80,9 @@ func CallExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath str
 	}
 
 	//sphinxURL := "http://localhost:8000/rec?audio_file=" + wavFielPathAbs
+	wavFilePathAbs = u.PathEscape(wavFilePathAbs)
 	sphinxURL := strings.Replace(url, wavFilePlaceHolder, wavFilePathAbs, -1)
+
 	log.Printf("callExternalPocketsphinxDecoderServer URL: %s\n", sphinxURL)
 	resp, err := http.Get(sphinxURL)
 	if err != nil {

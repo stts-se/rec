@@ -33,6 +33,7 @@ var gStreamerENMaptable = map[string]string{
 	"and also": "rose",
 	"b":        "bi",
 	"be":       "bi",
+	"been":     "bi",
 	"e":        "i",
 	"each":     "is",
 	"he's":     "is",

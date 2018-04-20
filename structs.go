@@ -81,16 +81,37 @@ func (af AudioFile) AudioDir() AudioDir {
 }
 
 type ProcessResponse struct {
-	Ok                bool              `json:"ok"`
-	Confidence        float64           `json:"confidence"` // value between 0 and 1
-	RecognitionResult string            `json:"recognition_result"`
-	RecordingID       string            `json:"recording_id"`
-	Message           string            `json:"message"`
-	ComponentResults  []ProcessResponse `json:"component_results,omitempty"`
+	Ok                bool                 `json:"ok"`
+	Confidence        float64              `json:"confidence"` // value between 0 and 1
+	RecognitionResult string               `json:"recognition_result"`
+	RecordingID       string               `json:"recording_id"`
+	Message           string               `json:"message"`
+	ComponentResults  []SubProcessResponse `json:"component_results,omitempty"`
+}
+
+type SubProcessResponse struct {
+	Ok                bool               `json:"ok"`
+	InputConfidence   map[string]float64 `json:"input_confidence,omitempty"` // recogniser, config, user, product
+	Confidence        float64            `json:"confidence"`                 // value between 0 and 1
+	RecognitionResult string             `json:"recognition_result"`
+	RecordingID       string             `json:"recording_id"`
+	Message           string             `json:"message"`
 }
 
 func (pr ProcessResponse) Source() string {
 	return pr.Message
+}
+
+func (pr SubProcessResponse) Source() string {
+	return pr.Message
+}
+
+func (pr SubProcessResponse) String() string {
+	status := "OK"
+	if !pr.Ok {
+		status = "FAIL"
+	}
+	return fmt.Sprintf("[%s] %s |  %s %v %s", pr.Message, pr.RecognitionResult, status, pr.InputConfidence, pr.RecordingID)
 }
 
 func (pr ProcessResponse) String() string {

@@ -77,7 +77,6 @@ func getBestGuess(totalConfs map[string]float64) (string, float64) {
 
 func CombineResults(input rec.ProcessInput, inputResults []rec.ProcessResponse, includeOriginalResponses bool) (rec.ProcessResponse, error) {
 	var resErr error
-	var results = inputResults
 	var recName2Weights = make(map[string]config.Recogniser)
 	for _, rc := range config.MyConfig.EnabledRecognisers() {
 		if !rc.Disabled {
@@ -88,38 +87,51 @@ func CombineResults(input rec.ProcessInput, inputResults []rec.ProcessResponse, 
 	// compute initial weights (recogniser conf * config defined conf * user defined conf)
 	var totalConf = 0.0
 	var anyOk = false
-	for i, res := range results {
-		inputConf := res.Confidence // input confidence from recogniser
-		if inputConf < 0.0 {        // below zero => unknown/undefined => default value 1.0
-			inputConf = 1.0
+	var convertedResults = []rec.SubProcessResponse{}
+	for _, res := range inputResults {
+		recogConf := res.Confidence // input confidence from recogniser
+		if recogConf < 0.0 {        // below zero => unknown/undefined => default value 1.0
+			recogConf = 1.0
 		}
 		configWeight, err := getConfigWeight(input, res, recName2Weights)
 		if err != nil {
 			return rec.ProcessResponse{}, fmt.Errorf("combineResults failed : %v", err)
 		}
 		userWeight := getUserWeight(input, res)
-		intermWeight := inputConf * configWeight * userWeight // intermediate weight
+		product := recogConf * configWeight * userWeight // intermediate weight
 		if res.Ok {
 			anyOk = true
 		} else {
-			intermWeight = 0.0
+			product = 0.0
 		}
-		res.Confidence = intermWeight
-		totalConf += roundConfidence(res.Confidence)
-		results[i] = res // update the slice with new value
-		log.Printf("combineResults:1 [%s] '%s' | conf=%f cw=%f uw=%f => %f", res.Source(), res.RecognitionResult, inputConf, configWeight, userWeight, intermWeight)
+		converted := rec.SubProcessResponse{
+			Ok:                res.Ok,
+			RecognitionResult: res.RecognitionResult,
+			RecordingID:       res.RecordingID,
+			Message:           res.Message,
+			InputConfidence: map[string]float64{
+				"recogniser": recogConf,
+				"config":     configWeight,
+				"user":       userWeight,
+				"product":    product,
+			},
+			Confidence: product, // intermediate value
+		}
+		convertedResults = append(convertedResults, converted)
+		totalConf += roundConfidence(converted.Confidence)
+		log.Printf("CombineResults:1 [%s] '%s' | conf=%f cw=%f uw=%f => %f", res.Source(), res.RecognitionResult, recogConf, configWeight, userWeight, product)
 	}
 	// re-compute conf relative to the sum of weights
 	var totalConfs = make(map[string]float64) // result string => sum of confidence measures for responses with this result
-	for i, res := range results {
+	for i, res := range convertedResults {
 		newConf := 0.0
 		if totalConf > 0 {
 			newConf = roundConfidence(res.Confidence / totalConf)
 		}
 		res.Confidence = newConf
-		results[i] = res // update the slice with new value
+		convertedResults[i] = res // update the slice with new value
 		totalConfs[res.RecognitionResult] = totalConfs[res.RecognitionResult] + res.Confidence
-		log.Printf("combineResults:2 [%s] '%s' | conf=%f", res.Source(), res.RecognitionResult, res.Confidence)
+		log.Printf("CombineResults:2 [%s] '%s' | conf=%f", res.Source(), res.RecognitionResult, res.Confidence)
 	}
 
 	if resErr != nil {
@@ -130,7 +142,7 @@ func CombineResults(input rec.ProcessInput, inputResults []rec.ProcessResponse, 
 	}
 
 	var selected rec.ProcessResponse
-	if len(results) > 0 {
+	if len(convertedResults) > 0 {
 		bestGuess, weight := getBestGuess(totalConfs)
 		selected = rec.ProcessResponse{Ok: true,
 			RecordingID:       input.RecordingID,
@@ -144,7 +156,7 @@ func CombineResults(input rec.ProcessInput, inputResults []rec.ProcessResponse, 
 			RecognitionResult: ""}
 	}
 	if includeOriginalResponses {
-		selected.ComponentResults = results
+		selected.ComponentResults = convertedResults
 	}
 	return selected, nil
 }

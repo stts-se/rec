@@ -62,10 +62,10 @@ func gStreamerENMapText(s0 string) (string, float64) {
 	return s, 0.0
 }
 
-func RunGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
+func RunGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.SubProcessResponse, error) {
 	name := rc.LongName()
 	url := rc.Cmd
-	res := rec.ProcessResponse{RecordingID: input.RecordingID}
+	res := rec.SubProcessResponse{RecordingID: input.RecordingID, Source: rc.LongName()}
 
 	// curl -T $WAVFILE "http://192.168.0.105:8080/client/dynamic/recognize"
 	// {"status": 0, "hypotheses": [{"utterance": "just three style."}], "id": "80a4a3e6-15ec-41e7-ac5d-fa2ea2386df2"}
@@ -76,6 +76,7 @@ func RunGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input re
 	audio, err := ioutil.ReadFile(wavFilePath)
 	if err != nil {
 		log.Printf("failure : %v\n", err)
+		res.Message = "SERVER ERROR"
 		return res, fmt.Errorf("[%s] failed to read audio into byte array : %v", name, err)
 	}
 
@@ -85,12 +86,14 @@ func RunGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input re
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Printf("failure : %v\n", err)
+		res.Message = "SERVER ERROR"
 		return res, fmt.Errorf("[%s] failed to send post request : %v", name, err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		log.Printf("failure : %v\n", err)
+		res.Message = "SERVER ERROR"
 		return res, fmt.Errorf("[%s] failed to run kaldi gstreamer, got %s", name, resp.Status)
 	}
 
@@ -99,6 +102,7 @@ func RunGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input re
 	err = json.Unmarshal(body, &gsResp)
 	if err != nil {
 		log.Printf("failure : %v\n", err)
+		res.Message = "SERVER ERROR"
 		return res, fmt.Errorf("[%s] failed to unmarshal : %v", name, err)
 	}
 
@@ -107,7 +111,11 @@ func RunGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input re
 		newRes, conf := gStreamerENMapText(res0)
 		res.Confidence = conf
 		res.RecognitionResult = newRes
-		res.Ok = true
+		if res.RecognitionResult == input.Text {
+			res.Ok = true
+		} else {
+			res.Ok = false
+		}
 	} else {
 		res.RecognitionResult = ""
 		res.Ok = false
@@ -115,7 +123,6 @@ func RunGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input re
 	if gsResp.Status != 0 {
 		res.Ok = false
 	}
-	res.Message = rc.LongName()
 	log.Printf("runGStreamerKaldiFromURL RecognitionResult: %s\n", res.RecognitionResult)
 	return res, nil
 }

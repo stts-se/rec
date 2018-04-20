@@ -177,14 +177,14 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 }
 
 type recresforchan struct {
-	resp  rec.ProcessResponse
+	resp  rec.SubProcessResponse
 	err   error
 	index int
 }
 
 func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, index int, wavFilePath string, input rec.ProcessInput) {
 	log.Printf("running recogniser %s", rc.LongName())
-	var res rec.ProcessResponse = rec.ProcessResponse{Message: rc.LongName()}
+	var res rec.SubProcessResponse
 	var err error
 	switch rc.Type {
 	case config.Tensorflow:
@@ -215,18 +215,29 @@ func analyzeAudio(audioFile string, input rec.ProcessInput, verbMode bool) (rec.
 		go runRecogniserChan(accres, rc, index, audioFile, input)
 	}
 	nRecs := len(config.MyConfig.EnabledRecognisers())
-	res := make([]rec.ProcessResponse, nRecs, nRecs)
+	res := make([]rec.SubProcessResponse, nRecs, nRecs)
 
 	for i := 0; i < n; i++ {
 		rr := <-accres
+		pr := rr.resp
 		if rr.err != nil {
-			return rec.ProcessResponse{}, rr.err
-		} else {
-			res[rr.index] = rr.resp
+			log.Printf("failure from %s : %v\n", pr.Source, rr.err)
+			// } else {
+			// 	if pr.Ok && pr.RecognitionResult == input.Text {
+			// 		pr.Ok = true
+			// 	} else {
+			// 		pr.Ok = false
+			// 	}
 		}
+		res[rr.index] = rr.resp
 	}
 
 	final, err := aggregator.CombineResults(input, res, verbMode)
+	if final.Ok && final.RecognitionResult == input.Text {
+		final.Ok = true
+	} else {
+		final.Ok = false
+	}
 	if err != nil {
 		return rec.ProcessResponse{}, fmt.Errorf("failed to combine results : %v", err)
 	}
@@ -338,7 +349,7 @@ func testRecognisers() error {
 	fileName := filepath.Join(audioDir, "silence_used_for_recserver_init_tests.wav")
 	input := rec.ProcessInput{
 		UserName:    "tmpuser0",
-		Text:        "DUMMY_TEXT0",
+		Text:        "_silenceX_",
 		RecordingID: "tmprecid0",
 		Audio:       rec.Audio{Data: "", FileType: "audio/wav"}}
 	_, err = analyzeAudio(fileName, input, true)

@@ -27,18 +27,18 @@ func roundConfidence(fl float64) float64 {
 	return math.Round(fl/unit) * unit
 }
 
-func getUserWeight(input rec.ProcessInput, res rec.ProcessResponse) float64 {
-	rcName := res.Source()
+func getUserWeight(input rec.ProcessInput, res rec.SubProcessResponse) float64 {
+	rcName := res.Source
 	if w, ok := input.Weights[rcName]; ok {
 		return w
 	}
 	return 1.0
 }
 
-func getConfigWeight(input rec.ProcessInput, res rec.ProcessResponse, recName2Weights map[string]config.Recogniser) (float64, error) {
-	rc, ok := recName2Weights[res.Source()]
+func getConfigWeight(input rec.ProcessInput, res rec.SubProcessResponse, recName2Weights map[string]config.Recogniser) (float64, error) {
+	rc, ok := recName2Weights[res.Source]
 	if !ok {
-		msg := fmt.Sprintf("no recogniser defined for %s", res.Source())
+		msg := fmt.Sprintf("no recogniser defined for %s", res.Source)
 		return 0.0, fmt.Errorf("%s", msg)
 	}
 	ws := rc.Weights
@@ -75,8 +75,9 @@ func getBestGuess(totalConfs map[string]float64) (string, float64) {
 	return bestGuess, bestConf
 }
 
-func CombineResults(input rec.ProcessInput, inputResults []rec.ProcessResponse, includeOriginalResponses bool) (rec.ProcessResponse, error) {
+func CombineResults(input rec.ProcessInput, inputResults []rec.SubProcessResponse, includeOriginalResponses bool) (rec.ProcessResponse, error) {
 	var resErr error
+	var convertedResults = inputResults
 	var recName2Weights = make(map[string]config.Recogniser)
 	for _, rc := range config.MyConfig.EnabledRecognisers() {
 		if !rc.Disabled {
@@ -86,40 +87,26 @@ func CombineResults(input rec.ProcessInput, inputResults []rec.ProcessResponse, 
 
 	// compute initial weights (recogniser conf * config defined conf * user defined conf)
 	var totalConf = 0.0
-	var anyOk = false
-	var convertedResults = []rec.SubProcessResponse{}
-	for _, res := range inputResults {
+	for i, res := range convertedResults {
 		recogConf := res.Confidence // input confidence from recogniser
 		if recogConf < 0.0 {        // below zero => unknown/undefined => default value 1.0
 			recogConf = 1.0
 		}
 		configWeight, err := getConfigWeight(input, res, recName2Weights)
 		if err != nil {
-			return rec.ProcessResponse{}, fmt.Errorf("combineResults failed : %v", err)
+			return rec.ProcessResponse{}, fmt.Errorf("CombineResults failed : %v", err)
 		}
 		userWeight := getUserWeight(input, res)
 		product := recogConf * configWeight * userWeight // intermediate weight
-		if res.Ok {
-			anyOk = true
-		} else {
-			product = 0.0
+		res.InputConfidence = map[string]float64{
+			"recogniser": recogConf,
+			"config":     configWeight,
+			"user":       userWeight,
+			"product":    product,
 		}
-		converted := rec.SubProcessResponse{
-			Ok:                res.Ok,
-			RecognitionResult: res.RecognitionResult,
-			RecordingID:       res.RecordingID,
-			Message:           res.Message,
-			InputConfidence: map[string]float64{
-				"recogniser": recogConf,
-				"config":     configWeight,
-				"user":       userWeight,
-				"product":    product,
-			},
-			Confidence: product, // intermediate value
-		}
-		convertedResults = append(convertedResults, converted)
-		totalConf += roundConfidence(converted.Confidence)
-		log.Printf("CombineResults:1 [%s] '%s' | conf=%f cw=%f uw=%f => %f", res.Source(), res.RecognitionResult, recogConf, configWeight, userWeight, product)
+		res.Confidence = product // the intermediate confidence value
+		convertedResults[i] = res
+		totalConf += roundConfidence(res.Confidence)
 	}
 	// re-compute conf relative to the sum of weights
 	var totalConfs = make(map[string]float64) // result string => sum of confidence measures for responses with this result
@@ -131,14 +118,15 @@ func CombineResults(input rec.ProcessInput, inputResults []rec.ProcessResponse, 
 		res.Confidence = newConf
 		convertedResults[i] = res // update the slice with new value
 		totalConfs[res.RecognitionResult] = totalConfs[res.RecognitionResult] + res.Confidence
-		log.Printf("CombineResults:2 [%s] '%s' | conf=%f", res.Source(), res.RecognitionResult, res.Confidence)
+		recogConf := res.InputConfidence["recogniser"]
+		configWeight := res.InputConfidence["config"]
+		userWeight := res.InputConfidence["user"]
+		product := res.InputConfidence["product"]
+		log.Printf("CombineResults [%s] '%s' %v | rc=%f cw=%f uw=%f %f => %f ", res.Source, res.RecognitionResult, res.Ok, recogConf, configWeight, userWeight, product, res.Confidence)
 	}
 
 	if resErr != nil {
 		return rec.ProcessResponse{}, nil
-	}
-	if !anyOk {
-		return rec.ProcessResponse{}, fmt.Errorf("no results available")
 	}
 
 	var selected rec.ProcessResponse

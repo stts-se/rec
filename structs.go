@@ -3,7 +3,7 @@ package rec
 import (
 	"fmt"
 	"path/filepath"
-	//"regexp"
+	"regexp"
 )
 
 type Utterance struct {
@@ -96,14 +96,13 @@ type SubProcessResponse struct {
 	RecognitionResult string             `json:"recognition_result"`
 	RecordingID       string             `json:"recording_id"`
 	Message           string             `json:"message"`
+	Source            string             `json:"source"`
 }
+
+var spaceAndAfter = regexp.MustCompile(" .*$")
 
 func (pr ProcessResponse) Source() string {
-	return pr.Message
-}
-
-func (pr SubProcessResponse) Source() string {
-	return pr.Message
+	return spaceAndAfter.ReplaceAllString(pr.Message, "")
 }
 
 func (pr SubProcessResponse) String() string {
@@ -111,7 +110,7 @@ func (pr SubProcessResponse) String() string {
 	if !pr.Ok {
 		status = "FAIL"
 	}
-	return fmt.Sprintf("[%s] %s |  %s %v %s", pr.Message, pr.RecognitionResult, status, pr.InputConfidence, pr.RecordingID)
+	return fmt.Sprintf("[%s] %s |  %s %f %s %s", pr.Source, pr.RecognitionResult, status, pr.Confidence, pr.RecordingID, pr.Message)
 }
 
 func (pr ProcessResponse) String() string {
@@ -119,5 +118,5 @@ func (pr ProcessResponse) String() string {
 	if !pr.Ok {
 		status = "FAIL"
 	}
-	return fmt.Sprintf("[%s] %s |  %s %f %s", pr.Message, pr.RecognitionResult, status, pr.Confidence, pr.RecordingID)
+	return fmt.Sprintf("[%s] %s |  %s %v %s", pr.Message, pr.RecognitionResult, status, pr.Confidence, pr.RecordingID)
 }

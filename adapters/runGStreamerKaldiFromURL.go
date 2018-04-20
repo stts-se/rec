@@ -47,16 +47,17 @@ var gStreamerENMaptable = map[string]string{
 }
 
 func gStreamerENMapText(s0 string) (string, float64) {
+	log.Printf("RunGStreamerKaldiFromURL gStreamerENMapText input: %s", s0)
 	s := strings.TrimSpace(strings.Replace(s0, ".", "", -1))
 	if s == "" {
 		return "_silence_", 1.0
 	}
+	if mapped, ok := gStreamerENMaptable[s]; ok {
+		return mapped, 1.0
+	}
 	nWds := len(strings.Split(s, " "))
 	if nWds > 2 {
 		return "_other_", 2.0
-	}
-	if mapped, ok := gStreamerENMaptable[s]; ok {
-		return mapped, 1.0
 	}
 	return s, 0.0
 }

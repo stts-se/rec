@@ -1,4 +1,4 @@
-package main
+package aggregator
 
 import (
 	"fmt"
@@ -75,8 +75,7 @@ func getBestGuess(totalConfs map[string]float64) (string, float64) {
 	return bestGuess, bestConf
 }
 
-// TODO: UNIT TESTS FOR THIS ALGORITHM!
-func combineResults(input rec.ProcessInput, inputResults []rec.ProcessResponse, includeOriginalResponses bool) (rec.ProcessResponse, error) {
+func CombineResults(input rec.ProcessInput, inputResults []rec.ProcessResponse, includeOriginalResponses bool) (rec.ProcessResponse, error) {
 	var resErr error
 	var results = inputResults
 	var recName2Weights = make(map[string]config.Recogniser)

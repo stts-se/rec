@@ -17,6 +17,8 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/stts-se/rec"
+	"github.com/stts-se/rec/adapters"
+	"github.com/stts-se/rec/aggregator"
 	"github.com/stts-se/rec/config"
 )
 
@@ -186,11 +188,11 @@ func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, index in
 	var err error
 	switch rc.Type {
 	case config.Tensorflow:
-		res, err = runTensorflowCommand(rc, wavFilePath, input)
+		res, err = adapters.RunTensorflowCommand(rc, wavFilePath, input)
 	case config.KaldiGStreamer:
-		res, err = runGStreamerKaldiFromURL(rc, wavFilePath, input)
+		res, err = adapters.RunGStreamerKaldiFromURL(rc, wavFilePath, input)
 	case config.PocketSphinx:
-		res, err = callExternalPocketsphinxDecoderServer(rc, wavFilePath, input)
+		res, err = adapters.CallExternalPocketsphinxDecoderServer(rc, wavFilePath, input)
 	default:
 		err = fmt.Errorf("unknown recogniser type: %s", rc.Type)
 	}
@@ -224,7 +226,7 @@ func analyzeAudio(audioFile string, input rec.ProcessInput, verbMode bool) (rec.
 		}
 	}
 
-	final, err := combineResults(input, res, verbMode)
+	final, err := aggregator.CombineResults(input, res, verbMode)
 	if err != nil {
 		return rec.ProcessResponse{}, fmt.Errorf("failed to combine results : %v", err)
 	}

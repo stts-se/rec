@@ -1,4 +1,4 @@
-package main
+package adapters
 
 import (
 	"bytes"
@@ -60,7 +60,7 @@ func gStreamerENMapText(s0 string) (string, float64) {
 	return s, 0.0
 }
 
-func runGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
+func RunGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
 	name := rc.LongName()
 	url := rc.Cmd
 	res := rec.ProcessResponse{RecordingID: input.RecordingID}

@@ -1,4 +1,4 @@
-package main
+package adapters
 
 import (
 	"bytes"
@@ -17,6 +17,8 @@ import (
 )
 
 func runExternalPocketsphinxDecoder(wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
+
+	panic("runExternalPocketsphinxDecoder is deprecated")
 
 	methodName := "pocketsphinx"
 	res := rec.ProcessResponse{RecordingID: input.RecordingID}
@@ -58,7 +60,7 @@ type sphinxResp struct {
 	RecognisedUtterance string `json:"recognised_utterance"`
 }
 
-func callExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
+func CallExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
 	name := rc.LongName()
 
 	url := rc.Cmd

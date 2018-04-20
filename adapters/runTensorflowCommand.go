@@ -1,4 +1,4 @@
-package main
+package adapters
 
 import (
 	"bytes"
@@ -22,7 +22,7 @@ type tensorflowResponse struct {
 
 var wavFilePlaceHolder = "{wavfile}"
 
-func runTensorflowCommand(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
+func RunTensorflowCommand(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
 	name := rc.LongName()
 	command := rc.Cmd
 	res := rec.ProcessResponse{RecordingID: input.RecordingID}

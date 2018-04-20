@@ -80,6 +80,8 @@ func CallExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath str
 	}
 
 	//sphinxURL := "http://localhost:8000/rec?audio_file=" + wavFielPathAbs
+
+	// TODO Would it be better to do u.Parse(URL); url = u.EscapedPath() ?
 	wavFilePathAbs = u.PathEscape(wavFilePathAbs)
 	sphinxURL := strings.Replace(url, wavFilePlaceHolder, wavFilePathAbs, -1)
 

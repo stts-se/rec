@@ -86,17 +86,17 @@ func process(w http.ResponseWriter, r *http.Request) {
 	}
 
 	/*
-	fmt.Printf("%#v\n", r)
-		r.ParseForm()
-		fmt.Printf("%#v\n", r.Form)
-		fmt.Printf("TEXT %#v\n", r.Form["text"])
-		for key, value := range r.Form {
-			fmt.Printf("HEJ %s = %s\n", key, value)
-		}
-		if strings.Contains(r.Header.Get("content-type"), "application/x-www-form-urlencoded") {
-			fmt.Printf("KJHKJHKJ\n")
-		}
-		fmt.Printf("CONTENT TYPE: %s\n", r.Header.Get("content-type"))
+		fmt.Printf("%#v\n", r)
+			r.ParseForm()
+			fmt.Printf("%#v\n", r.Form)
+			fmt.Printf("TEXT %#v\n", r.Form["text"])
+			for key, value := range r.Form {
+				fmt.Printf("HEJ %s = %s\n", key, value)
+			}
+			if strings.Contains(r.Header.Get("content-type"), "application/x-www-form-urlencoded") {
+				fmt.Printf("KJHKJHKJ\n")
+			}
+			fmt.Printf("CONTENT TYPE: %s\n", r.Header.Get("content-type"))
 	*/
 	verb := getParam("verb", r)
 	if verb == "true" {
@@ -541,8 +541,8 @@ func main() {
 	r.PathPrefix("/rec/recclient/").Handler(http.StripPrefix("/rec/recclient/", http.FileServer(http.Dir("../recclient"))))
 
 	ps := fmt.Sprintf("%d", p)
-	//addr := fmt.Sprintf("127.0.0.1:%s", ps) // access only from localhost
-	addr := fmt.Sprintf(":%s", ps) // external access
+	addr := fmt.Sprintf("127.0.0.1:%s", ps) // access only from localhost (and morf since apache is handeling external access)
+	//addr := fmt.Sprintf(":%s", ps) // external access
 	srv := &http.Server{
 		Handler: r,
 		Addr:    addr,

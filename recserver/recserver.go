@@ -81,22 +81,32 @@ func checkProcessInput(input rec.ProcessInput) error {
 }
 
 func process(w http.ResponseWriter, r *http.Request) {
+
+	//if origin := r.Header.Get("Origin"); origin != "" {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	//}
+
+	//rw.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+	//w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+
 	if r.Method == "OPTIONS" {
 		return
 	}
 
 	/*
-	fmt.Printf("%#v\n", r)
-		r.ParseForm()
-		fmt.Printf("%#v\n", r.Form)
-		fmt.Printf("TEXT %#v\n", r.Form["text"])
-		for key, value := range r.Form {
-			fmt.Printf("HEJ %s = %s\n", key, value)
-		}
-		if strings.Contains(r.Header.Get("content-type"), "application/x-www-form-urlencoded") {
-			fmt.Printf("KJHKJHKJ\n")
-		}
-		fmt.Printf("CONTENT TYPE: %s\n", r.Header.Get("content-type"))
+		fmt.Printf("%#v\n", r)
+			r.ParseForm()
+			fmt.Printf("%#v\n", r.Form)
+			fmt.Printf("TEXT %#v\n", r.Form["text"])
+			for key, value := range r.Form {
+				fmt.Printf("HEJ %s = %s\n", key, value)
+			}
+			if strings.Contains(r.Header.Get("content-type"), "application/x-www-form-urlencoded") {
+				fmt.Printf("KJHKJHKJ\n")
+			}
+			fmt.Printf("CONTENT TYPE: %s\n", r.Header.Get("content-type"))
 	*/
 	verb := getParam("verb", r)
 	if verb == "true" {

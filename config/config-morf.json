@@ -10,19 +10,19 @@
 	    "cmd": "http://192.168.0.105:8080/client/dynamic/recognize"
 	},
 	{
-	    "name": "elexia_20180412",
+	    "name": "elexia_503_20180412",
 	    "type": "tensorflow",
 	    "disabled": true,
-	    "cmd": "bash /home/hanna/go/src/github.com/stts-se/audioproc/tensorflow/scripts/classify.sh /home/hanna/progz/tensorflow/simple_audio_recognition/e-lexia-20180412/my_frozen_graph.pb /home/hanna/progz/tensorflow/simple_audio_recognition/e-lexia-20180412/speech_commands_train/conv_labels.txt {wavfile}",
+	    "cmd": "bash /home/hanna/private/git_repos/e-lexia/tensorflow/scripts/classify.sh /home/hanna/tensorflow/bin/activate /home/hanna/private/git_repos/e-lexia/tensorflow/elexia_503_20180412/my_frozen_graph.pb /home/hanna/private/git_repos/e-lexia/tensorflow/elexia_503_20180412/conv_labels.txt {wavfile}",
 	    "weights": {
 		"output:_silence_": 1.0
 	    }
 	},
 	{
-	    "name": "nst-aeneas-4",
+	    "name": "nst_chars_20170410",
 	    "type": "tensorflow",
 	    "disabled": true,
-	    "cmd": "bash /home/hanna/go/src/github.com/stts-se/audioproc/tensorflow/scripts/classify.sh /home/hanna/progz/tensorflow/simple_audio_recognition/danish-test-aeneas-4/my_frozen_graph.pb /home/hanna/progz/tensorflow/simple_audio_recognition/danish-test-aeneas-4/speech_commands_train/conv_labels.txt {wavfile}",
+	    "cmd": "bash /home/hanna/private/git_repos/e-lexia/tensorflow/scripts/classify.sh /home/hanna/tensorflow/bin/activate /home/hanna/git_repos/private/e-lexia/tensorflow/nst_chars_20170410/my_frozen_graph.pb /home/hanna/private/git_repos/e-lexia/tensorflow/nst_chars_20170410/conv_labels.txt {wavfile}",
 	    "weights": {
 		"input:_char_": 1.0,
 		"output:_silence_": 1.0,

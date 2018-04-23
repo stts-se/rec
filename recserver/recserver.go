@@ -81,6 +81,10 @@ func checkProcessInput(input rec.ProcessInput) error {
 }
 
 func process(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		return
+	}
+
 	verb := getParam("verb", r)
 	if verb == "true" {
 		process0(w, r, true)
@@ -456,7 +460,7 @@ func main() {
 	r := mux.NewRouter()
 	r.StrictSlash(true)
 	r.HandleFunc("/rec/", index)
-	r.HandleFunc("/rec/process/", process).Methods("POST")
+	r.HandleFunc("/rec/process/", process).Methods("POST", "OPTIONS")
 	docs["/rec/process/"] = "send param verb=true for verbose response"
 
 	// generateDoc is definied in file generateDoc.go

@@ -551,8 +551,8 @@ func main() {
 	r.PathPrefix("/rec/recclient/").Handler(http.StripPrefix("/rec/recclient/", http.FileServer(http.Dir("../recclient"))))
 
 	ps := fmt.Sprintf("%d", p)
-	//addr := fmt.Sprintf("127.0.0.1:%s", ps) // access only from localhost
-	addr := fmt.Sprintf(":%s", ps) // external access
+	addr := fmt.Sprintf("127.0.0.1:%s", ps) // access only from localhost (and morf since apache is handeling external access)
+	//addr := fmt.Sprintf(":%s", ps) // external access
 	srv := &http.Server{
 		Handler: r,
 		Addr:    addr,

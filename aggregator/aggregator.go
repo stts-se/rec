@@ -134,16 +134,20 @@ func CombineResults(input rec.ProcessInput, inputResults []rec.RecogniserRespons
 	if len(convertedResults) > 0 {
 		bestGuess, weight := getBestGuess(totalConfs)
 		selected = rec.ProcessResponse{
-			Ok:                bestGuess == input.Text,
+			// Ok:  bestGuess == input.Text
+			Ok:                true, // 20170423: always 'true' for backward compatibility, TODO: better value/better field
 			RecordingID:       input.RecordingID,
 			Message:           message,
 			RecognitionResult: bestGuess,
-			Confidence:        weight}
+			Confidence:        weight,
+		}
 	} else {
-		selected = rec.ProcessResponse{Ok: false,
+		selected = rec.ProcessResponse{
+			Ok:                false,
 			RecordingID:       input.RecordingID,
 			Message:           fmt.Sprintf("no result from server; %s", message),
-			RecognitionResult: ""}
+			RecognitionResult: "",
+		}
 	}
 	if includeOriginalResponses {
 		selected.ComponentResults = convertedResults

@@ -265,7 +265,7 @@ func analyzeAudio(audioFile string, input rec.ProcessInput, verbMode bool, failO
 		}
 	}
 
-	final, err := aggregator.CombineResults(input, res, verbMode)
+	final, err := aggregator.CombineResults(MyConfig, input, res, verbMode)
 	if err != nil {
 		return rec.ProcessResponse{}, fmt.Errorf("failed to combine results : %v", err)
 	}

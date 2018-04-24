@@ -30,6 +30,31 @@ type Config struct {
 	Recognisers           []Recogniser `json:"recognisers,omitempty"`
 }
 
+func (cfg Config) test() error {
+	if strings.TrimSpace(cfg.AudioDir) == "" {
+		return fmt.Errorf("empty audio_dir in config %v", cfg)
+	}
+	recMap := make(map[string]Recogniser)
+	for _, rc := range cfg.Recognisers {
+		if strings.TrimSpace(rc.Name) == "" {
+			return fmt.Errorf("empty recogniser name in config %v", cfg)
+		}
+		switch rc.Type {
+		case Tensorflow:
+		case TensorflowCmd:
+		case KaldiGStreamer:
+		case PocketSphinx:
+		default:
+			return fmt.Errorf("invalid recogniser type: %s", rc.Type)
+		}
+		if _, ok := recMap[rc.LongName()]; ok {
+			return fmt.Errorf("recogniser names must be unique, found repeated name %s", rc.LongName())
+		}
+		recMap[rc.LongName()] = rc
+	}
+	return nil
+}
+
 func NewConfig(filePath string) (Config, error) {
 	log.Printf("Loading config file: %s", filePath)
 	bts, err := ioutil.ReadFile(filePath)
@@ -43,28 +68,11 @@ func NewConfig(filePath string) (Config, error) {
 		log.Printf("failure : %v\n", err)
 		return res, fmt.Errorf("failed to unmarshal : %v", err)
 	}
-	//log.Printf("Loaded config: %#v\n", res)
-
-	// SANITY CHECK CONFIG
-	if strings.TrimSpace(res.AudioDir) == "" {
-		return Config{}, fmt.Errorf("empty audio_dir in config file %s", filePath)
+	err = res.test()
+	if err != nil {
+		return res, fmt.Errorf("init tests failed for config file %s : %v", filePath, err)
 	}
-	for _, rc := range res.Recognisers {
-		if strings.TrimSpace(rc.Name) == "" {
-			return Config{}, fmt.Errorf("empty recogniser name in config file %s", filePath)
-		}
-		switch rc.Type {
-		case Tensorflow:
-		case TensorflowCmd:
-		case KaldiGStreamer:
-		case PocketSphinx:
-		default:
-			return Config{}, fmt.Errorf("unknown recogniser type: %s", rc.Type)
-		}
-	}
-
 	return res, nil
-
 }
 
 func (cfg Config) EnabledRecognisers() []Recogniser {

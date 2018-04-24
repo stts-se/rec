@@ -105,6 +105,11 @@ var spaceAndAfter = regexp.MustCompile(" .*$")
 var prInputConfidenceRe = regexp.MustCompile("(\"input_confidence\": {)\n\\s*")
 var prInputConfidenceChildrenRe = regexp.MustCompile("(\"(?:config|product|recogniser|user)\": [0-9.]+,?)\n\\s*(}?)")
 
+func (pr ProcessResponse) PrettyJSONForced() string {
+	res, _ := pr.PrettyJSON()
+	return res
+}
+
 func (pr ProcessResponse) PrettyJSON() (string, error) {
 	js, err := PrettyMarshal(pr)
 	if err != nil {

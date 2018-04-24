@@ -97,6 +97,13 @@ func CallExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath str
 		res.Status = false
 		return res, fmt.Errorf("[%s] %s", name, msg)
 	}
+	if resp.StatusCode != http.StatusOK {
+		msg := fmt.Sprintf("failed to call URL %s : %s", url, resp.Status)
+		log.Printf("[%s] failure : %s\n", name, msg)
+		res.Message = msg
+		res.Status = false
+		return res, fmt.Errorf("[%s] %s", name, msg)
+	}
 
 	sr := sphinxResp{}
 	body, err := ioutil.ReadAll(resp.Body)

@@ -123,14 +123,18 @@ func main() {
 			os.Exit(1)
 		}
 
-		// Pretty print the returned JSON
-		var prettyBody bytes.Buffer
-		err = json.Indent(&prettyBody, body, "", "\t")
+		pr := rec.ProcessResponse{}
+		err = json.Unmarshal(body, &pr)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "failed to process JSON '%s': %v\n", string(body), err)
 			os.Exit(1)
 		}
+		pretty, err := pr.PrettyJSON()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "failed to process JSON '%s': %v\n", string(body), err)
+			os.Exit(1)
+		}
+		fmt.Fprintf(os.Stdout, "[%s] RESPONSE %s\n", cmdName, pretty)
 
-		fmt.Fprintf(os.Stdout, "[%s] RESPONSE %s\n", cmdName, string(prettyBody.Bytes()))
 	}
 }

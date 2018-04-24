@@ -203,15 +203,15 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 	for _, r := range res.ComponentResults {
 		log.Printf("%s\n", r.String())
 	}
-	resJSON, err := json.Marshal(res)
+	resJSONString, err := res.PrettyJSON()
 	if err != nil {
-		msg := fmt.Sprintf("failed to marshal response : %v", err)
-		log.Println(msg)
-		http.Error(w, msg, http.StatusBadRequest)
+		msg := fmt.Sprintf("failed to create JSON string from %v : %v", res, err)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	fmt.Fprintf(w, "%s\n", string(resJSON))
+	fmt.Fprintf(w, "%s\n", resJSONString)
 
 }
 
@@ -227,6 +227,8 @@ func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, index in
 	var err error
 	switch rc.Type {
 	case config.Tensorflow:
+		res, err = adapters.RunTensorflowFromURL(rc, wavFilePath, input)
+	case config.TensorflowCmd:
 		res, err = adapters.RunTensorflowCommand(rc, wavFilePath, input)
 	case config.KaldiGStreamer:
 		res, err = adapters.RunGStreamerKaldiFromURL(rc, wavFilePath, input)
@@ -246,7 +248,6 @@ func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, index in
 
 // runs parallell calls (using chan)
 func analyzeAudio(audioFile string, input rec.ProcessInput, verbMode bool, failOnRecogError bool) (rec.ProcessResponse, error) {
-	//fmt.Printf("analyzeAudio input : %s\n", input)
 	var accres = make(chan recresforchan)
 	var n = 0
 	for index, rc := range config.MyConfig.EnabledRecognisers() {
@@ -358,7 +359,7 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 	res.FileType = mimeType(ext)
 	res.Data = data
 
-	resJSON, err := prettyMarshal(res)
+	resJSON, err := rec.PrettyMarshal(res)
 	if err != nil {
 		msg := fmt.Sprintf("get_audio: failed to create JSON from struct : %v", res)
 		log.Print(msg)

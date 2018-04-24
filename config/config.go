@@ -12,6 +12,7 @@ import (
 var MyConfig Config
 
 var Tensorflow = "tensorflow"
+var TensorflowCmd = "tensorflow_cmd"
 var PocketSphinx = "pocketsphinx"
 var KaldiGStreamer = "kaldigstreamer"
 
@@ -54,6 +55,7 @@ func NewConfig(filePath string) (Config, error) {
 		}
 		switch rc.Type {
 		case Tensorflow:
+		case TensorflowCmd:
 		case KaldiGStreamer:
 		case PocketSphinx:
 		default:

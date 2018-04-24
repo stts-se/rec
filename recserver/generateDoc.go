@@ -1,8 +1,6 @@
 package main
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
@@ -33,22 +31,6 @@ type tplData struct {
 	Items []item
 }
 
-func prettyMarshal(thing interface{}) ([]byte, error) {
-	var res []byte
-
-	j, err := json.Marshal(thing)
-	if err != nil {
-		return res, err
-	}
-	var prettyJSON bytes.Buffer
-	err = json.Indent(&prettyJSON, j, "", "\t")
-	if err != nil {
-		return res, err
-	}
-	res = prettyJSON.Bytes()
-	return res, nil
-}
-
 // Generates simple documentation semi-automatically to stay fresh.
 // It is exposed by a get request to /rec/doc/
 func generateDoc(w http.ResponseWriter, r *http.Request) {
@@ -74,7 +56,7 @@ func generateDoc(w http.ResponseWriter, r *http.Request) {
 		RecordingID: "utterance_0001",
 	}
 
-	prettyJSON, err := prettyMarshal(processIn)
+	prettyJSON, err := rec.PrettyMarshal(processIn)
 	if err != nil {
 		msg := fmt.Sprintf("failed to pretty marshal : %v", err)
 		log.Println(msg)
@@ -82,7 +64,7 @@ func generateDoc(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	prettySampleJSON, err := prettyMarshal(processInSample)
+	prettySampleJSON, err := rec.PrettyMarshal(processInSample)
 	if err != nil {
 		msg := fmt.Sprintf("failed to pretty marshal : %v", err)
 		log.Println(msg)
@@ -97,7 +79,7 @@ func generateDoc(w http.ResponseWriter, r *http.Request) {
 		RecordingID:       "string",
 		Message:           "string",
 	}
-	prettyResponseJSON, err := prettyMarshal(processResp)
+	prettyResponseJSON, err := rec.PrettyMarshal(processResp)
 	if err != nil {
 		msg := fmt.Sprintf("failed to pretty marshal : %v", err)
 		log.Println(msg)

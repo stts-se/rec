@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/stts-se/rec"
+	rc "github.com/stts-se/rec"
 )
 
 type fileInfo struct {
@@ -17,7 +17,7 @@ type fileInfo struct {
 	Message           string  `json:"message"`
 }
 
-func writeJSONInfoFile(audioRef rec.AudioRef, rec rec.ProcessInput, res0 rec.ProcessResponse) error {
+func writeJSONInfoFile(audioRef rc.AudioRef, rec rc.ProcessInput, res0 rc.ProcessResponse) error {
 
 	infos := []fileInfo{}
 
@@ -52,7 +52,7 @@ func writeJSONInfoFile(audioRef rec.AudioRef, rec rec.ProcessInput, res0 rec.Pro
 		}
 		infos = append(infos, info)
 	}
-	infoJSON, err := prettyMarshal(infos)
+	infoJSON, err := rc.PrettyMarshal(infos)
 	if err != nil {
 		return fmt.Errorf("writeJSONInfoFile: failed to create info JSON : %v", err)
 	}

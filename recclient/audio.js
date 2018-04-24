@@ -27,7 +27,7 @@ AUDIO.sendJSON = function(payload, onLoadEndFunc) {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", baseURL + "/process/?verb=true", true);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');   
-    xhr.onloadend = onLoadEndFunc
+    xhr.onloadend = onLoadEndFunc;    
     xhr.send(JSON.stringify(payload));
 };
 

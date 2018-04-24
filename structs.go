@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 	"regexp"
+	"strings"
 )
 
 type Utterance struct {
@@ -100,6 +101,21 @@ type RecogniserResponse struct {
 }
 
 var spaceAndAfter = regexp.MustCompile(" .*$")
+
+var prInputConfidenceRe = regexp.MustCompile("(\"input_confidence\": {)\n\\s*")
+var prInputConfidenceChildrenRe = regexp.MustCompile("(\"(?:config|product|recogniser|user)\": [0-9.]+,?)\n\\s*(}?)")
+
+func (pr ProcessResponse) PrettyJSON() (string, error) {
+	js, err := PrettyMarshal(pr)
+	if err != nil {
+		return "", fmt.Errorf("failed to marshal response : %v", err)
+	}
+	res := string(js)
+	res = prInputConfidenceRe.ReplaceAllString(res, "$1")
+	res = prInputConfidenceChildrenRe.ReplaceAllString(res, "$1$2 ")
+	res = strings.Replace(res, "} ,", "},", -1)
+	return res, nil
+}
 
 func (pr ProcessResponse) Source() string {
 	return spaceAndAfter.ReplaceAllString(pr.Message, "")

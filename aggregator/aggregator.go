@@ -75,20 +75,38 @@ func getBestGuess(totalConfs map[string]float64) (string, float64) {
 	return bestGuess, bestConf
 }
 
-func CombineResults(input rec.ProcessInput, inputResults []rec.RecogniserResponse, includeOriginalResponses bool) (rec.ProcessResponse, error) {
+func CombineResults(cfg config.Config, input rec.ProcessInput, inputResults []rec.RecogniserResponse, includeOriginalResponses bool) (rec.ProcessResponse, error) {
 	var resErr error
 	var convertedResults = inputResults
 	var recName2Weights = make(map[string]config.Recogniser)
-	for _, rc := range config.MyConfig.EnabledRecognisers() {
+	var recNames = make(map[string]bool)
+	for _, rc := range cfg.EnabledRecognisers() {
+		name := rc.LongName()
+		recNames[name] = true
+		if strings.TrimSpace(name) == "" {
+			return rec.ProcessResponse{}, fmt.Errorf("empty recogniser name in source %v", rc)
+		}
 		if !rc.Disabled {
-			recName2Weights[rc.LongName()] = rc
+			recName2Weights[name] = rc
 		}
 	}
 
 	// compute initial weights (recogniser conf * config defined conf * user defined conf)
 	var totalConf = 0.0
 	var nProcessSuccess = 0
+	var sourceMap = make(map[string]bool)
 	for i, res := range convertedResults {
+		if res.Source == "" {
+			return rec.ProcessResponse{}, fmt.Errorf("empty source in response : %v", res)
+		}
+		if _, ok := recNames[res.Source]; !ok {
+			return rec.ProcessResponse{}, fmt.Errorf("no recogniser defined for source %s", res.Source)
+		}
+		if _, ok := sourceMap[res.Source]; ok {
+			return rec.ProcessResponse{}, fmt.Errorf("recogniser sources must be unique, found repeated source name %s in %v", res.Source, res)
+		}
+		sourceMap[res.Source] = true
+
 		if res.Status == true {
 			nProcessSuccess += 1
 		}

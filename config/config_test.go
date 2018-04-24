@@ -36,7 +36,7 @@ func Test_Config1(t *testing.T) {
 	if err == nil {
 		t.Errorf("%s in %v", msg, config)
 	} else if !strings.Contains(err.Error(), "empty recogniser name") {
-		t.Errorf("%s in %v", msg, config)
+		t.Errorf("%s in %v, got : %v", msg, config, err)
 	}
 
 	// REPEATED RECOGNISER NAMES FOR THE SAME TYPE - NOT OK
@@ -63,7 +63,7 @@ func Test_Config1(t *testing.T) {
 	if err == nil {
 		t.Errorf("%s in %v", msg, config)
 	} else if !strings.Contains(err.Error(), "recogniser names must be unique") {
-		t.Errorf("%s in %v", msg, config)
+		t.Errorf("%s in %v, got : %v", msg, config, err)
 	}
 
 	// REPEATED RECOGNISER NAMES FOR DIFFERENT TYPES - OK
@@ -113,7 +113,7 @@ func Test_Config1(t *testing.T) {
 	if err == nil {
 		t.Errorf("%s in %v", msg, config)
 	} else if !strings.Contains(err.Error(), "invalid recogniser type") {
-		t.Errorf("%s in %v", msg, config)
+		t.Errorf("%s in %v, got : %v", msg, config, err)
 	}
 
 }

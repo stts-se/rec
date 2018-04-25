@@ -372,7 +372,7 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 }
 
 func pingRecognisers(w http.ResponseWriter, r *http.Request) {
-	res, err := testRecognisers(false)
+	res, err := testRecognisers(true)
 	if err != nil {
 		msg := fmt.Sprintf("server error : %v", err)
 		http.Error(w, msg, http.StatusInternalServerError)

@@ -19,7 +19,7 @@
 	    }
 	},
 	{
-	    "name": "nst_chars_20170410",
+	    "name": "nst_chars_20181410",
 	    "type": "tensorflow",
 	    "disabled": true,
 	    "cmd": "http://localhost:8809/classify?audio_file={wavfile}",

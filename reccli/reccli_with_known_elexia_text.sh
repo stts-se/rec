@@ -4,19 +4,25 @@ dir=`dirname $0`
 
 verbose=0
 
+url="http://localhost:9993/rec/process/?verb=true"
+
 show_help() {
     echo "Usage: $cmd -[vh] <wavfiles>" 1>&2
     echo "       -h print this help and exit" 1>&2
+    echo "       -u URL for calling rec server (default: $url)" 1>&2
     echo "       -v verbose output (with complete json input and result)" 1>&2
 }
 
-while getopts "hv" opt; do
+
+while getopts "hu:v" opt; do
     case "$opt" in
     h)
         show_help
         exit 0
         ;;
     v)  verbose=1
+        ;;
+    u)  url=$OPTARG
         ;;
     esac
 done
@@ -38,8 +44,8 @@ run_reccli() {
     cd $dir
     target_text=$1
     tmpfile="/tmp/reccli-$uid.out"
-    reccli_cmd="go run reccli.go -u elexia_test -t \"$target_text\" $abswav" 1>&2
-    if go run reccli.go -u elexia_test -t "$target_text" $abswav > $tmpfile; then
+    reccli_cmd="go run reccli.go -u elexia_test -url $url -t \"$target_text\" $abswav" 1>&2
+    if go run reccli.go -u elexia_test -url $url -t "$target_text" $abswav > $tmpfile; then
 	result=`cat $tmpfile | egrep recognition_result | head -1 | sed 's/.*recognition_result": *"\([^"]*\)",.*$/\1/'`
 	echo "$result"
 	if [ $verbose -eq 1 ]; then

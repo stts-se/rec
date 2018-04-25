@@ -88,7 +88,8 @@ func CallExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath str
 	wavFilePathAbs = u.PathEscape(wavFilePathAbs)
 	sphinxURL := strings.Replace(url, wavFilePlaceHolder, wavFilePathAbs, -1)
 
-	log.Printf("callExternalPocketsphinxDecoderServer URL: %s\n", sphinxURL)
+	log.Printf("callExternalPocketsphinxDecoderServer url=%s\n", sphinxURL)
+	log.Printf("callExternalPocketsphinxDecoderServer wav=%s\n", wavFilePathAbs)
 	resp, err := http.Get(sphinxURL)
 	if err != nil {
 		msg := fmt.Sprintf("failed to call URL : %v", err)

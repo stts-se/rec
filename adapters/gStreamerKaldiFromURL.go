@@ -71,7 +71,7 @@ func RunGStreamerKaldiFromURL(rc config.Recogniser, wavFilePath string, input re
 	// {"status": 0, "hypotheses": [{"utterance": "just three style."}], "id": "80a4a3e6-15ec-41e7-ac5d-fa2ea2386df2"}
 
 	log.Printf("runGStreamerKaldiFromURL url=%s\n", url)
-	log.Printf("runGStreamerKaldiFromURL wav rel=%s\n", wavFilePath)
+	log.Printf("runGStreamerKaldiFromURL wav=%s\n", wavFilePath)
 
 	audio, err := ioutil.ReadFile(wavFilePath)
 	if err != nil {

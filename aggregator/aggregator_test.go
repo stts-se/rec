@@ -27,7 +27,7 @@ func testCheckSum(t *testing.T, result rec.ProcessResponse) {
 	unit := 0.01
 	rounded := math.Round(sum/unit) * unit
 	if rounded != 1.00 {
-		t.Errorf("Expected sum of confidences to be near 1.0000, but found '%.2f': %v", rounded, result.ComponentResults)
+		t.Errorf("Expected sum of confidences to be near 1.00, but found '%.2f': %v", rounded, result.ComponentResults)
 	}
 }
 

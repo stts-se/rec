@@ -29,7 +29,7 @@ func RunTensorflowFromURL(rc config.Recogniser, wavFilePath string, input rec.Pr
 	wavFilePathAbs = u.PathEscape(wavFilePathAbs)
 	url := strings.Replace(rc.Cmd, wavFilePlaceHolder, wavFilePathAbs, -1)
 	log.Printf("runTensorflowFromURL url=%s\n", url)
-	log.Printf("runTensorflowFromURL wav rel=%s\n", wavFilePathAbs)
+	log.Printf("runTensorflowFromURL wav=%s\n", wavFilePathAbs)
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -57,19 +57,29 @@ func RunTensorflowFromURL(rc config.Recogniser, wavFilePath string, input rec.Pr
 	}
 
 	result := strings.TrimSpace(string(body))
-	var text string
-	res0 := strings.Split(result, "\t")
-	if len(res0) < 2 {
-		fmt.Println("??? " + result)
-		text = "FAIL"
-	} else {
-		text = res0[1]
-	}
-	if text == "FAIL" {
+	// WAVFILE TAB STATUS TAB TEXT TAB CONFIDENCE
+	//   where
+	//    STATUS = FAIL/OK
+	//    TEXT   = RESULT or ERROR MESSAGE
+	log.Printf("runTensorflowFromURL result=%s", result)
+	fields := strings.Split(result, "\t")
+	if len(fields) != 4 {
+		msg := fmt.Sprintf("expected four fields back from tensorflow server, found %d : %v", len(fields), fields)
+		log.Printf("[%s] failure : %s\n", name, msg)
+		res.Message = msg
 		res.Status = false
-	} else {
+		return res, fmt.Errorf("[%s] %s", name, msg)
+	}
+	status := fields[1]
+	text := fields[2]
+	if status == "FAIL" {
+		log.Printf("[%s] failure : %s\n", name, text)
+		res.Message = text
+		res.Status = false
+		return res, fmt.Errorf("[%s] %s", name, text)
+	} else if status == "OK" {
 		res.Status = true
-		score, err := strconv.ParseFloat(res0[2], 64)
+		score, err := strconv.ParseFloat(fields[3], 64)
 		if err != nil {
 			msg := fmt.Sprintf("failed parsing score to float64 : %v", err)
 			log.Printf("[%s] failure : %s\n", name, msg)
@@ -79,6 +89,12 @@ func RunTensorflowFromURL(rc config.Recogniser, wavFilePath string, input rec.Pr
 		}
 		res.RecognitionResult = text
 		res.Confidence = score
+	} else {
+		msg := fmt.Sprintf("unknown return status %s in %s", status, result)
+		log.Printf("[%s] failure : %s\n", name, msg)
+		res.Message = msg
+		res.Status = false
+		return res, fmt.Errorf("[%s] %s", name, msg)
 	}
 	log.Printf("runTensorflowFromURL RecognitionResult: %s\n", res.RecognitionResult)
 	return res, nil

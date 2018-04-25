@@ -12,7 +12,6 @@
 	{
 	    "name": "elexia_503_20180412",
 	    "type": "tensorflow",
-	    "disabled": true,
 	    "cmd": "http://localhost:8808/classify?audio_file={wavfile}",
 	    "weights": {
 		"output:_silence_": 1.0
@@ -21,7 +20,6 @@
 	{
 	    "name": "nst_chars_20170410",
 	    "type": "tensorflow",
-	    "disabled": true,
 	    "cmd": "http://localhost:8809/classify?audio_file={wavfile}",
 	    "weights": {
 		"input:_char_": 1.0,
@@ -32,6 +30,7 @@
 	{
 	    "name": "elexia_503_20180412",
 	    "type": "tensorflow_cmd",
+	    "disabled": true,
 	    "cmd": "bash /home/hanna/tensorflow/stts/e-lexia/tensorflow/scripts/classify.sh /home/hanna/tensorflow/bin/activate /home/hanna/tensorflow/stts/e-lexia/tensorflow/elexia_503_20180412/my_frozen_graph.pb /home/hanna/tensorflow/stts/e-lexia/tensorflow/elexia_503_20180412/conv_labels.txt {wavfile}",
 	    "weights": {
 		"output:_silence_": 1.0
@@ -40,6 +39,7 @@
 	{
 	    "name": "nst_chars_20170410",
 	    "type": "tensorflow_cmd",
+	    "disabled": true,
 	    "cmd": "bash /home/hanna/tensorflow/stts/e-lexia/tensorflow/scripts/classify.sh /home/hanna/tensorflow/bin/activate /home/hanna/tensorflow/stts/e-lexia/tensorflow/nst_chars_20170410/my_frozen_graph.pb /home/hanna/tensorflow/stts/e-lexia/tensorflow/nst_chars_20170410/conv_labels.txt {wavfile}",
 	    "weights": {
 		"input:_char_": 1.0,

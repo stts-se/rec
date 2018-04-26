@@ -293,7 +293,7 @@ function showResponse(json) {
     var o = JSON.parse(json);
     var j = JSON.stringify(o, null, '\t');
     j = j.replace(/("input_confidence": {)\n\s*/g, "$1");
-    j = j.replace(/("(?:config|product|recogniser|user)": [0-9.]+,?)\n\s*(}?)/g, "$1$2 ");
+    j = j.replace(/("(?:config[^"]*|combined|recogniser|user)": [0-9.]+,?)\n\s*(}?)/g, "$1$2 ");
     j = j.replace(/} ,/g, "},");
     
     resp.innerHTML = j;

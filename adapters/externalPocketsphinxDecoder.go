@@ -60,19 +60,16 @@ type sphinxResp struct {
 	RecognisedUtterance string `json:"recognised_utterance"`
 }
 
-func pocketSphinxMapText(s0 string) (string, float64) {
+func pocketSphinxMapText(s0 string) string {
 	s := strings.TrimSpace(strings.Replace(s0, ".", "", -1))
 	if s == "" {
-		return "_silence_", 1.0
+		return "_silence_"
 	}
-	// if mapped, ok := pocketSphinxMaptable[s]; ok {
-	// 	return mapped, 1.0
-	// }
 	nWds := len(strings.Split(s, " "))
 	if nWds > 2 {
-		return "_other_", 2.0
+		return "_other_"
 	}
-	return s, 0.0
+	return s
 }
 
 func CallExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.RecogniserResponse, error) {
@@ -140,12 +137,15 @@ func CallExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath str
 		return res, fmt.Errorf("[%s] %s", name, msg)
 	}
 
-	recRes := sr.RecognisedUtterance
+	recRes := strings.TrimSpace(sr.RecognisedUtterance)
 
-	text, conf := pocketSphinxMapText(strings.TrimSpace(recRes))
+	text := pocketSphinxMapText(recRes)
+	if text != recRes {
+		res.Message = fmt.Sprintf("server output: %s", recRes)
+	}
 	res.Status = true
 	res.RecognitionResult = text
-	res.Confidence = conf
+	res.Confidence = 1.0
 	log.Printf("[%s] RecognitionResult: %s\n", name, res.RecognitionResult)
 	return res, nil
 }

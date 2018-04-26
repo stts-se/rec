@@ -92,7 +92,7 @@ type ProcessResponse struct {
 
 type RecogniserResponse struct {
 	Status            bool               `json:"status"`
-	InputConfidence   map[string]float64 `json:"input_confidence,omitempty"` // recogniser, config, user, product
+	InputConfidence   map[string]float64 `json:"input_confidence,omitempty"` // recogniser, config, user, combined
 	Confidence        float64            `json:"confidence"`                 // value between 0 and 1
 	RecognitionResult string             `json:"recognition_result"`
 	RecordingID       string             `json:"recording_id"`
@@ -103,7 +103,7 @@ type RecogniserResponse struct {
 var spaceAndAfter = regexp.MustCompile(" .*$")
 
 var prInputConfidenceRe = regexp.MustCompile("(\"input_confidence\": {)\n\\s*")
-var prInputConfidenceChildrenRe = regexp.MustCompile("(\"(?:config|product|recogniser|user)\": [0-9.]+,?)\n\\s*(}?)")
+var prInputConfidenceChildrenRe = regexp.MustCompile("(\"(?:config[^\"]*|combined|recogniser|user)\": [0-9.]+,?)\n\\s*(}?)")
 
 func (pr ProcessResponse) PrettyJSONForced() string {
 	res, _ := pr.PrettyJSON()

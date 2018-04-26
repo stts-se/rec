@@ -19,7 +19,7 @@ func Test_PR_PrettyJSON(t *testing.T) {
 				Status: true,
 				InputConfidence: map[string]float64{
 					"config":     1,
-					"product":    0.77671,
+					"combined":   0.77671,
 					"recogniser": 0.77671,
 					"user":       1,
 				},
@@ -33,7 +33,7 @@ func Test_PR_PrettyJSON(t *testing.T) {
 				Status: true,
 				InputConfidence: map[string]float64{
 					"config":     0,
-					"product":    0,
+					"combined":   0,
 					"recogniser": 0.30963,
 					"user":       1,
 				},
@@ -55,7 +55,7 @@ func Test_PR_PrettyJSON(t *testing.T) {
 	"component_results": [
 		{
 			"status": true,
-			"input_confidence": {"config": 1, "product": 0.77671, "recogniser": 0.77671, "user": 1},
+			"input_confidence": {"combined": 0.77671, "config": 1, "recogniser": 0.77671, "user": 1},
 			"confidence": 0.6321,
 			"recognition_result": "bi",
 			"recording_id": "tmprecid0",
@@ -64,7 +64,7 @@ func Test_PR_PrettyJSON(t *testing.T) {
 		},
 		{
 			"status": true,
-			"input_confidence": {"config": 0, "product": 0, "recogniser": 0.30963, "user": 1},
+			"input_confidence": {"combined": 0, "config": 0, "recogniser": 0.30963, "user": 1},
 			"confidence": 0,
 			"recognition_result": "o",
 			"recording_id": "tmprecid0",

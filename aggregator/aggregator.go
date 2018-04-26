@@ -35,29 +35,29 @@ func getUserWeight(input rec.ProcessInput, res rec.RecogniserResponse) float64 {
 	return 1.0
 }
 
-func getConfigWeight(input rec.ProcessInput, res rec.RecogniserResponse, recName2Weights map[string]config.Recogniser) (float64, error) {
+func getConfigWeight(input rec.ProcessInput, res rec.RecogniserResponse, recName2Weights map[string]config.Recogniser) (float64, string, error) {
 	rc, ok := recName2Weights[res.Source]
 	if !ok {
 		msg := fmt.Sprintf("no recogniser defined for %s", res.Source)
-		return 0.0, fmt.Errorf("%s", msg)
+		return 0.0, "", fmt.Errorf("%s", msg)
 	}
 	ws := rc.Weights
 	if w, ok := ws["input:"+input.Text]; ok {
-		return w, nil
+		return w, "input:" + input.Text, nil
 	} else if w, ok := ws["output:"+res.RecognitionResult]; ok {
-		return w, nil
+		return w, "output:" + res.RecognitionResult, nil
 	} else if w, ok := ws["input:_char_"]; ok && isChar(input.Text) {
-		return w, nil
+		return w, "input:_char_", nil
 	} else if w, ok := ws["input:_word_"]; ok && isWord(input.Text) {
-		return w, nil
+		return w, "input:_word_", nil
 	} else if w, ok := ws["output:_char_"]; ok && isChar(res.RecognitionResult) {
-		return w, nil
+		return w, "output:_char_", nil
 	} else if w, ok := ws["output:_word_"]; ok && isWord(res.RecognitionResult) {
-		return w, nil
+		return w, "output:_word_", nil
 	} else if w, ok := ws["default"]; ok {
-		return w, nil
+		return w, "default", nil
 	}
-	return 1.0, nil
+	return 1.0, "", nil
 }
 
 func getBestGuess(totalConfs map[string]float64) (string, float64) {
@@ -114,19 +114,23 @@ func CombineResults(cfg config.Config, input rec.ProcessInput, inputResults []re
 		if recogConf < 0.0 {        // below zero => unknown/undefined => default value 1.0
 			recogConf = 1.0
 		}
-		configWeight, err := getConfigWeight(input, res, recName2Weights)
+		configWeight, configLog, err := getConfigWeight(input, res, recName2Weights)
 		if err != nil {
 			return rec.ProcessResponse{}, fmt.Errorf("CombineResults failed : %v", err)
 		}
+		configName := "config"
+		if configLog != "" {
+			configName = "config-" + configLog
+		}
 		userWeight := getUserWeight(input, res)
-		product := recogConf * configWeight * userWeight // intermediate weight
+		combined := recogConf * configWeight * userWeight // intermediate weight
 		res.InputConfidence = map[string]float64{
 			"recogniser": recogConf,
-			"config":     configWeight,
+			configName:   configWeight,
 			"user":       userWeight,
-			"product":    product,
+			"combined":   combined,
 		}
-		res.Confidence = product  // the intermediate confidence value
+		res.Confidence = combined // the intermediate confidence value
 		convertedResults[i] = res // update the slice with new values
 		totalConf += roundConfidence(res.Confidence)
 	}

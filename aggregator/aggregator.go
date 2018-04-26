@@ -120,7 +120,7 @@ func CombineResults(cfg config.Config, input rec.ProcessInput, inputResults []re
 		}
 		configName := "config"
 		if configLog != "" {
-			configName = "config-" + configLog
+			configName = "config|" + configLog
 		}
 		userWeight := getUserWeight(input, res)
 		combined := recogConf * configWeight * userWeight // intermediate weight

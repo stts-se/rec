@@ -91,9 +91,15 @@ type ProcessResponse struct {
 }
 
 type RecogniserResponse struct {
-	Status            bool               `json:"status"`
-	InputConfidence   map[string]float64 `json:"input_confidence,omitempty"` // recogniser, config, user, combined
-	Confidence        float64            `json:"confidence"`                 // value between 0 and 1
+	Status bool `json:"status"`
+
+	// InputConfidence properties:
+	//  * config or config|<property> - config as set in from config file
+	//  * recogniser - from recogniser
+	//  * user - user defined weight (as defined in call to process URL)
+	//  * combined - the combined confidence from the three values above (config * recogniser * user)
+	InputConfidence   map[string]float64 `json:"input_confidence,omitempty"`
+	Confidence        float64            `json:"confidence"` // value between 0 and 1
 	RecognitionResult string             `json:"recognition_result"`
 	RecordingID       string             `json:"recording_id"`
 	Message           string             `json:"message"`

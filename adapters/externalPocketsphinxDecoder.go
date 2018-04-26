@@ -141,7 +141,7 @@ func CallExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath str
 
 	text := pocketSphinxMapText(recRes)
 	if recRes != "" && text != recRes {
-		res.Message = fmt.Sprintf("server output: %s", recRes)
+		res.Message = fmt.Sprintf("original result: %s", recRes)
 	}
 	res.Status = true
 	res.RecognitionResult = text

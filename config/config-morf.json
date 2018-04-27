@@ -25,6 +25,7 @@
 	{
 	    "name": "nst_chars_soundtype_20181411",
 	    "type": "tensorflow",
+	    "disabled": true,
 	    "cmd": "http://localhost:8810/classify?audio_file={wavfile}",
 	    "weights": {
 		"input:_word_": 0.0

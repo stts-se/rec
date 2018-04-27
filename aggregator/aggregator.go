@@ -4,11 +4,51 @@ import (
 	"fmt"
 	"log"
 	"math"
+	"regexp"
 	"strings"
 
 	"github.com/stts-se/rec"
 	"github.com/stts-se/rec/config"
 )
+
+var vowels = map[string]bool{
+	"e": true, "y": true, "u": true, "i": true, "o": true, "å": true, "a": true, "ö": true, "ä": true, "ø": true, "æ": true,
+}
+var conses = map[string]bool{
+	"q": true, "w": true, "r": true, "t": true, "p": true, "s": true, "d": true, "f": true, "g": true, "h": true, "j": true, "k": true, "l": true, "z": true, "x": true, "c": true, "v": true, "b": true, "n": true, "m": true,
+}
+
+var voiced = map[string]bool{
+	"r": true, "d": true, "g": true, "h": true, "j": true, "l": true, "v": true, "b": true, "n": true, "m": true,
+}
+
+var devoiced = map[string]bool{
+	"q": true, "w": true, "t": true, "p": true, "s": true, "f": true, "k": true, "z": true, "x": true, "c": true,
+}
+
+func isVowel(s string) bool {
+	_, ok := vowels[s]
+	return ok
+}
+func isCons(s string) bool {
+	_, ok := conses[s]
+	return ok
+}
+
+func isVoiced(s string) bool {
+	if isVowel(s) {
+		return true
+	}
+	_, ok := voiced[s]
+	return ok
+}
+func isDevoiced(s string) bool {
+	if isVowel(s) {
+		return false
+	}
+	_, ok := devoiced[s]
+	return ok
+}
 
 func isChar(s string) bool {
 	return len([]rune(s)) == 1
@@ -18,7 +58,13 @@ func isWord(s string) bool {
 	return len([]rune(s)) > 1
 }
 
-func isEntity(s string) bool {
+var knownPropertyRE = regexp.MustCompile("^_(word|char|vowel|cons|silence|other|voiced|devoiced)_$")
+
+func isKnownProperty(s string) bool {
+	return knownPropertyRE.MatchString(s)
+}
+
+func isProperty(s string) bool {
 	return strings.HasPrefix(s, "_") && strings.HasSuffix(s, "_")
 }
 
@@ -64,7 +110,7 @@ func getBestGuess(totalConfs map[string]float64) (string, float64) {
 	var bestConf = -1.0
 	var bestGuess string
 	for guess, conf := range totalConfs {
-		if conf > bestConf {
+		if conf > bestConf && !isProperty(guess) {
 			bestConf = conf
 			bestGuess = guess
 		}
@@ -135,6 +181,7 @@ func CombineResults(cfg config.Config, input rec.ProcessInput, inputResults []re
 		totalConf += roundConfidence(res.Confidence)
 	}
 	// re-compute conf relative to the sum of weights
+	var propertyConfs = make(map[string]float64)
 	var totalConfs = make(map[string]float64) // result string => sum of confidence measures for responses with this result
 	for i, res := range convertedResults {
 		newConf := 0.0
@@ -144,8 +191,45 @@ func CombineResults(cfg config.Config, input rec.ProcessInput, inputResults []re
 		res.Confidence = newConf
 		convertedResults[i] = res // update the slice with new value
 		totalConfs[res.RecognitionResult] = totalConfs[res.RecognitionResult] + res.Confidence
+		if isProperty(res.RecognitionResult) {
+			if isKnownProperty(res.RecognitionResult) {
+				propertyConfs[res.RecognitionResult] = propertyConfs[res.RecognitionResult] + res.Confidence
+			} else {
+				return rec.ProcessResponse{}, fmt.Errorf("unknown property : %s", res.RecognitionResult)
+			}
+		}
 		log.Printf("CombineResults %v", res)
 	}
+	log.Printf("propertyConfs: %v", propertyConfs)
+	// recalculate conf for properties
+	for res, conf := range totalConfs {
+		if isVowel(res) {
+			totalConfs[res] = conf + propertyConfs["_vowel_"]
+			totalConfs["_vowel_"] = totalConfs["_vowel_"] + conf
+		}
+		if isCons(res) {
+			totalConfs[res] = conf + propertyConfs["_cons_"]
+			totalConfs["_cons_"] = totalConfs["_cons_"] + conf
+		}
+		if isChar(res) {
+			totalConfs[res] = conf + propertyConfs["_char_"]
+			totalConfs["_char_"] = totalConfs["_char_"] + conf
+		}
+		if isWord(res) {
+			totalConfs[res] = conf + propertyConfs["_word_"]
+			totalConfs["_word_"] = totalConfs["_word_"] + conf
+		}
+		if isVoiced(res) {
+			totalConfs[res] = conf + propertyConfs["_voiced_"]
+			totalConfs["_voiced_"] = totalConfs["_voiced_"] + conf
+		}
+		if isDevoiced(res) {
+			totalConfs[res] = conf + propertyConfs["_devoiced_"]
+			totalConfs["_devoiced_"] = totalConfs["_devoiced_"] + conf
+		}
+	}
+
+	// TODO: update confs for properties
 
 	if resErr != nil {
 		return rec.ProcessResponse{}, nil

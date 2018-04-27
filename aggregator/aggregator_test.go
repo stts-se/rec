@@ -32,7 +32,7 @@ func testCheckSum(t *testing.T, result rec.ProcessResponse) {
 	}
 }
 
-func Test_CombineResults_Computations2_UserAndRecogniserWeights1(t *testing.T) {
+func Test_CombineResults_Computations_UserAndRecogniserWeights1(t *testing.T) {
 	var recID = "test_0001"
 	var pInput = rec.ProcessInput{
 		UserName:    "tmpuser",
@@ -145,7 +145,7 @@ func Test_CombineResults_Computations2_UserAndRecogniserWeights1(t *testing.T) {
 	testCheckSum(t, result)
 }
 
-func Test_CombineResults_Computations2_UserAndRecogniserWeights2(t *testing.T) {
+func Test_CombineResults_Computations_UserAndRecogniserWeights2(t *testing.T) {
 	var recID = "test_0001"
 	var pInput = rec.ProcessInput{
 		UserName:    "tmpuser",
@@ -260,7 +260,147 @@ func Test_CombineResults_Computations2_UserAndRecogniserWeights2(t *testing.T) {
 	testCheckSum(t, result)
 }
 
-func Test_CombineResults_Computations2_UserWeights(t *testing.T) {
+func Test_CombineResults_Computations_UserAndRecogniserWeightsAndProperties(t *testing.T) {
+	var recID = "test_0001"
+	var pInput = rec.ProcessInput{
+		UserName:    "tmpuser",
+		Audio:       rec.Audio{},
+		Text:        "bi",
+		RecordingID: recID,
+		Weights: map[string]float64{
+			"kaldigstreamer|rc2": 3,
+		},
+	}
+	var cfg = config.Config{
+		AudioDir:              "audio_dir",
+		ServerPort:            9993,
+		FailOnRecogniserError: true,
+		Recognisers: []config.Recogniser{
+			config.Recogniser{
+				Name: "rc1",
+				Type: "kaldigstreamer",
+				Cmd:  "http://192.168.0.105:8080/client/dynamic/recognize",
+				Weights: map[string]float64{
+					"output:_word_": 0.6,
+					"default":       0.8,
+				},
+			},
+			config.Recogniser{
+				Name: "rc2",
+				Type: "kaldigstreamer",
+				Weights: map[string]float64{
+					"output:bi": 2.0,
+					"default":   1.5,
+				},
+				Cmd: "http://192.168.0.105:8080/client/dynamic/recognize",
+			},
+			config.Recogniser{
+				Name: "rc3",
+				Type: "kaldigstreamer",
+				Weights: map[string]float64{
+					"input:_char_": 0.0,
+					"default":      0.3,
+				},
+				Cmd: "http://192.168.0.105:8080/client/dynamic/recognize",
+			},
+			config.Recogniser{
+				Name: "rc4",
+				Type: "kaldigstreamer",
+				Weights: map[string]float64{
+					"input:_char_": 0.0,
+					"default":      0.3,
+				},
+				Cmd: "http://192.168.0.105:8080/client/dynamic/recognize",
+			},
+		},
+	}
+	var input []rec.RecogniserResponse
+	var result rec.ProcessResponse
+	var err error
+	var msg string
+
+	input = []rec.RecogniserResponse{
+		rec.RecogniserResponse{
+			Status:            true,
+			Confidence:        1.5, // weighted => 1.5 * 0.8 * 1.0 = 1.2/5.97 = 0.201005025125628
+			RecognitionResult: "i",
+			RecordingID:       recID,
+			Message:           "",
+			Source:            "kaldigstreamer|rc1",
+		},
+		rec.RecogniserResponse{
+			Status:            true,
+			Confidence:        1, // weighted => 1.0 * 1.5 * 3.0 = 4.5/5.97 = 0.753768844221106
+			RecognitionResult: "_word_",
+			RecordingID:       recID,
+			Message:           "",
+			Source:            "kaldigstreamer|rc2",
+		},
+		rec.RecogniserResponse{
+			Status:            true,
+			Confidence:        0.5, // weighted => 0.5 * 0.3 * 1.0 = 0.15/5.97 = 0.0251256281407035
+			RecognitionResult: "li",
+			RecordingID:       recID,
+			Message:           "",
+			Source:            "kaldigstreamer|rc3",
+		},
+		rec.RecogniserResponse{
+			Status:            true,
+			Confidence:        0.4, // weighted => 0.4 * 0.3 * 1.0 = 0.12/5.97 = 0.0201005025125628
+			RecognitionResult: "bi",
+			RecordingID:       recID,
+			Message:           "",
+			Source:            "kaldigstreamer|rc4",
+		},
+	}
+	expW := round2S(0.753768844221106 + 0.0251256281407035)
+	msg = fmt.Sprintf("expected output weight %s", expW)
+	result, err = CombineResults(cfg, pInput, input, true)
+	if err != nil {
+		t.Errorf("%s, got error : %v", msg, err)
+	} else if !testEqualConf(expW, result.Confidence) {
+		t.Errorf("%s, got %s", msg, round2S(result.Confidence))
+	}
+
+	//fmt.Println(result.PrettyJSONForced())
+
+	if result.RecognitionResult != "li" {
+		t.Errorf("expected %s, got %s", "li", result.RecognitionResult)
+	}
+
+	for _, resp := range result.ComponentResults {
+		if resp.Source == "kaldigstreamer|rc1" {
+			expW = round2S(0.201005025125628)
+			if !testEqualConf(expW, resp.Confidence) {
+				msg = fmt.Sprintf("expected output weight %s", expW)
+				t.Errorf("%s, got %s", msg, round2S(resp.Confidence))
+			}
+		} else if resp.Source == "kaldigstreamer|rc2" {
+			expW = round2S(0.753768844221106)
+			if !testEqualConf(expW, resp.Confidence) {
+				msg = fmt.Sprintf("expected output weight %s", expW)
+				t.Errorf("%s, got %s", msg, round2S(resp.Confidence))
+			}
+		} else if resp.Source == "kaldigstreamer|rc3" {
+			expW = round2S(0.0251256281407035)
+			if !testEqualConf(expW, resp.Confidence) {
+				msg = fmt.Sprintf("expected output weight %s", expW)
+				t.Errorf("%s, got %s", msg, round2S(resp.Confidence))
+			}
+		} else if resp.Source == "kaldigstreamer|rc4" {
+			expW = round2S(0.0201005025125628)
+			if !testEqualConf(expW, resp.Confidence) {
+				msg = fmt.Sprintf("expected output weight %s", expW)
+				t.Errorf("%s, got %s", msg, round2S(resp.Confidence))
+			}
+		} else {
+			t.Errorf("unknown recogniser name: %s", resp.Source)
+		}
+	}
+	testCheckSum(t, result)
+}
+
+func Test_CombineResults_Computations_UserWeights(t *testing.T) {
 	var recID = "test_0001"
 	var pInput = rec.ProcessInput{
 		UserName:    "tmpuser",

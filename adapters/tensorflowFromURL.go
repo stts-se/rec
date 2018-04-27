@@ -14,6 +14,16 @@ import (
 	"github.com/stts-se/rec/config"
 )
 
+func tensorflowMapText(s0 string) (string, bool) {
+	s := strings.TrimSpace(strings.Replace(s0, ".", "", -1))
+	if s == "vowel" {
+		return "_vowel_", false
+	} else if s == "cons" {
+		return "_cons_", false
+	}
+	return s, false
+}
+
 func RunTensorflowFromURL(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.RecogniserResponse, error) {
 	name := rc.LongName()
 	res := rec.RecogniserResponse{RecordingID: input.RecordingID, Source: rc.LongName()}
@@ -71,7 +81,9 @@ func RunTensorflowFromURL(rc config.Recogniser, wavFilePath string, input rec.Pr
 		return res, fmt.Errorf("[%s] %s", name, msg)
 	}
 	status := fields[1]
-	text := fields[2]
+	recRes := fields[2]
+	text, updated := tensorflowMapText(recRes)
+
 	if status == "FAIL" {
 		log.Printf("[%s] failure : %s\n", name, text)
 		res.Message = text
@@ -88,6 +100,14 @@ func RunTensorflowFromURL(rc config.Recogniser, wavFilePath string, input rec.Pr
 			return res, fmt.Errorf("[%s] %s", name, msg)
 		}
 		res.RecognitionResult = text
+		if recRes != "" && updated && text != recRes {
+			msg := fmt.Sprintf("original result: %s", recRes)
+			if len(res.Message) > 0 {
+				res.Message = res.Message + "; " + msg
+			} else {
+				res.Message = msg
+			}
+		}
 		res.Confidence = score
 	} else {
 		msg := fmt.Sprintf("unknown return status %s in %s", status, result)

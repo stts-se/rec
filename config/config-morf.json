@@ -23,6 +23,14 @@
 	    }
 	},
 	{
+	    "name": "nst_chars_soundtype_20181410",
+	    "type": "tensorflow",
+	    "cmd": "http://localhost:8810/classify?audio_file={wavfile}",
+	    "weights": {
+		"input:_word_": 0.0
+	    }
+	},
+	{
 	    "name": "nst_10000_adapted_467",
 	    "disabled": true,
 	    "type": "pocketsphinx",

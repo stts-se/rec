@@ -110,6 +110,7 @@ var spaceAndAfter = regexp.MustCompile(" .*$")
 
 var prInputConfidenceRe = regexp.MustCompile("(\"input_confidence\": {)\n\\s*")
 var prInputConfidenceChildrenRe = regexp.MustCompile("(\"(?:config[^\"]*|combined|recogniser|user)\": [0-9.]+,?)\n\\s*(}?)")
+var prConfidenceTooLongRe = regexp.MustCompile("(\"(?:config[^\"]*|combined|recogniser|user|confidence)\": [0-9].[0-9]{4})[0-9]+")
 
 func (pr ProcessResponse) PrettyJSONForced() string {
 	res, _ := pr.PrettyJSON()
@@ -124,6 +125,7 @@ func (pr ProcessResponse) PrettyJSON() (string, error) {
 	res := string(js)
 	res = prInputConfidenceRe.ReplaceAllString(res, "$1")
 	res = prInputConfidenceChildrenRe.ReplaceAllString(res, "$1$2 ")
+	res = prConfidenceTooLongRe.ReplaceAllString(res, "$1")
 	res = strings.Replace(res, "} ,", "},", -1)
 	return res, nil
 }

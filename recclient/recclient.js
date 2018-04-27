@@ -295,7 +295,7 @@ function showResponse(json) {
     j = j.replace(/("input_confidence": {)\n\s*/g, "$1");
     j = j.replace(/("(?:config[^"]*|combined|recogniser|user)": [0-9.]+,?)\n\s*(}?)/g, "$1$2 ");
     j = j.replace(/} ,/g, "},");
-    
+    j = j.replace(/("(?:config[^"]*|combined|recogniser|user|confidence)": [0-9].[0-9]{4})[0-9]+/g, "$1");
     resp.innerHTML = j;
 };
 

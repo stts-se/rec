@@ -23,7 +23,7 @@
 	    }
 	},
 	{
-	    "name": "nst_chars_soundtype_20181410",
+	    "name": "nst_chars_soundtype_20181411",
 	    "type": "tensorflow",
 	    "cmd": "http://localhost:8810/classify?audio_file={wavfile}",
 	    "weights": {

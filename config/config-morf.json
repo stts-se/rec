@@ -54,7 +54,7 @@
 	    "cmd": "http://localhost:9091/rec?audio_file={wavfile}"
 	},
 	{
-	    "name": "nst_46912_full_lm",
+	    "name": "nst_173155_full_lm",
 	    "type": "pocketsphinx",
 	    "cmd": "http://localhost:9092/rec?audio_file={wavfile}",
 	    "weights": {

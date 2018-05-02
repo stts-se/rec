@@ -18,10 +18,10 @@ navigator.getUserMedia = (navigator.getUserMedia ||
                           navigator.mozGetUserMedia ||
                           navigator.msGetUserMedia);
 
-navigator.mediaDevices.getUserMedia = (navigator.mediaDevices.getUserMedia ||
-					navigator.mediaDevices.webkitGetUserMedia ||
-					navigator.mediaDevices.mozGetUserMedia ||
-					navigator.mediaDevices.msGetUserMedia);
+// navigator.mediaDevices.getUserMedia = (navigator.mediaDevices.getUserMedia ||
+// 					navigator.mediaDevices.webkitGetUserMedia ||
+// 					navigator.mediaDevices.mozGetUserMedia ||
+// 					navigator.mediaDevices.msGetUserMedia);
 
 
 

@@ -95,7 +95,7 @@ window.onload = function () {
     //navigator.mediaDevices.getUserMedia({'audio': true, video: false}).catch(function(err) {
     mediaAccess.catch(function(err) {
 	console.log("error from getUserMedia:", err);
-	alert(err);
+	alert("Couldn't initialize recorder: " + err);
     });
 
     //initWavesurferJS();

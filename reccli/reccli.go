@@ -34,7 +34,7 @@ func main() {
 	flag.StringVar(&flagUserName, "u", "tmpuser0", "user name to be sent to server along with sound file.")
 	flag.StringVar(&flagRecordingID, "r", "tmprecid0", "recording ID to be sent to server along with sound file.")
 	flag.StringVar(&flagText, "t", "DUMMY_TEXT0", "text to be sent to server along with sound file.")
-	flag.StringVar(&flagWeights, "w", "", "user defined weights for recognisers (& separated list: NAME1=WEIGHT1&NAME2=WRIGHT2).")
+	flag.StringVar(&flagWeights, "w", "", "user defined weights for recognisers (&-separated list: NAME1=WEIGHT1&NAME2=WRIGHT2).")
 
 	flag.Parse()
 

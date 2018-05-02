@@ -73,8 +73,13 @@ window.onload = function () {
 	getAudio();
     });
 
+
+    console.log("navigator.mediaDevices:", navigator.mediaDevices);
+    mediaAccess = navigator.mediaDevices.getUserMedia({'audio': true, video: false});
+    console.log("navigator.mediaDevices.getUserMedia:", mediaAccess);
     
-    navigator.mediaDevices.getUserMedia({'audio': true, video: false}).then(function(stream) {
+    //navigator.mediaDevices.getUserMedia({'audio': true, video: false}).then(function(stream) {
+	mediaAccess.then(function(stream) {
 	console.log("navigator.mediaDevices.getUserMedia was called")
 	source = audioCtx.createMediaStreamSource(stream);
         source.connect(analyser);
@@ -87,8 +92,9 @@ window.onload = function () {
 	
 	recorder.onstop = function(evt) {}
     });
-    navigator.mediaDevices.getUserMedia({'audio': true, video: false}).catch(function(err) {
-	console.log(err);
+    //navigator.mediaDevices.getUserMedia({'audio': true, video: false}).catch(function(err) {
+    mediaAccess.catch(function(err) {
+	console.log("error from getUserMedia:", err);
 	alert(err);
     });
 

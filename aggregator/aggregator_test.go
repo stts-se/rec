@@ -260,7 +260,7 @@ func Test_CombineResults_Computations_UserAndRecogniserWeights2(t *testing.T) {
 	testCheckSum(t, result)
 }
 
-func Test_CombineResults_Computations_UserAndRecogniserWeightsAndProperties(t *testing.T) {
+func Test_CombineResults_Computations_UserAndRecogniserWeightsAndProperties1(t *testing.T) {
 	var recID = "test_0001"
 	var pInput = rec.ProcessInput{
 		UserName:    "tmpuser",
@@ -389,6 +389,125 @@ func Test_CombineResults_Computations_UserAndRecogniserWeightsAndProperties(t *t
 			}
 		} else if resp.Source == "kaldigstreamer|rc4" {
 			expW = round2S(0.0201005025125628)
+			if !testEqualConf(expW, resp.Confidence) {
+				msg = fmt.Sprintf("expected output weight %s", expW)
+				t.Errorf("%s, got %s", msg, round2S(resp.Confidence))
+			}
+		} else {
+			t.Errorf("unknown recogniser name: %s", resp.Source)
+		}
+	}
+	testCheckSum(t, result)
+}
+
+func Test_CombineResults_Computations_UserAndRecogniserWeightsAndProperties2(t *testing.T) {
+	var recID = "test_0001"
+	var pInput = rec.ProcessInput{
+		UserName:    "tmpuser",
+		Audio:       rec.Audio{},
+		Text:        "<unknown input text>",
+		RecordingID: recID,
+	}
+	var cfg = config.Config{
+		AudioDir:              "audio_dir",
+		ServerPort:            9993,
+		FailOnRecogniserError: true,
+		Recognisers: []config.Recogniser{
+			config.Recogniser{
+				Name: "rc1",
+				Type: "kaldigstreamer",
+				Cmd:  "http://192.168.0.105:8080/client/dynamic/recognize",
+			},
+			config.Recogniser{
+				Name: "rc2",
+				Type: "kaldigstreamer",
+				Cmd:  "http://192.168.0.105:8080/client/dynamic/recognize",
+			},
+			config.Recogniser{
+				Name: "rc3",
+				Type: "kaldigstreamer",
+				Cmd:  "http://192.168.0.105:8080/client/dynamic/recognize",
+			},
+			config.Recogniser{
+				Name: "rc4",
+				Type: "kaldigstreamer",
+				Cmd:  "http://192.168.0.105:8080/client/dynamic/recognize",
+			},
+		},
+	}
+	var input []rec.RecogniserResponse
+	var result rec.ProcessResponse
+	var err error
+	var msg string
+
+	input = []rec.RecogniserResponse{
+		rec.RecogniserResponse{
+			Status:            true,
+			Confidence:        0.25,
+			RecognitionResult: "_silence_",
+			RecordingID:       recID,
+			Message:           "",
+			Source:            "kaldigstreamer|rc1",
+		},
+		rec.RecogniserResponse{
+			Status:            true,
+			Confidence:        0.25,
+			RecognitionResult: "_silence_",
+			RecordingID:       recID,
+			Message:           "",
+			Source:            "kaldigstreamer|rc2",
+		},
+		rec.RecogniserResponse{
+			Status:            true,
+			Confidence:        0.25,
+			RecognitionResult: "_silence_",
+			RecordingID:       recID,
+			Message:           "",
+			Source:            "kaldigstreamer|rc3",
+		},
+		rec.RecogniserResponse{
+			Status:            true,
+			Confidence:        0.25,
+			RecognitionResult: "_silence_",
+			RecordingID:       recID,
+			Message:           "",
+			Source:            "kaldigstreamer|rc4",
+		},
+	}
+	expW := round2S(0.9999)
+	msg = fmt.Sprintf("expected output weight %s", expW)
+	result, err = CombineResults(cfg, pInput, input, true)
+	if err != nil {
+		t.Errorf("%s, got error : %v", msg, err)
+	} else if !testEqualConf(expW, result.Confidence) {
+		t.Errorf("%s, got %s", msg, round2S(result.Confidence))
+	}
+
+	if result.RecognitionResult != "_silence_" {
+		t.Errorf("expected %s, got %s", "_silence_", result.RecognitionResult)
+	}
+
+	for _, resp := range result.ComponentResults {
+		if resp.Source == "kaldigstreamer|rc1" {
+			expW = round2S(0.25)
+			if !testEqualConf(expW, resp.Confidence) {
+				msg = fmt.Sprintf("expected output weight %s", expW)
+				t.Errorf("%s, got %s", msg, round2S(resp.Confidence))
+			}
+		} else if resp.Source == "kaldigstreamer|rc2" {
+			expW = round2S(0.25)
+			if !testEqualConf(expW, resp.Confidence) {
+				msg = fmt.Sprintf("expected output weight %s", expW)
+				t.Errorf("%s, got %s", msg, round2S(resp.Confidence))
+			}
+		} else if resp.Source == "kaldigstreamer|rc3" {
+			expW = round2S(0.25)
+			if !testEqualConf(expW, resp.Confidence) {
+				msg = fmt.Sprintf("expected output weight %s", expW)
+				t.Errorf("%s, got %s", msg, round2S(resp.Confidence))
+			}
+		} else if resp.Source == "kaldigstreamer|rc4" {
+			expW = round2S(0.25)
 			if !testEqualConf(expW, resp.Confidence) {
 				msg = fmt.Sprintf("expected output weight %s", expW)
 				t.Errorf("%s, got %s", msg, round2S(resp.Confidence))

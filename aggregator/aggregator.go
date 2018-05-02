@@ -58,7 +58,7 @@ func isWord(s string) bool {
 	return len([]rune(s)) > 1
 }
 
-var knownPropertyRE = regexp.MustCompile("^_(word|char|vowel|cons|silence|other|voiced|devoiced)_$")
+var knownPropertyRE = regexp.MustCompile("^_(word|char|vowel|cons|voiced|devoiced)_$")
 
 func isKnownProperty(s string) bool {
 	return knownPropertyRE.MatchString(s)
@@ -106,13 +106,13 @@ func getConfigWeight(input rec.ProcessInput, res rec.RecogniserResponse, recName
 	return 1.0, "", nil
 }
 
-var usePropertyConfs = false
+const usePropertyConfs = true
 
 func getBestGuess(totalConfs map[string]float64) (string, float64) {
 	var bestConf = -1.0
 	var bestGuess string
 	for guess, conf := range totalConfs {
-		if conf > bestConf && (!usePropertyConfs || !isProperty(guess)) {
+		if conf > bestConf && (!usePropertyConfs || !isKnownProperty(guess)) {
 			bestConf = conf
 			bestGuess = guess
 		}
@@ -125,7 +125,6 @@ func getBestGuess(totalConfs map[string]float64) (string, float64) {
 
 func updatePropertyConfs(totalConfs map[string]float64, propertyConfs map[string]float64) map[string]float64 {
 	updated := totalConfs
-	log.Printf("propertyConfs: %v", propertyConfs)
 	// recalculate conf for properties
 	for res, conf := range totalConfs {
 		if isVowel(res) {
@@ -227,12 +226,10 @@ func CombineResults(cfg config.Config, input rec.ProcessInput, inputResults []re
 		res.Confidence = newConf
 		convertedResults[i] = res // update the slice with new value
 		totalConfs[res.RecognitionResult] = totalConfs[res.RecognitionResult] + res.Confidence
-		if isProperty(res.RecognitionResult) {
-			if isKnownProperty(res.RecognitionResult) {
-				propertyConfs[res.RecognitionResult] = propertyConfs[res.RecognitionResult] + res.Confidence
-			} else {
-				return rec.ProcessResponse{}, fmt.Errorf("unknown property : %s", res.RecognitionResult)
-			}
+		if isKnownProperty(res.RecognitionResult) {
+			propertyConfs[res.RecognitionResult] = propertyConfs[res.RecognitionResult] + res.Confidence
+			// } else if isProperty(res.RecognitionResult) {
+			// 	return rec.ProcessResponse{}, fmt.Errorf("unknown property : %s", res.RecognitionResult)
 		}
 		log.Printf("CombineResults %v", res)
 	}

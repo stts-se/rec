@@ -75,6 +75,7 @@ window.onload = function () {
 
     
     navigator.mediaDevices.getUserMedia({'audio': true, video: false}).then(function(stream) {
+	console.log("navigator.mediaDevices.getUserMedia was called")
 	source = audioCtx.createMediaStreamSource(stream);
         source.connect(analyser);
 	visualize();	
@@ -90,6 +91,12 @@ window.onload = function () {
 	console.log(err);
 	alert(err);
     });
+
+    if (recorder == null) {
+	msg = "recorder is undefined! was getUserMedia ever called?";
+	console.log(msg);
+	alert(msg);
+    }
     
     //initWavesurferJS();
 

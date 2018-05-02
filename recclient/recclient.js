@@ -92,12 +92,6 @@ window.onload = function () {
 	alert(err);
     });
 
-    if (recorder == null) {
-	msg = "recorder is undefined! was getUserMedia ever called?";
-	console.log(msg);
-	alert(msg);
-    }
-    
     //initWavesurferJS();
 
     // TODO Remove temporary initialization
@@ -203,6 +197,13 @@ function getNext() {
 }
 
 function startRecording() {
+
+    if (recorder == null) {
+	msg = "Cannot record -- recorder is undefined"
+	console.log(msg);
+	alert(msg);
+    }
+    
 
     // TODO set max recording time limit
     

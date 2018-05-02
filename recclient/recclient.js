@@ -92,8 +92,8 @@ window.onload = function () {
 	alert(err);
     });
 
-    if recorder == null {
-	msg = "recorder is undefined! was getUserMedia ever called?"
+    if (recorder == null) {
+	msg = "recorder is undefined! was getUserMedia ever called?";
 	console.log(msg);
 	alert(msg);
     }

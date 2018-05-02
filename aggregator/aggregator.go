@@ -106,11 +106,13 @@ func getConfigWeight(input rec.ProcessInput, res rec.RecogniserResponse, recName
 	return 1.0, "", nil
 }
 
+var usePropertyConfs = false
+
 func getBestGuess(totalConfs map[string]float64) (string, float64) {
 	var bestConf = -1.0
 	var bestGuess string
 	for guess, conf := range totalConfs {
-		if conf > bestConf && !isProperty(guess) {
+		if conf > bestConf && (!usePropertyConfs || !isProperty(guess)) {
 			bestConf = conf
 			bestGuess = guess
 		}
@@ -119,6 +121,39 @@ func getBestGuess(totalConfs map[string]float64) (string, float64) {
 		bestConf = roundConfidence(0.9999)
 	}
 	return bestGuess, bestConf
+}
+
+func updatePropertyConfs(totalConfs map[string]float64, propertyConfs map[string]float64) map[string]float64 {
+	updated := totalConfs
+	log.Printf("propertyConfs: %v", propertyConfs)
+	// recalculate conf for properties
+	for res, conf := range totalConfs {
+		if isVowel(res) {
+			updated[res] = conf + propertyConfs["_vowel_"]
+			updated["_vowel_"] = totalConfs["_vowel_"] + conf
+		}
+		if isCons(res) {
+			updated[res] = conf + propertyConfs["_cons_"]
+			updated["_cons_"] = totalConfs["_cons_"] + conf
+		}
+		if isChar(res) {
+			updated[res] = conf + propertyConfs["_char_"]
+			updated["_char_"] = totalConfs["_char_"] + conf
+		}
+		if isWord(res) {
+			updated[res] = conf + propertyConfs["_word_"]
+			updated["_word_"] = totalConfs["_word_"] + conf
+		}
+		if isVoiced(res) {
+			updated[res] = conf + propertyConfs["_voiced_"]
+			updated["_voiced_"] = totalConfs["_voiced_"] + conf
+		}
+		if isDevoiced(res) {
+			updated[res] = conf + propertyConfs["_devoiced_"]
+			updated["_devoiced_"] = totalConfs["_devoiced_"] + conf
+		}
+	}
+	return updated
 }
 
 func CombineResults(cfg config.Config, input rec.ProcessInput, inputResults []rec.RecogniserResponse, includeOriginalResponses bool) (rec.ProcessResponse, error) {
@@ -181,8 +216,9 @@ func CombineResults(cfg config.Config, input rec.ProcessInput, inputResults []re
 		totalConf += roundConfidence(res.Confidence)
 	}
 	// re-compute conf relative to the sum of weights
-	var propertyConfs = make(map[string]float64)
 	var totalConfs = make(map[string]float64) // result string => sum of confidence measures for responses with this result
+	// ... and save property confs for later use
+	var propertyConfs = make(map[string]float64)
 	for i, res := range convertedResults {
 		newConf := 0.0
 		if totalConf > 0 {
@@ -200,37 +236,9 @@ func CombineResults(cfg config.Config, input rec.ProcessInput, inputResults []re
 		}
 		log.Printf("CombineResults %v", res)
 	}
-	log.Printf("propertyConfs: %v", propertyConfs)
-	// recalculate conf for properties
-	for res, conf := range totalConfs {
-		if isVowel(res) {
-			totalConfs[res] = conf + propertyConfs["_vowel_"]
-			totalConfs["_vowel_"] = totalConfs["_vowel_"] + conf
-		}
-		if isCons(res) {
-			totalConfs[res] = conf + propertyConfs["_cons_"]
-			totalConfs["_cons_"] = totalConfs["_cons_"] + conf
-		}
-		if isChar(res) {
-			totalConfs[res] = conf + propertyConfs["_char_"]
-			totalConfs["_char_"] = totalConfs["_char_"] + conf
-		}
-		if isWord(res) {
-			totalConfs[res] = conf + propertyConfs["_word_"]
-			totalConfs["_word_"] = totalConfs["_word_"] + conf
-		}
-		if isVoiced(res) {
-			totalConfs[res] = conf + propertyConfs["_voiced_"]
-			totalConfs["_voiced_"] = totalConfs["_voiced_"] + conf
-		}
-		if isDevoiced(res) {
-			totalConfs[res] = conf + propertyConfs["_devoiced_"]
-			totalConfs["_devoiced_"] = totalConfs["_devoiced_"] + conf
-		}
+	if usePropertyConfs {
+		totalConfs = updatePropertyConfs(totalConfs, propertyConfs)
 	}
-
-	// TODO: update confs for properties
-
 	if resErr != nil {
 		return rec.ProcessResponse{}, nil
 	}

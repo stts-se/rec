@@ -1,6 +1,7 @@
 # rec
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/stts-se/rec)](https://goreportcard.com/report/github.com/stts-se/rec)
+[![Go Report Card](https://goreportcard.com/badge/github.com/stts-se/rec)](https://goreportcard.com/report/github.com/stts-se/rec)  [![Build Status](https://travis-ci.org/stts-se/rec.svg?branch=master)](https://travis-ci.org/stts-se/rec)
+
 
 Tiny demo server for capturing microphone sound via browser (Chrome, Firefox only) 
 

@@ -18,9 +18,12 @@ navigator.getUserMedia = (navigator.getUserMedia ||
                           navigator.mozGetUserMedia ||
                           navigator.msGetUserMedia);
 
+navigator.mediaDevices.getUserMedia = (navigator.mediaDevices.getUserMedia ||
+					navigator.mediaDevices.webkitGetUserMedia ||
+					navigator.mediaDevices.mozGetUserMedia ||
+					navigator.mediaDevices.msGetUserMedia);
 
-// //
-// //
+
 
 
 let recButton, stopButton, sendButton, getAudioButton, prevButton, nextButton;
@@ -28,7 +31,7 @@ let baseURL = window.location.origin +"/rec";
 console.log(baseURL);
 var currentBlob;
 var recorder;
-var wavesurfer;
+// var wavesurfer;
 
 window.onload = function () {
 
@@ -83,8 +86,12 @@ window.onload = function () {
 	
 	recorder.onstop = function(evt) {}
     });
-
-    initWavesurferJS();
+    navigator.mediaDevices.getUserMedia({'audio': true, video: false}).catch(function(err) {
+	console.log(err);
+	alert(err);
+    });
+    
+    //initWavesurferJS();
 
     // TODO Remove temporary initialization
     prevButton.click();
@@ -303,17 +310,17 @@ function clearResponse() {
     document.getElementById("response").innerHTML = "";
 }
 
-function showJSAudioPane() {
-    console.log("showJSAudioPane()");
-    ele = document.getElementById("js-wavesurfer");
-    ele.style.visibility = "visible";
-}
+// function showJSAudioPane() {
+//     console.log("showJSAudioPane()");
+//     ele = document.getElementById("js-wavesurfer");
+//     ele.style.visibility = "visible";
+// }
 
-function hideJSAudioPane() {
-    console.log("hideJSAudioPane()");
-    ele = document.getElementById("js-wavesurfer");
-    ele.style.visibility = "hidden";
-}
+// function hideJSAudioPane() {
+//     console.log("hideJSAudioPane()");
+//     ele = document.getElementById("js-wavesurfer");
+//     ele.style.visibility = "hidden";
+// }
 
 
 function updateAudio(blob) {
@@ -342,7 +349,7 @@ function uint8ArrayToArrayBuffer(input) {
 function getAudio() {
 
     console.log("getAudio()");
-    hideJSAudioPane();
+    //hideJSAudioPane();
     
     let userName = document.getElementById('username2').value;
     let utteranceID = document.getElementById('recording_id2').value;
@@ -377,7 +384,7 @@ function getAudio() {
 	console.log("getAudio onloadend")
 	//audio.play();
 
-	wavesurfer.loadBlob(blob);
+	//wavesurfer.loadBlob(blob);
     };
     
     xhr.send();

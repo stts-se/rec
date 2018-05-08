@@ -12,21 +12,23 @@
 	{
 	    "name": "elexia_503_20180412",
 	    "type": "tensorflow",
-	    "disabled": true,
-	    "cmd": "http://localhost:8808/classify?audio_file={wavfile}",
+	    "cmd": "http://localhost:8809/rec/elexia_503_20180412?audio_file={wavfile}"
+	},
+	{
+	    "name": "nst_chars_20180410",
+	    "type": "tensorflow",
+	    "cmd": "http://localhost:8809/rec/nst_chars_20180410?audio_file={wavfile}",
 	    "weights": {
-		"output:_silence_": 1.0
+		"input:_word_": 0.0
 	    }
 	},
 	{
-	    "name": "nst_chars_20181410",
+	    "name": "nst_chars_soundtype_20180411",
 	    "type": "tensorflow",
 	    "disabled": true,
-	    "cmd": "http://localhost:8809/classify?audio_file={wavfile}",
+	    "cmd": "http://localhost:8809/nst_chars_soundtype_20180411(rec?audio_file={wavfile}",
 	    "weights": {
-		"input:_char_": 1.0,
-		"output:_silence_": 1.0,
-		"default": 0.0
+		"input:_word_": 0.0
 	    }
 	},
 	{

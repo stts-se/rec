@@ -14,6 +14,7 @@ var MyConfig Config
 var Tensorflow = "tensorflow"
 var TensorflowCmd = "tensorflow_cmd"
 var PocketSphinx = "pocketsphinx"
+var PocketSphinxElexia = "pocketsphinx_elexia"
 var KaldiGStreamer = "kaldigstreamer"
 
 type Recogniser struct {
@@ -44,6 +45,7 @@ func (cfg Config) test() error {
 		case TensorflowCmd:
 		case KaldiGStreamer:
 		case PocketSphinx:
+		case PocketSphinxElexia:
 		default:
 			return fmt.Errorf("invalid recogniser type: %s", rc.Type)
 		}

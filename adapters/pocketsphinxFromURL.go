@@ -16,51 +16,11 @@ import (
 	"github.com/stts-se/rec/config"
 )
 
-// func runExternalPocketsphinxDecoder(wavFilePath string, input rec.ProcessInput) (rec.ProcessResponse, error) {
-
-// 	panic("runExternalPocketsphinxDecoder is deprecated")
-
-// 	methodName := "pocketsphinx"
-// 	res := rec.ProcessResponse{RecordingID: input.RecordingID}
-
-// 	_, pErr := exec.LookPath("python")
-// 	if pErr != nil {
-// 		log.Printf("[%s] failure : %v\n", name, pErr)
-// 		return res, fmt.Errorf("failed to find the external 'python' command : %v", pErr)
-// 	}
-
-// 	cmd := exec.Command("python3", "/home/hanna/git_repos/e-lexia/pocketsphinx/demo_client.py", wavFilePath)
-// 	var out bytes.Buffer
-// 	var sterr bytes.Buffer
-// 	cmd.Stdout = &out
-// 	cmd.Stderr = &sterr
-
-// 	err := cmd.Run()
-// 	if err != nil {
-// 		log.Printf("failure: %v\n", err /*sterr.String()*/)
-// 		log.Printf("stderr: %v", sterr.String())
-// 		return res, fmt.Errorf("runExternalPocketsphinxDecoder failed running '%s': %v\n", cmd.Path, err)
-
-// 	}
-
-// 	log.Printf("RecognitionResult: %s\n", out.String())
-// 	text := strings.TrimSpace(out.String())
-// 	if len(text) > 0 {
-// 		res.RecognitionResult = text
-// 		res.Ok = true
-// 	} else {
-// 		res.Ok = false
-// 	}
-// 	msg := "Recognised by external pocketsphinx recogniser"
-// 	res.Message = fmt.Sprintf("[%s] %s", methodName, msg)
-// 	return res, nil
-// }
-
 type sphinxResp struct {
 	RecognisedUtterance string `json:"recognised_utterance"`
 }
 
-func pocketSphinxMapText(s0 string) string {
+func pocketsphinxMapElexia(s0 string) string {
 	s := strings.TrimSpace(strings.Replace(s0, ".", "", -1))
 	if s == "" {
 		return "_silence_"
@@ -72,7 +32,21 @@ func pocketSphinxMapText(s0 string) string {
 	return s
 }
 
-func CallExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.RecogniserResponse, error) {
+func RunElexiaPocketsphinxFromURL(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.RecogniserResponse, error) {
+	res, err := RunPocketsphinxFromURL(rc, wavFilePath, input)
+	if err != nil {
+		return res, err
+	}
+	recRes := res.RecognitionResult
+	text := pocketsphinxMapElexia(recRes)
+	if recRes != "" && text != recRes {
+		res.RecognitionResult = text
+		res.Message = fmt.Sprintf("original result: %s", recRes)
+	}
+	return res, err
+}
+
+func RunPocketsphinxFromURL(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.RecogniserResponse, error) {
 	name := rc.LongName()
 	url := rc.Cmd
 	res := rec.RecogniserResponse{RecordingID: input.RecordingID, Source: rc.LongName()}
@@ -139,12 +113,8 @@ func CallExternalPocketsphinxDecoderServer(rc config.Recogniser, wavFilePath str
 
 	recRes := strings.TrimSpace(sr.RecognisedUtterance)
 
-	text := pocketSphinxMapText(recRes)
-	if recRes != "" && text != recRes {
-		res.Message = fmt.Sprintf("original result: %s", recRes)
-	}
 	res.Status = true
-	res.RecognitionResult = text
+	res.RecognitionResult = recRes
 	res.Confidence = 1.0
 	log.Printf("[%s] RecognitionResult: %s\n", name, res.RecognitionResult)
 	return res, nil

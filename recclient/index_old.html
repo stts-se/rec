@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Rec</title>
+    
+    <style>
+      label { display: inline-block; width: 110px; }
+    </style>
+    
+    
+  </head>
+  <body>
+    
+    <p>
+      <em>This demo client works in Chrome and Firefox only (I think)</em>
+    </p>
+    <p>
+      Some rudimentary docs <a href="/rec/doc/">here</a>. <br>
+      
+    </p>
+    
+    <p>_____________________________________________________________</p>
+    
+    <p>
+      <label for="username">Username</label> <input id="username" name="username" type="text" value="user0001"><br>
+      <label for="recording_id">Recording ID</label>                 <span id="recording_id"></span><br>
+      <label for="text">Text to read</label>                         <span id="text"></span><br>
+      
+      <button id="prev_button" >Prev</button>          <button id="next_button">Next</button><br>
+      <span id="num"></span> <span style="color:blue" id="message"></span><br>
+    </p>
+    
+    
+    
+    <div class="wrapper">
+      <canvas class="visualizer" width="640" height="100"></canvas> 
+    </div>
+      
+    
+    <p>
+      
+      <button id="rec">rec</button>
+      <button id="stopandsend">stop/send</button>
+      
+      <progress id="rec_progress" value="0" max="5"></progress> (arbitrary max recording time, 5 secs)
+      
+    </p>
+    <p>
+      <audio id="audio" controls></audio>
+    </p>
+    
+    <p style="display:none">
+      <button id="send">send</button>
+      (sends audio to server) <br>
+    </p>
+
+    <p>_____________________________________________________________</p>
+    <details open="open">
+    <summary>Server response after send:</summary>
+    <p><pre id="response"></pre></p>
+    </details>
+    <p>_____________________________________________________________</p>
+    
+    Get audio back from server:
+    <p>
+      <label for="username2">Username</label> <input id="username2" type="text" value="user0001"><br>
+      <label for="recording_id2">Recording ID</label> <input id="recording_id2" type="text" value="rec_0001"><br>
+      <button id="get_audio">Get audio</button>
+
+      <span>
+<!-- 	<input id="get_audio_include_spectrogram" type="checkbox">include spectrogram from server</input> -->
+<!--	<input id="noise_red_spectrogram" type="checkbox" checked="checked">noise reduce spectrogram</input>-->
+      </span>
+      
+    </p>
+    
+    <p>
+      <audio id="audio_from_server" controls></audio>
+      <br/>
+
+      <div id="js-wavesurfer">
+	<!-- <div id="js-wavesurfer-spectrogram"> </div>-->
+	<div id="js-wavesurfer-timeline"></div>
+	<div id="js-wavesurfer-wav"></div>
+      </div>
+    </p>
+    
+    
+  </body>
+  
+  <script src="recclient/audio.js"></script>
+  <script src="recclient/recclient-old.js"></script>
+  <!--  <script src="recclient/vendor/spectrogram/spectrogram.js"></script>
+	<script src="recclient/vendor/spectrogram/chroma.js"></script>
+	<script src="recclient/vendor/spectrogram/audiobuffer-slice.js"></script> -->
+  
+<!--  <script src="recclient/vendor/wavesurfer-js/wavesurfer.min.js"></script>
+  <script src="recclient/vendor/wavesurfer-js/wavesurfer.spectrogram.min.js"></script>
+  <script src="recclient/vendor/wavesurfer-js/wavesurfer.timeline.min.js"></script>-->
+
+  <script src="recclient/vendor/jquery/3.1.0/jquery.min.js"></script>
+</html>
+

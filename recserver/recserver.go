@@ -16,6 +16,8 @@ import (
 
 	"github.com/gorilla/mux"
 
+	"github.com/google/uuid"
+
 	"github.com/stts-se/rec"
 	"github.com/stts-se/rec/adapters"
 	"github.com/stts-se/rec/aggregator"
@@ -44,6 +46,10 @@ func index(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "../recclient/index.html")
 }
 
+func indexOLD(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "../recclient/index_old.html")
+}
+
 const defaultExtension = "wav"
 
 func mimeType(ext string) string {
@@ -59,13 +65,12 @@ func checkProcessInput(input rec.ProcessInput) error {
 	if strings.TrimSpace(input.UserName) == "" {
 		errMsg = append(errMsg, "no value for 'username'")
 	}
-	if strings.TrimSpace(input.Text) == "" {
+	if strings.TrimSpace(input.Text) == "" && strings.TrimSpace(input.UserName) != "anon" {
 		errMsg = append(errMsg, "no value for 'text'")
 	}
 	if strings.TrimSpace(input.RecordingID) == "" {
 		errMsg = append(errMsg, "no value for 'recording_id'")
 	}
-
 	if len(input.Audio.Data) == 0 {
 		errMsg = append(errMsg, "no 'audio.data'")
 	}
@@ -152,6 +157,19 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 	}
 	if len(input.Weights) > 0 {
 		log.Printf("user set weights: %-v\n", input.Weights)
+	}
+
+	// anonymous user + undefined recording id => create an arbitrary recording id
+	if input.UserName == "anon" && strings.TrimSpace(input.RecordingID) == "" {
+		id, err := uuid.NewUUID()
+		if err != nil {
+			msg := fmt.Sprintf("couldn't generate uuid for empty recording id: %v", err)
+			log.Println("[recserver] " + msg)
+			log.Printf("[recserver] incoming JSON string : %s\n", string(body))
+			http.Error(w, msg, http.StatusBadRequest)
+			return
+		}
+		input.RecordingID = id.String()
 	}
 
 	err = checkProcessInput(input)
@@ -494,6 +512,7 @@ func main() {
 	r := mux.NewRouter()
 	r.StrictSlash(true)
 	r.HandleFunc("/rec/", index)
+	r.HandleFunc("/rec/old", indexOLD)
 	r.HandleFunc("/rec/process/", process).Methods("POST", "OPTIONS")
 	docs["/rec/process/"] = "send param verb=true for verbose response"
 

@@ -26,28 +26,17 @@ navigator.getUserMedia = (navigator.getUserMedia ||
 
 
 
-let recButton, stopButton, sendButton, getAudioButton, prevButton, nextButton;
+let recButton, stopAndSendButton, /*stopButton,*/ getAudioButton, sendButton;
 let baseURL = window.location.origin +"/rec";
 console.log(baseURL);
 var currentBlob;
 var recorder;
 // var wavesurfer;
+let user = "anon";
 
 window.onload = function () {
 
     var url = new URL(document.URL);
-    var user = url.searchParams.get('username');
-    if (user != null && user != "") {
-	document.getElementById('username').setAttribute('value',user);
-	document.getElementById('username2').setAttribute('value',user);
-	console.log("Setting user", user);
-    }
-    
-    prevButton  = document.getElementById('prev_button');
-    prevButton.addEventListener('click', getPrev)
-    
-    nextButton  = document.getElementById('next_button');
-    nextButton.addEventListener('click', getNext)
     
     recButton = document.getElementById('rec');
     recButton.addEventListener('click', startRecording);
@@ -57,23 +46,10 @@ window.onload = function () {
     // stopButton.addEventListener('click', stopRecording);
     // stopButton.disabled = true;
     
-    stopButton = document.getElementById('stopandsend');
-    stopButton.addEventListener('click', function() {
-	stopRecording();
-    });
-    stopButton.disabled = true;
+    stopAndSendButton = document.getElementById('stopandsend');
+    stopAndSendButton.addEventListener('click', stopAndSend);
+    stopAndSendButton.disabled = true;
     
-    // stop+send not used as separate buttons, instead see stopButton also sends to server
-    sendButton = document.getElementById('send');
-    sendButton.addEventListener('click', sendAndReceiveBlob);
-    sendButton.disabled = true;
-
-    getAudioButton = document.getElementById('get_audio');
-    getAudioButton.addEventListener('click', function() {
-	getAudio();
-    });
-
-
     console.log("navigator.mediaDevices:", navigator.mediaDevices);
     mediaAccess = navigator.mediaDevices.getUserMedia({'audio': true, video: false});
     console.log("navigator.mediaDevices.getUserMedia:", mediaAccess);
@@ -98,109 +74,7 @@ window.onload = function () {
 	alert("Couldn't initialize recorder: " + err);
     });
 
-    //initWavesurferJS();
-
-    // TODO Remove temporary initialization
-    prevButton.click();
-
-    // getAudioButton.click(); HL using this for quicker dev with spectrograms
 };
-
-
-function getPrev() {
-
-    document.getElementById("message").innerHTML = "";
-    document.getElementById("num").innerHTML = "";
-    
-    // TODO Error check user name
-    
-    let userName = document.getElementById('username').value
-    
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", baseURL + "/get_previous_utterance/" + userName , true);
-
-    
-    // TODO error handling
-    
-    
-    xhr.onloadend = function () {
-
-	let resp = JSON.parse(xhr.response);
-	
-	document.getElementById("recording_id").innerHTML = resp.recording_id;
-	document.getElementById("recording_id2").setAttribute('value',resp.recording_id);
-	document.getElementById("text").innerHTML = resp.text;
-	document.getElementById("num").innerHTML = resp.num +"/"+ resp.of;
-	document.getElementById("message").innerHTML = resp.message;
-    };
-
-    xhr.send();
-
-}
-
-function initWavesurferJS() {
-    // https://wavesurfer-js.org/doc/class/src/plugin/spectrogram.js~SpectrogramPlugin.html
-    wavesurfer = WaveSurfer.create({
-    	container: '#js-wavesurfer-wav',
-    	waveColor: '#6699FF',
-    	progressColor: '#517acc', //'#46B54D',
-    	labels: true,
-    	controls: true,
-    });
-    
-    wavesurfer.on('ready', function () {
-    	//console.log("wavesurfer.js sample rate", wavesurfer.backend.ac.sampleRate);
-    	// var spectrogram = Object.create(WaveSurfer.Spectrogram);
-    	// spectrogram.init({
-    	//     wavesurfer: wavesurfer,
-    	//     container: "#js-wavesurfer-spectrogram",
-    	//     labels: true,
-    	// });
-    	var timeline = Object.create(WaveSurfer.Timeline);
-    	timeline.init({
-            wavesurfer: wavesurfer,
-            container: "#js-wavesurfer-timeline",
-    	    labels: true,
-    	});
-    	wavesurfer.play();
-    });
-
-    let maxWidth = "max-width: 1244px";
-    document.getElementById("js-wavesurfer").setAttribute("style", maxWidth);
-    document.getElementById("js-wavesurfer-wav").setAttribute("style", maxWidth);
-    //document.getElementById("js-wavesurfer-spectrogram").setAttribute("style", maxWidth);
-    document.getElementById("js-wavesurfer-timeline").setAttribute("style", maxWidth);
-}
-
-function getNext() {
-
-    document.getElementById("num").innerHTML = "";
-    document.getElementById("message").innerHTML = "";
-    
-    // TODO Error check user name
-
-    let userName = document.getElementById('username').value
-    
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", baseURL + "/get_next_utterance/" + userName , true);
-
-    
-    // TODO error handling
-    
-    
-    xhr.onloadend = function () {
-	
-	let resp = JSON.parse(xhr.response);
-	
-	document.getElementById("recording_id").innerHTML = resp.recording_id;
-	document.getElementById("text").innerHTML = resp.text;
-	document.getElementById("num").innerHTML = resp.num +"/"+ resp.of;
-	document.getElementById("message").innerHTML = resp.message;
-    };
-    
-    xhr.send();
-    
-}
 
 function startRecording() {
 
@@ -214,23 +88,37 @@ function startRecording() {
     // TODO set max recording time limit
     
     recButton.disabled = true;
-    stopButton.disabled = false;
-    sendButton.disabled = true;
+    // stopButton.disabled = false;
+    stopAndSendButton.disabled = false;
     recorder.start();
 
     clearResponse();
     countDown();
 }
-function stopRecording() {
-    console.log("stopRecording()");
+// function stopRecording() {
+//     console.log("stopRecording()");
+
+//     recButton.disabled = false;
+    
+//     // make MediaRecorder stop recording
+//     // eventually this will trigger the dataavailable event
+//     recorder.cancel();
+//     stopAndSendButton.disabled = false;
+//     // stopButton.disabled = false;
+//     clearInterval(setIntFunc);
+//     document.getElementById("rec_progress").value = "0";
+// }
+
+function stopAndSend() {
+    console.log("stopAndSend()");
 
     recButton.disabled = false;
-    stopButton.disabled = true;
     
     // make MediaRecorder stop recording
     // eventually this will trigger the dataavailable event
     recorder.stop();
-    sendButton.disabled = false;
+    stopAndSendButton.disabled = true;
+    // stopButton.disabled = false;
     clearInterval(setIntFunc);
     document.getElementById("rec_progress").value = "0";
 }
@@ -252,7 +140,7 @@ function countDown() {
 	
 	if (dur > max + 1) {
 	    clearInterval(setIntFunc);
-	    stopButton.click();
+	    stopAndSendButton.click();
 	};
 	
     }, tick);
@@ -266,7 +154,7 @@ function sendAndReceiveBlob() {
     var onLoadEndFunc = function (data) {
 	//console.log("onLoadEndFunc data ", data);
 	clearResponse(); // originally called before sending
-	sendButton.disabled = true; // originally called after sendJSON
+	stopAndSendButton.disabled = true; // originally called after sendJSON
 	console.log("onLoadEndFunc|STATUS : "+ data.target.status + "/" + data.target.statusText);
 	console.log("onLoadEndFunc|RESPONSE : "+ data.target.responseText);
 	if (data.target.status === 200) {
@@ -277,9 +165,9 @@ function sendAndReceiveBlob() {
     };
 
     AUDIO.sendBlob(currentBlob,
-	     document.getElementById("username").value,
-	     document.getElementById("text").innerHTML,
-	     document.getElementById("recording_id").innerHTML,
+	     user,
+	     "", // input text
+	     "", // rec id
 	     onLoadEndFunc);
 }
 
@@ -348,7 +236,6 @@ function updateAudio(blob) {
     // use the blob from the MediaRecorder as source for the audio tag
     audio.src = URL.createObjectURL(blob);
 
-    //sendButton.disabled = false;
 };
 
 function uint8ArrayToArrayBuffer(input) {
@@ -459,7 +346,7 @@ function visualize() {
 	
 	// Only draw frequency bars when recording
 	// When recording, the stop button is enabled 
-	if (stopButton.disabled === false) { 
+	if (stopAndSendButton.disabled === false) { 
 	    for(var i = 0; i < bufferLengthAlt; i++) {
 		barHeight = dataArrayAlt[i];
 		

@@ -99,10 +99,13 @@ func AddUser(baseDir, userName string) error {
 	log.Printf("[admin] Created folder %s for user %s", userDirName, userName)
 
 	// create default utterance list
-	uttFile := filepath.Join(userDirName, "test_utterances.utt")
-	err = ioutil.WriteFile(uttFile, []byte(defaultTestUtterances), 0644)
-	if err != nil {
-		return fmt.Errorf("couldn't create default utterance file %s for user '%s'", uttFile, userName)
+	// TODO: refactoring
+	if userName != "anon" {
+		uttFile := filepath.Join(userDirName, "test_utterances.utt")
+		err = ioutil.WriteFile(uttFile, []byte(defaultTestUtterances), 0644)
+		if err != nil {
+			return fmt.Errorf("couldn't create default utterance file %s for user '%s'", uttFile, userName)
+		}
 	}
 
 	return nil

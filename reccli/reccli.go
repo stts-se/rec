@@ -31,9 +31,9 @@ func main() {
 	var cmdName = "reccli"
 	var flagUserName, flagRecordingID, flagURL, flagText, flagWeights string
 	flag.StringVar(&flagURL, "url", "http://localhost:9993/rec/process/?verb=true", "URL for calling rec server.")
-	flag.StringVar(&flagUserName, "u", "tmpuser0", "user name to be sent to server along with sound file.")
-	flag.StringVar(&flagRecordingID, "r", "tmprecid0", "recording ID to be sent to server along with sound file.")
-	flag.StringVar(&flagText, "t", "DUMMY_TEXT0", "text to be sent to server along with sound file.")
+	flag.StringVar(&flagUserName, "u", "anon", "user name to be sent to server along with sound file.")
+	flag.StringVar(&flagRecordingID, "r", "", "recording ID to be sent to server along with sound file.")
+	flag.StringVar(&flagText, "t", "", "text to be sent to server along with sound file.")
 	flag.StringVar(&flagWeights, "w", "", "user defined weights for recognisers (&-separated list: NAME1=WEIGHT1&NAME2=WRIGHT2).")
 
 	flag.Parse()

@@ -27,7 +27,7 @@ func Test_PR_PrettyJSON(t *testing.T) {
 				RecognitionResult: "bi",
 				RecordingID:       "tmprecid0",
 				Message:           "",
-				Source:            "tensorflow_cmd|elexia_503_20180412",
+				Source:            "tensorflow_cmd|nst_test",
 			},
 			RecogniserResponse{
 				Status: true,
@@ -60,7 +60,7 @@ func Test_PR_PrettyJSON(t *testing.T) {
 			"recognition_result": "bi",
 			"recording_id": "tmprecid0",
 			"message": "",
-			"source": "tensorflow_cmd|elexia_503_20180412"
+			"source": "tensorflow_cmd|nst_test"
 		},
 		{
 			"status": true,

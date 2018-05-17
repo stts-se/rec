@@ -252,8 +252,8 @@ func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, index in
 		res, err = adapters.RunGStreamerKaldiFromURL(rc, wavFilePath, input)
 	case config.PocketSphinx:
 		res, err = adapters.RunPocketsphinxFromURL(rc, wavFilePath, input)
-	case config.PocketSphinxElexia:
-		res, err = adapters.RunElexiaPocketsphinxFromURL(rc, wavFilePath, input)
+	case config.PocketSphinxWithFilter:
+		res, err = adapters.RunPocketsphinxWithFilterFromURL(rc, wavFilePath, input)
 	default:
 		err = fmt.Errorf("unknown recogniser type: %s", rc.Type)
 	}

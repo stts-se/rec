@@ -20,7 +20,7 @@ type sphinxResp struct {
 	RecognisedUtterance string `json:"recognised_utterance"`
 }
 
-func pocketsphinxMapElexia(s0 string) string {
+func pocketsphinxFilter(s0 string) string {
 	s := strings.TrimSpace(strings.Replace(s0, ".", "", -1))
 	if s == "" {
 		return "_silence_"
@@ -32,13 +32,13 @@ func pocketsphinxMapElexia(s0 string) string {
 	return s
 }
 
-func RunElexiaPocketsphinxFromURL(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.RecogniserResponse, error) {
+func RunPocketsphinxWithFilterFromURL(rc config.Recogniser, wavFilePath string, input rec.ProcessInput) (rec.RecogniserResponse, error) {
 	res, err := RunPocketsphinxFromURL(rc, wavFilePath, input)
 	if err != nil {
 		return res, err
 	}
 	recRes := res.RecognitionResult
-	text := pocketsphinxMapElexia(recRes)
+	text := pocketsphinxFilter(recRes)
 	if recRes != "" && text != recRes {
 		res.RecognitionResult = text
 		res.Message = fmt.Sprintf("original result: %s", recRes)

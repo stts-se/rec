@@ -14,7 +14,7 @@ var MyConfig Config
 var Tensorflow = "tensorflow"
 var TensorflowCmd = "tensorflow_cmd"
 var PocketSphinx = "pocketsphinx"
-var PocketSphinxElexia = "pocketsphinx_elexia"
+var PocketSphinxWithFilter = "pocketsphinx_withfilter"
 var KaldiGStreamer = "kaldigstreamer"
 
 type Recogniser struct {
@@ -45,7 +45,7 @@ func (cfg Config) test() error {
 		case TensorflowCmd:
 		case KaldiGStreamer:
 		case PocketSphinx:
-		case PocketSphinxElexia:
+		case PocketSphinxWithFilter:
 		default:
 			return fmt.Errorf("invalid recogniser type: %s", rc.Type)
 		}
@@ -102,7 +102,7 @@ func (cfg Config) PrettyString() string {
 	return string(prettyBody.Bytes())
 }
 
-// LongName returns cfg.Type <vertical bar> cfg.Name, e.g. pocketsphinx|elexia_448/9999
+// LongName returns cfg.Type <vertical bar> cfg.Name, e.g. pocketsphinx|nst_chars
 func (rec Recogniser) LongName() string {
 	return fmt.Sprintf("%s|%s", rec.Type, rec.Name)
 }

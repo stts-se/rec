@@ -33,17 +33,17 @@
 	},
 	{
 	    "name": "nst_46912",
-	    "type": "pocketsphinx",
+	    "type": "pocketsphinx_withfilter",
 	    "cmd": "http://localhost:8000/rec/nst_46912?audio_file={wavfile}"
 	},
 	{
 	    "name": "nst_46912_adapted_467",
-	    "type": "pocketsphinx",
+	    "type": "pocketsphinx_withfilter",
 	    "cmd": "http://localhost:8000/rec/nst_46912_adapted_467?audio_file={wavfile}"
 	},
 	{
 	    "name": "nst_173155_full_lm",
-	    "type": "pocketsphinx_elexia",
+	    "type": "pocketsphinx_withfilter",
 	    "cmd": "http://localhost:8000/rec/nst_173155_full_lm?audio_file={wavfile}",
 	    "weights": {
 		"input:_char_": 0.0,
@@ -54,7 +54,7 @@
 	},
 	{
 	    "name": "elexia_448",
-	    "type": "pocketsphinx",
+	    "type": "pocketsphinx_withfilter",
 	    "cmd": "http://localhost:8000/rec/elexia_448/?audio_file={wavfile}"
 	}
     ]

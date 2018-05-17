@@ -39,8 +39,8 @@ func RunPocketsphinxWithFilterFromURL(rc config.Recogniser, wavFilePath string, 
 	}
 	recRes := res.RecognitionResult
 	text := pocketsphinxFilter(recRes)
+	res.RecognitionResult = text
 	if recRes != "" && text != recRes {
-		res.RecognitionResult = text
 		res.Message = fmt.Sprintf("original result: %s", recRes)
 	}
 	return res, err

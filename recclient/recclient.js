@@ -27,7 +27,8 @@ navigator.getUserMedia = (navigator.getUserMedia ||
 
 
 let recButton, stopAndSendButton, /*stopButton,*/ getAudioButton, sendButton;
-let baseURL = window.location.origin +"/rec";
+let baseURL = window.location.origin +"/rec"; // TODO: should probably be : let baseURL = window.location.protocol + '//' + window.location.host + window.location.pathname.replace(/\/$/g,"");
+
 console.log(baseURL);
 var currentBlob;
 var recorder;

@@ -268,6 +268,21 @@ func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, index in
 
 // runs parallell calls (using chan)
 func analyzeAudio(audioFile string, input rec.ProcessInput, verbMode bool, failOnRecogError bool) (rec.ProcessResponse, error) {
+
+	if len(config.MyConfig.EnabledRecognisers()) == 0 {
+		message := "no enabled recognisers exist"
+		if len(config.MyConfig.Recognisers) == 0 {
+			message = "no recognisers defined"
+		}
+		empty := rec.ProcessResponse{
+			Ok:                false,
+			RecordingID:       input.RecordingID,
+			Message:           message,
+			RecognitionResult: "",
+		}
+		return empty, nil
+	}
+
 	var accres = make(chan recresforchan)
 	var n = 0
 	for index, rc := range config.MyConfig.EnabledRecognisers() {
@@ -460,10 +475,6 @@ func main() {
 	cfg, cErr := config.NewConfig(cfgFile)
 	if cErr != nil {
 		log.Printf("Exiting. Failed to read config file : %v", cErr)
-		os.Exit(1)
-	}
-	if len(cfg.Recognisers) == 0 {
-		log.Printf("Exiting. No recognisers defined in config file : %s", cfgFile)
 		os.Exit(1)
 	}
 	config.MyConfig = cfg

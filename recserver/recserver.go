@@ -50,6 +50,10 @@ func indexOLD(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "../recclient/index_old.html")
 }
 
+func indexHBTest(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "../recclient/index_hbtest.html")
+}
+
 const defaultExtension = "wav"
 
 func mimeType(ext string) string {
@@ -524,6 +528,7 @@ func main() {
 	r.StrictSlash(true)
 	r.HandleFunc("/rec/", index)
 	r.HandleFunc("/rec/old", indexOLD)
+	r.HandleFunc("/rec/hbtest", indexHBTest)
 	r.HandleFunc("/rec/process/", process).Methods("POST", "OPTIONS")
 	docs["/rec/process/"] = "send param verb=true for verbose response"
 

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Rec</title>
+    
+    <style type="text/css">
+    .hide { display: none }
+
+    #text {
+	color:green;
+	font-size: 500%;
+	text-align: center;
+    }
+
+      #prev_next { color: blue; font-size: 200% }
+            
+      #rec {
+      height: 10em;
+      width: 10em;
+      cursor: pointer;
+      /*border: none;*/
+      border-radius: 50%;
+      background: white;
+	  outline: none;	  
+      }
+
+    .center {
+	margin: auto;
+	width: 50%;
+	border: none;
+	//border: 1px solid green;
+	padding: 10px;
+    }      
+
+    #rec {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+    }
+    .visualizer {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+    }
+
+    </style>    
+    
+  </head>
+  <body>
+
+    <!--
+go run *.go ../config/config-sample-empty.json
+put utterance list in recserver/audio_dir/hb/test_utterances.utt
+http://localhost:9993/rec/hbtest?username=hb
+-->
+
+    <div id="info" class="hide">
+      <input type="text" id="username" value="defaultUser">
+      <div id="recording_id"></div>
+    </div>
+    
+    <div id="text" class="center"></div>
+
+    <div id="prev_next" class="hide">
+      <button id="prev_button" >Prev</button>
+      <button id="next_button">Next</button><br>
+      <div>
+	<span id="num"></span> <span style="color:blue" id="message"></span>
+      </div>
+    </div>
+    
+    <div class="wrapper center">
+      <canvas class="visualizer" width="640" height="100"></canvas> 
+    </div>
+          
+    <div id="buttons" class="center">
+      <button id="rec" type="button" onclick="switchState()">
+      </button>
+    </div>
+
+
+    <button id="stopandsend" class="hide">stop/send</button>      
+
+    <div id="rec_progress_div" class="hide">
+      <progress id="rec_progress" value="0" max="5"></progress> (arbitrary max recording time, 5 secs)
+    </div>
+
+    <div id="audio_wrapper" class="hide">
+      <audio id="audio" controls></audio>
+    </div>
+    
+    <p style="display:none">
+      <button id="send">send</button>
+      (sends audio to server) <br>
+    </p>
+
+
+    <div id="server_response" class="hide">
+      <p>_____________________________________________________________</p>
+      <details open="open">
+	<summary>Server response after send:</summary>
+	<p><pre id="response"></pre></p>
+      </details>
+      <p>_____________________________________________________________</p>
+      
+      Get audio back from server:
+      <p>
+	<label for="username2">Username</label> <input id="username2" type="text" value="user0001"><br>
+	<label for="recording_id2">Recording ID</label> <input id="recording_id2" type="text" value="rec_0001"><br>
+	<button id="get_audio">Get audio</button>	
+      </p>
+    
+      <p>
+	<audio id="audio_from_server" controls></audio>
+	<br/>
+	
+	<div id="js-wavesurfer">
+	  <div id="js-wavesurfer-timeline"></div>
+	  <div id="js-wavesurfer-wav"></div>
+	</div>
+      </p>
+    </div>
+
+
+
+        <div id="button_images" class="hide">
+      <div id="rec_image">
+	<svg width="29" height="28" viewBox="0 0 29 28">
+	  <defs>
+	    <path id="mic-path42" d="M9.333 18.667A4.68 4.68 0 0 0 14 14V4.667A4.68 4.68 0 0 0 9.333 0a4.68 4.68 0 0 0-4.666 4.667V14a4.68 4.68 0 0 0 4.666 4.667zM7 4.667a2.34 2.34 0 0 1 2.333-2.334 2.34 2.34 0 0 1 2.334 2.334V14a2.34 2.34 0 0 1-2.334 2.333A2.34 2.34 0 0 1 7 14V4.667zm11.667 7V14c0 4.783-3.617 8.633-8.167 9.217v2.45H14c.7 0 1.167.466 1.167 1.166S14.7 28 14 28H4.667c-.7 0-1.167-.467-1.167-1.167s.467-1.166 1.167-1.166h3.5v-2.45C3.617 22.633 0 18.667 0 14v-2.333c0-.7.467-1.167 1.167-1.167s1.166.467 1.166 1.167V14c0 3.85 3.15 7 7 7s7-3.15 7-7v-2.333c0-.7.467-1.167 1.167-1.167s1.167.467 1.167 1.167z">
+	    </path>
+	  </defs>
+	  <g fill="none" fill-rule="evenodd" transform="translate(5)">
+	    <mask id="mic-mask42" fill="#fff">
+	      <use xlink:href="#mic-path42"></use>
+	    </mask>
+	    <g fill="#FF4F5E" mask="url(#mic-mask42)">
+	      <path d="M-5 0h28v28H-5z"></path>
+	    </g>
+	  </g>
+	</svg>
+      </div>
+      <div id="stop_image">
+	<svg width="28" height="28" viewBox="0 0 28 28">
+	  <defs>
+	    <path id="stop-path2" d="M19.833 0H3.5C1.517 0 0 1.517 0 3.5v16.333c0 1.984 1.517 3.5 3.5 3.5h16.333c1.984 0 3.5-1.516 3.5-3.5V3.5c0-1.983-1.516-3.5-3.5-3.5zM21 19.833c0 .7-.467 1.167-1.167 1.167H3.5c-.7 0-1.167-.467-1.167-1.167V3.5c0-.7.467-1.167 1.167-1.167h16.333c.7 0 1.167.467 1.167 1.167v16.333z"></path>
+	  </defs>
+	  <g fill="none" fill-rule="evenodd" transform="translate(2.333 2.333)">
+	    <mask id="stop-mask2" fill="#fff">
+	      <use xlink:href="#stop-path2"></use>
+	    </mask>
+	    <g fill="#FF4F5E" mask="url(#stop-mask2)">
+	      <path d="M-2.333-2.333h28v28h-28z"></path>
+	    </g>
+	  </g>
+	</svg>
+      </div>
+    </div>
+
+
+
+    
+  </body>
+  
+  <script src="recclient/audio.js"></script>
+  <script src="recclient/recclient-old.js"></script>
+  <script src="recclient/vendor/jquery/3.1.0/jquery.min.js"></script>
+
+  <script type="text/javascript">
+
+function showRecImage() {
+    state = "stopped";
+    var image_name = "rec_image"
+    console.log(image_name);
+    
+    var button = document.getElementById("rec");
+    console.log(document.getElementById(image_name));
+    var svg = document.getElementById(image_name).innerHTML;
+    console.log(svg);
+    button.innerHTML = svg;
+    
+}
+
+function switchState() {
+    console.log("called switchState");
+    var button = document.getElementById("rec");
+    if ( state == "stopped" ) {
+	state = "recording";
+	image_name = "stop_image";
+	startRecording();
+
+	//to reset things set in recclient_old.js
+	button.removeEventListener('click', startRecording);
+	recButton.disabled = false;
+	
+	console.log("RECORDING STARTED");
+    } else {
+	state = "stopped";
+	image_name = "rec_image";
+	stopRecording();
+	console.log("RECORDING STOPPED");
+	var next_button = document.getElementById("next_button");
+	next_button.click()
+
+    }
+    console.log(document.getElementById(image_name));
+    var svg = document.getElementById(image_name).innerHTML;
+    //console.log(svg);
+    button.innerHTML = svg;        
+}
+
+      
+showRecImage();
+
+document.onkeydown = function() {myFunction(event)};
+
+function myFunction(event) {
+    if (event.keyCode==32){
+        event.preventDefault();
+	switchState();
+    }
+}
+
+
+  </script>
+
+</html>
+

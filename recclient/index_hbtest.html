@@ -15,11 +15,11 @@
 
       #prev_next { color: blue; font-size: 200% }
             
-      #rec {
+      button {
       height: 10em;
       width: 10em;
       cursor: pointer;
-      /*border: none;*/
+      border: none;
       border-radius: 50%;
       background: white;
 	  outline: none;	  
@@ -33,17 +33,27 @@
 	padding: 10px;
     }      
 
-    #rec {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-    }
-    .visualizer {
+    .img-center {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
     }
 
+    #next_button {
+    float: right;
+    width: 10em;
+    height: 10em;
+    fill:green;
+    }
+    #prev_button {
+    /*float: left;*/
+    width: 10em;
+    height: 10em;
+    fill:green;
+    }
+
+    
+    
     </style>    
     
   </head>
@@ -61,35 +71,37 @@ http://localhost:9993/rec/hbtest?username=hb
     </div>
     
     <div id="text" class="center"></div>
-
-    <div id="prev_next" class="hide">
-      <button id="prev_button" >Prev</button>
-      <button id="next_button">Next</button><br>
-      <div>
-	<span id="num"></span> <span style="color:blue" id="message"></span>
-      </div>
-    </div>
     
     <div class="wrapper center">
-      <canvas class="visualizer" width="640" height="100"></canvas> 
+      <canvas class="visualizer img-center" width="640" height="100"></canvas> 
     </div>
-          
-    <div id="buttons" class="center">
-      <button id="rec" type="button" onclick="switchState()">
+    
+    <div id="buttons" class="center img-center">
+      <button id="rec" class="img-center" type="button" onclick="switchState()">
       </button>
     </div>
 
-
+    
     <button id="stopandsend" class="hide">stop/send</button>      
 
     <div id="rec_progress_div" class="hide">
       <progress id="rec_progress" value="0" max="5"></progress> (arbitrary max recording time, 5 secs)
     </div>
 
-    <div id="audio_wrapper" class="hide">
-      <audio id="audio" controls></audio>
+    <div id="audio_wrapper" class="center">
+      <audio id="audio" class="img-center" controls></audio>
     </div>
     
+    <div id="prev_next" class="center">
+      <button id="prev_button">Prev</button>
+      <button id="next_button">Next</button><br>
+
+      <div class="hide">
+	<span id="num"></span> <span style="color:blue" id="message"></span>
+      </div>
+    </div>
+
+
     <p style="display:none">
       <button id="send">send</button>
       (sends audio to server) <br>
@@ -141,6 +153,7 @@ http://localhost:9993/rec/hbtest?username=hb
 	  </g>
 	</svg>
       </div>
+      
       <div id="stop_image">
 	<svg width="28" height="28" viewBox="0 0 28 28">
 	  <defs>
@@ -156,7 +169,19 @@ http://localhost:9993/rec/hbtest?username=hb
 	  </g>
 	</svg>
       </div>
-    </div>
+
+      <div id="arrow-right">
+	<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 400 400">
+	  <path d="m20,15v31H0v88h20v31l130-75"/>
+	</svg>
+      </div>
+
+      <div id="arrow-left">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 400 400">
+<path d="m30,90 130-75v31h20v88h-20v31"/>
+</svg>
+      </div>
+      </div>
 
 
 
@@ -178,8 +203,24 @@ function showRecImage() {
     console.log(document.getElementById(image_name));
     var svg = document.getElementById(image_name).innerHTML;
     console.log(svg);
-    button.innerHTML = svg;
-    
+    button.innerHTML = svg;   
+}
+
+function showRightArrow() {
+    var image_name = "arrow-right";
+    var button = document.getElementById("next_button");
+    //console.log(document.getElementById(image_name));
+    var svg = document.getElementById(image_name).innerHTML;
+    //console.log(svg);
+    button.innerHTML = svg;   
+}
+function showLeftArrow() {
+    var image_name = "arrow-left";
+    var button = document.getElementById("prev_button");
+    //console.log(document.getElementById(image_name));
+    var svg = document.getElementById(image_name).innerHTML;
+    //console.log(svg);
+    button.innerHTML = svg;   
 }
 
 function switchState() {
@@ -212,6 +253,8 @@ function switchState() {
 
       
 showRecImage();
+showRightArrow();
+showLeftArrow();
 
 document.onkeydown = function() {myFunction(event)};
 

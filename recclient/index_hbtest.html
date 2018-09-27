@@ -256,10 +256,9 @@ showRecImage();
 showRightArrow();
 showLeftArrow();
 
-document.onkeydown = function() {myFunction(event)};
-
-function myFunction(event) {
-    if (event.keyCode==32){
+document.onkeydown = function(event) {
+    var keyCode = event.which || event.keyCode;
+    if (keyCode==32){
         event.preventDefault();
 	switchState();
     }

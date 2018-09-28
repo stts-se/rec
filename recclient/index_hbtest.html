@@ -17,6 +17,11 @@
 	font-size: 200%;
 	text-align: center;
     }
+    #utt_nr {
+	color:blue;
+	font-size: 200%;
+	text-align: center;
+    }
 
       #prev_next { color: blue; font-size: 200% }
             
@@ -73,6 +78,9 @@ http://localhost:9993/rec/hbtest?username=hb
     <div id="info" class="hide">
       <input type="text" id="username" value="defaultUser">
       <div id="recording_id"></div>
+    </div>
+    <div id="utt_nr">
+    <span id="num"></span> <span style="color:blue" id="message"></span><br>
     </div>
     
     <div id="text" class="center"></div>
@@ -142,6 +150,47 @@ http://localhost:9993/rec/hbtest?username=hb
 
     <div id="recognition_result" class="hide">...</div>
 
+      <details id="shortcuts">
+    <summary>Shortcuts (s)</summary>
+	<table>
+	  <!--	  <tr>
+	    <th>key</th>
+	    <th>description</th>
+	  </tr>
+	  -->
+	  <tr>
+	    <td>space</td>
+	    <td>record / stop</td>
+	  </tr>
+	  <tr>
+	    <td>left arrow</td>
+	    <td>previous</td>
+	  </tr>
+	  <tr>
+	    <td>right arrow</td>
+	    <td>next</td>
+	  </tr>
+	  <tr>
+	    <td>n</td>
+	    <td>automatic next on/off</td>
+	  </tr>
+	  <tr>
+	    <td>a</td>
+	    <td>audio player on/off</td>
+	  </tr>
+	  <tr>
+	    <td>p</td>
+	    <td>play audio</td>
+	  </tr>
+	  <tr>
+	    <td>r</td>
+	    <td>recognition result on/off</td>
+	  </tr>
+	  <tr>
+	    <td>s</td>
+	    <td>show/hide shortcuts</td>
+	  </tr>
+      </details>
 
         <div id="button_images" class="hide">
       <div id="rec_image">
@@ -205,6 +254,7 @@ http://localhost:9993/rec/hbtest?username=hb
 var state = "stopped";
 var showRecResult = false;
 var showAudioPlayer = true;
+var autoNext = true;
 
 function showRecImage() {
     var image_name = "rec_image"
@@ -252,8 +302,10 @@ function switchState() {
 	image_name = "rec_image";
 	stopRecording();
 	console.log("RECORDING STOPPED");
-	var next_button = document.getElementById("next_button");
-	next_button.click();
+	if (autoNext === true) { 
+	    var next_button = document.getElementById("next_button");
+	    next_button.click();
+	}
 
 	
 
@@ -312,6 +364,39 @@ document.onkeydown = function(event) {
 	//a to toggle audio player
         event.preventDefault();
 	toggleShowAudioPlayer();
+    }
+    else if (keyCode==78) {
+	//n to toggle automatic next
+        event.preventDefault();
+	autoNext = !autoNext;
+    }
+    else if (keyCode==80) {
+	//p to play audio
+        event.preventDefault();
+	var audio = document.getElementById("audio");
+	audio.play();
+    }
+    else if (keyCode==83) {
+	//s to show/hide shortcuts
+        event.preventDefault();
+	var s = document.getElementById("shortcuts");
+	if ( s.hasAttribute("open") ) { 
+	    s.removeAttribute("open");
+	} else {
+	    s.setAttribute("open","true");
+	}
+    }
+    else if (keyCode==39) {
+	//right arrow for next
+        event.preventDefault();
+	var next_button = document.getElementById("next_button");
+	next_button.click();
+    }
+    else if (keyCode==37) {
+	//left arrow for prev
+        event.preventDefault();
+	var prev_button = document.getElementById("prev_button");
+	prev_button.click();
     }
 }
 

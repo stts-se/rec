@@ -108,7 +108,7 @@ http://localhost:9993/rec/hbtest?username=hb
     </p>
 
 
-    <div id="server_response" class="hide">
+    <div id="server_response" class="hide center">
       <p>_____________________________________________________________</p>
       <details open="open">
 	<summary>Server response after send:</summary>
@@ -194,8 +194,12 @@ http://localhost:9993/rec/hbtest?username=hb
 
   <script type="text/javascript">
 
+
+var state = "stopped";
+var showRecResult = false;
+var showAudioPlayer = true;
+
 function showRecImage() {
-    state = "stopped";
     var image_name = "rec_image"
     console.log(image_name);
     
@@ -251,6 +255,31 @@ function switchState() {
     button.innerHTML = svg;        
 }
 
+function toggleShowRecognitionResult() {
+    if (showRecResult == false) {
+	showRecResult = true;
+	var div = document.getElementById("server_response");
+	div.classList.remove("hide");
+    } else {
+	showRecResult = false;
+	var div = document.getElementById("server_response");
+	div.classList.add("hide");
+    }
+}
+
+function toggleShowAudioPlayer() {
+    if (showAudioPlayer == false) {
+	showAudioPlayer = true;
+	var div = document.getElementById("audio_wrapper");
+	div.classList.remove("hide");
+    } else {
+	showAudioPlayer = false;
+	var div = document.getElementById("audio_wrapper");
+	div.classList.add("hide");
+    }
+}
+
+
       
 showRecImage();
 showRightArrow();
@@ -258,11 +287,24 @@ showLeftArrow();
 
 document.onkeydown = function(event) {
     var keyCode = event.which || event.keyCode;
-    if (keyCode==32){
+    if (keyCode==32) {
+	//space to rec/stop
         event.preventDefault();
 	switchState();
     }
+    else if (keyCode==82) {
+	//r to toggle recognition result
+        event.preventDefault();
+	toggleShowRecognitionResult();
+    }
+    else if (keyCode==65) {
+	//a to toggle audio player
+        event.preventDefault();
+	toggleShowAudioPlayer();
+    }
 }
+
+    
 
 
   </script>

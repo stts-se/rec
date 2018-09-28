@@ -318,6 +318,14 @@ function showResponse(json) {
     j = j.replace(/} ,/g, "},");
     j = j.replace(/("(?:config[^"]*|combined|recogniser|user|confidence)": [0-9].[0-9]{4})[0-9]+/g, "$1");
     resp.innerHTML = j;
+
+    //HB added
+    var e = document.getElementById("recognition_result");
+    if (e !== null) {
+	e.innerHTML = o.recognition_result;
+    }
+
+
 };
 
 function clearResponse() {

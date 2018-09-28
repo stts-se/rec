@@ -12,6 +12,11 @@
 	font-size: 500%;
 	text-align: center;
     }
+    #recognition_result {
+	color:green;
+	font-size: 200%;
+	text-align: center;
+    }
 
       #prev_next { color: blue; font-size: 200% }
             
@@ -135,6 +140,8 @@ http://localhost:9993/rec/hbtest?username=hb
     </div>
 
 
+    <div id="recognition_result" class="hide">...</div>
+
 
         <div id="button_images" class="hide">
       <div id="rec_image">
@@ -246,7 +253,9 @@ function switchState() {
 	stopRecording();
 	console.log("RECORDING STOPPED");
 	var next_button = document.getElementById("next_button");
-	next_button.click()
+	next_button.click();
+
+	
 
     }
     console.log(document.getElementById(image_name));
@@ -258,11 +267,13 @@ function switchState() {
 function toggleShowRecognitionResult() {
     if (showRecResult == false) {
 	showRecResult = true;
-	var div = document.getElementById("server_response");
+	//var div = document.getElementById("server_response");
+	var div = document.getElementById("recognition_result");
 	div.classList.remove("hide");
     } else {
 	showRecResult = false;
-	var div = document.getElementById("server_response");
+	//var div = document.getElementById("server_response");
+	var div = document.getElementById("recognition_result");
 	div.classList.add("hide");
     }
 }

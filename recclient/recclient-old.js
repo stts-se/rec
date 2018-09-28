@@ -81,11 +81,11 @@ window.onload = function () {
     //navigator.mediaDevices.getUserMedia({'audio': true, video: false}).then(function(stream) {
     mediaAccess.then(function(stream) {
 	console.log("navigator.mediaDevices.getUserMedia was called")
-	//HB not used atm..
-	//source = audioCtx.createMediaStreamSource(stream);
-        //source.connect(analyser);
-	//visualize();	
-	//END HB not used atm..
+
+	source = audioCtx.createMediaStreamSource(stream);
+        source.connect(analyser);
+	visualize();	
+
 	recorder = new MediaRecorder(stream);
 	recorder.addEventListener('dataavailable', function (evt) {
 	    updateAudio(evt.data);
@@ -422,20 +422,16 @@ function getAudio() {
 // window. is needed otherwise Safari explodes
 
 //HB chrome gives a warning..
-//var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 var source;
 var stream;
 
 //set up the different audio nodes we will use for the app
 
-//HB not used atm..
-/*
 var analyser = audioCtx.createAnalyser();
 analyser.minDecibels = -90;
 analyser.maxDecibels = -10;
 analyser.smoothingTimeConstant = 0.85;
-*/
-//HB not used atm..
 
 // set up canvas context for visualizer
 

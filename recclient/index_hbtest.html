@@ -70,17 +70,17 @@
   <body>
 
     <!--
-go run *.go ../config/config-sample-empty.json
-put utterance list in recserver/audio_dir/hb/test_utterances.utt
-http://localhost:9993/rec/hbtest?username=hb
--->
+	go run *.go ../config/config-sample-empty.json
+	put utterance list in recserver/audio_dir/hb/test_utterances.utt
+	http://localhost:9993/rec/hbtest?username=hb
+      -->
 
     <div id="info" class="hide">
       <input type="text" id="username" value="defaultUser">
       <div id="recording_id"></div>
     </div>
     <div id="utt_nr">
-    <span id="num"></span> <span style="color:blue" id="message" class="hide"></span><br>
+      <span id="num"></span> <span style="color:blue" id="message" class="hide"></span><br>
     </div>
     
     <div id="text" class="center"></div>
@@ -125,7 +125,9 @@ http://localhost:9993/rec/hbtest?username=hb
       <p>_____________________________________________________________</p>
       <details open="open">
 	<summary>Server response after send:</summary>
-	<p><pre id="response"></pre></p>
+	<div>
+	  <pre id="response"> </pre>
+	</div>
       </details>
       <p>_____________________________________________________________</p>
       
@@ -135,64 +137,63 @@ http://localhost:9993/rec/hbtest?username=hb
 	<label for="recording_id2">Recording ID</label> <input id="recording_id2" type="text" value="rec_0001"><br>
 	<button id="get_audio">Get audio</button>	
       </p>
-    
-      <p>
+      
+      <div>
 	<audio id="audio_from_server" controls></audio>
-	<br/>
-	
 	<div id="js-wavesurfer">
 	  <div id="js-wavesurfer-timeline"></div>
 	  <div id="js-wavesurfer-wav"></div>
 	</div>
-      </p>
+      </div>
     </div>
 
 
     <div id="recognition_result" class="hide">...</div>
 
-      <details id="shortcuts">
-    <summary>Shortcuts (s)</summary>
-	<table>
-	  <!--	  <tr>
-	    <th>key</th>
-	    <th>description</th>
-	  </tr>
-	  -->
-	  <tr>
-	    <td>space</td>
-	    <td>record / stop</td>
-	  </tr>
-	  <tr>
-	    <td>left arrow</td>
-	    <td>previous</td>
-	  </tr>
-	  <tr>
-	    <td>right arrow</td>
-	    <td>next</td>
-	  </tr>
-	  <tr>
-	    <td>n</td>
-	    <td>automatic next on/off</td>
-	  </tr>
-	  <tr>
-	    <td>a</td>
-	    <td>audio player on/off</td>
-	  </tr>
-	  <tr>
-	    <td>p</td>
-	    <td>play audio</td>
-	  </tr>
-	  <tr>
-	    <td>r</td>
-	    <td>recognition result on/off</td>
-	  </tr>
-	  <tr>
-	    <td>s</td>
-	    <td>show/hide shortcuts</td>
-	  </tr>
-      </details>
+    <details id="shortcuts">
+      <summary>Shortcuts (s)</summary>
+      <table>
+	<!--	  <tr>
+		  <th>key</th>
+		  <th>description</th>
+	</tr>
+	-->
+	<tr>
+	  <td>space</td>
+	  <td>record / stop</td>
+	</tr>
+	<tr>
+	  <td>left arrow</td>
+	  <td>previous</td>
+	</tr>
+	<tr>
+	  <td>right arrow</td>
+	  <td>next</td>
+	</tr>
+	<tr>
+	  <td>n</td>
+	  <td>automatic next on/off</td>
+	</tr>
+	<tr>
+	  <td>a</td>
+	  <td>audio player on/off</td>
+	</tr>
+	<tr>
+	  <td>p</td>
+	  <td>play audio</td>
+	</tr>
+	<tr>
+	  <td>r</td>
+	  <td>recognition result on/off</td>
+	</tr>
+	<tr>
+	  <td>s</td>
+	  <td>show/hide shortcuts</td>
+	</tr>
+      </table>
+    </details>
 
-        <div id="button_images" class="hide">
+    <div id="button_images" class="hide">
       <div id="rec_image">
 	<svg width="29" height="28" viewBox="0 0 29 28">
 	  <defs>
@@ -225,24 +226,21 @@ http://localhost:9993/rec/hbtest?username=hb
 	  </g>
 	</svg>
       </div>
-
+      
       <div id="arrow-right">
 	<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 400 400">
 	  <path d="m20,15v31H0v88h20v31l130-75"/>
 	</svg>
       </div>
-
+      
       <div id="arrow-left">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 400 400">
-<path d="m30,90 130-75v31h20v88h-20v31"/>
-</svg>
+	<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 400 400">
+	  <path d="m30,90 130-75v31h20v88h-20v31"/>
+	</svg>
       </div>
-      </div>
-
-
-
-    
-  </body>
+      
+      
+    </div>
   
   <script src="recclient/audio.js"></script>
   <script src="recclient/recclient-old.js"></script>
@@ -404,6 +402,7 @@ document.onkeydown = function(event) {
 
 
   </script>
+  </body>
 
 </html>
 

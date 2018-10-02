@@ -9,6 +9,7 @@ import (
 	//"os"
 	"path"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"sync"
 
@@ -71,6 +72,88 @@ var uttLists = newUtteranceLists() //utteranceLists{}
 // 	Num         int    `json:"num"`
 // 	Of          int    `json:"of"`
 // }
+
+func getUtterance(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userName := strings.ToLower(vars["username"])
+	uttIndex, err := strconv.Atoi(vars["uttindex"])
+	if err != nil {
+		msg := fmt.Sprintf("getUtterance: failed to convert argument into integer: %v", err)
+		http.Error(w, msg, http.StatusBadRequest)
+		return
+	}
+
+	//func getUtt(userName string, uttIndex int) (rec.Utterance, error) {
+	//var res rec.Utterance
+	//var msg string
+
+	uttLists.Lock()
+	defer uttLists.Unlock()
+
+	//var newIndex int
+
+	var utterances []rec.Utterance
+
+	utts, ok := uttLists.uttsForUser[userName]
+	if !ok || len(utts) == 0 {
+		msg := fmt.Sprintf("get_next_utterance: no utterances for user '%s'", userName)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusBadRequest)
+
+		return //res, fmt.Errorf(msg)
+	}
+	//else
+	utterances = utts
+
+	if uttIndex < 0 || uttIndex > len(utterances) {
+		//res.Num = uttIndex
+		//res.Of = len(utterances)
+		msg := fmt.Sprintf("no utterance with index %d", uttIndex)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusBadRequest)
+
+		return //res, fmt.Errorf("getUtt: index out of bounds, no utterance with index %d", uttIndex)
+	}
+
+	res := utterances[uttIndex-1]
+	res.Of = len(utterances)
+	res.Num = uttIndex
+
+	resJSON, err := json.Marshal(res)
+	if err != nil {
+		msg0 := fmt.Sprintf("get_next_utterance: failed JSON conversion of struct : %v", err)
+		log.Print(msg0)
+		http.Error(w, msg0, http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Fprintf(w, string(resJSON))
+
+	// // Not first utterace
+	// if currIndex, ok := uttLists.currentUttForUser[userName]; ok {
+	// 	newIndex = uttIndex + currIndex
+	// } else { //first utterance in list, currIndex == 0
+	// 	newIndex = 0 //uttIndex + currIndex
+	// }
+	// //}
+
+	// if newIndex < 0 {
+	// 	newIndex = 0
+	// 	msg = "at first utterance"
+	// }
+	// if newIndex > len(utterances)-1 {
+	// 	newIndex = len(utterances) - 1
+	// 	msg = "at last utterance"
+	// }
+
+	// uttLists.currentUttForUser[userName] = newIndex
+
+	// utterances[newIndex].UserName = userName
+	// utterances[newIndex].Message = msg
+	// utterances[newIndex].Num = newIndex + 1 // Number, not index
+	//utterances[newIndex].Of = len(utterances)
+	//return utterances[uttIndex], nil
+}
 
 func getUttRelativeToCurrent(userName string, uttIndex int) (rec.Utterance, error) {
 	var res rec.Utterance

@@ -535,7 +535,6 @@ func main() {
 	r.HandleFunc("/rec/hbtest", indexHBTest)
 	docs["/rec/hbtest"] = "simple recorder with utterance list"
 
-	
 	// generateDoc is definied in file generateDoc.go
 	r.HandleFunc("/rec/doc/", generateDoc).Methods("GET")
 
@@ -552,6 +551,7 @@ func main() {
 	// Defined in getUtterance.go
 	r.HandleFunc("/rec/get_next_utterance/{username}", getNextUtterance).Methods("GET")
 	r.HandleFunc("/rec/get_previous_utterance/{username}", getPreviousUtterance).Methods("GET")
+	r.HandleFunc("/rec/get_utterance/{username}/{uttindex}", getUtterance).Methods("GET")
 
 	r.HandleFunc("/rec/admin/ping_recognisers", pingRecognisers).Methods("GET")
 

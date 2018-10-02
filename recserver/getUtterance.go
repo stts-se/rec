@@ -100,18 +100,17 @@ func getUtterance(w http.ResponseWriter, r *http.Request) {
 	//utterances = utts
 
 	if uttIndex <= 0 || uttIndex > len(utts) {
-		//res.Num = uttIndex
-		//res.Of = len(utterances)
-		msg := fmt.Sprintf("no utterance with index %d", uttIndex)
+		msg := fmt.Sprintf("no utterance number %d", uttIndex)
 		log.Print(msg)
 		http.Error(w, msg, http.StatusBadRequest)
 
-		return //res, fmt.Errorf("getUtt: index out of bounds, no utterance with index %d", uttIndex)
+		return
 	}
 
 	res := utts[uttIndex-1]
 	res.Of = len(utts)
 	res.Num = uttIndex
+	res.UserName = userName
 
 	resJSON, err := json.Marshal(res)
 	if err != nil {

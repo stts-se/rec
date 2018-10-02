@@ -532,8 +532,8 @@ func main() {
 	docs["/rec/process/"] = "send param verb=true for verbose response"
 
 	//HB
-	r.HandleFunc("/rec/hbtest", indexHBTest)
-	docs["/rec/hbtest"] = "simple recorder with utterance list"
+	r.HandleFunc("/rec/simple_recorder", indexHBTest)
+	docs["/rec/hbtest"] = "simple recorder with utterance list and optional audio prompts"
 
 	// generateDoc is definied in file generateDoc.go
 	r.HandleFunc("/rec/doc/", generateDoc).Methods("GET")

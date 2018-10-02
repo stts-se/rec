@@ -71,20 +71,28 @@
 
     <!--
 	go run *.go ../config/config-sample-empty.json
-	put utterance list in recserver/audio_dir/hb/test_utterances.utt
-	http://localhost:9993/rec/hbtest?username=hb
+put utterance list in recserver/audio_dir/hb/test_utterances.utt
+name audio prompts <utt_id>-prompt.wav in same directory
+	http://localhost:9993/rec/simple_recorder?username=test
       -->
 
     <div id="info" class="hide">
       <input type="text" id="username" value="defaultUser">
       <div id="recording_id"></div>
     </div>
-    <div id="utt_nr">
-      <span id="num"></span> <span style="color:blue" id="message" class="hide"></span><br>
+    <div id="utt_nr" class="hideXX">
+      <span id="num"></span> <span style="color:blue" id="message"></span>
+/
+      <span id="tot"></span> <span style="color:blue" id="message"></span>
     </div>
     
     <div id="text" class="center"></div>
-    
+
+    <div id="audio_prompt_wrapper" class="center hide">
+<!--      <audio id="audio_prompt" controls class="img-center" autoplay></audio>-->
+      <audio id="audio_prompt" controls class="img-center"></audio>
+    </div>
+      
     <div class="wrapper center">
       <canvas class="visualizer img-center" width="640" height="100"></canvas> 
     </div>
@@ -101,8 +109,8 @@
       <progress id="rec_progress" value="0" max="5"></progress> (arbitrary max recording time, 5 secs)
     </div>
 
-    <div id="audio_wrapper" class="center">
-      <audio id="audio" class="img-center" controls></audio>
+    <div id="audio_wrapper" class="center hide">
+     <audio id="audio" class="img-center" controls></audio>
     </div>
     
     <div id="prev_next" class="center">
@@ -158,37 +166,49 @@
 		  <th>description</th>
 	</tr>
 	-->
-	<tr>
+	<tr onclick="switchState();">
 	  <td>space</td>
 	  <td>record / stop</td>
 	</tr>
-	<tr>
+	<tr onclick="prev();">
 	  <td>left arrow</td>
 	  <td>previous</td>
 	</tr>
-	<tr>
+	<tr onclick="next();">
 	  <td>right arrow</td>
 	  <td>next</td>
 	</tr>
-	<tr>
+	<tr onclick="autoNext = !autoNext;">
 	  <td>n</td>
 	  <td>automatic next on/off</td>
 	</tr>
-	<tr>
+	<tr onclick="toggleShowAudioPlayer()">
 	  <td>a</td>
-	  <td>audio player on/off</td>
+	  <td>audio player show/hide</td>
 	</tr>
-	<tr>
+	<tr onclick="toggleShowPromptAudioPlayer();">
+	  <td>q</td>
+	  <td>prompt audio player show/hide</td>
+	</tr>
+	<tr onclick="togglePromptAudioAutoplay();">
+	  <td>w</td>
+	  <td>prompt audio autoplay on/off</td>
+	</tr>
+	<tr onclick="var audio = document.getElementById('audio_prompt');audio.play();">
 	  <td>p</td>
-	  <td>play audio</td>
+	  <td>play audio prompt</td>
 	</tr>
-	<tr>
+	<tr onclick="var audio = document.getElementById('audio');audio.play();">
 	  <td>r</td>
-	  <td>recognition result on/off</td>
+	  <td>play recorded audio</td>
 	</tr>
-	<tr>
+	<tr onclick="toggleShowRecognitionResult();">
+	  <td>r</td>
+	  <td>recognition result show/hide</td>
+	</tr>
+	<tr onclick="toggleShortcuts();">
 	  <td>s</td>
-	  <td>show/hide shortcuts</td>
+	  <td>shortcuts show/hide</td>
 	</tr>
       </table>
     </details>
@@ -243,7 +263,7 @@
     </div>
   
   <script src="recclient/audio.js"></script>
-  <script src="recclient/recclient-old.js"></script>
+  <script src="recclient/recclient-hb.js"></script>
   <script src="recclient/vendor/jquery/3.1.0/jquery.min.js"></script>
 
   <script type="text/javascript">
@@ -251,7 +271,9 @@
 
 var state = "stopped";
 var showRecResult = false;
-var showAudioPlayer = true;
+var showAudioPlayer = false;
+var showPromptAudioPlayer = false;
+var promptAudioAutoplay = false;
 var autoNext = true;
 
 function showRecImage() {
@@ -301,8 +323,7 @@ function switchState() {
 	stopRecording();
 	console.log("RECORDING STOPPED");
 	if (autoNext === true) { 
-	    var next_button = document.getElementById("next_button");
-	    next_button.click();
+	    next();
 	}
 
 	
@@ -339,7 +360,47 @@ function toggleShowAudioPlayer() {
 	div.classList.add("hide");
     }
 }
+function toggleShowPromptAudioPlayer() {
+    if (showPromptAudioPlayer == false) {
+	showPromptAudioPlayer = true;
+	var div = document.getElementById("audio_prompt_wrapper");
+	div.classList.remove("hide");
+    } else {
+	showPromptAudioPlayer = false;
+	var div = document.getElementById("audio_prompt_wrapper");
+	div.classList.add("hide");
+    }
+}
+function togglePromptAudioAutoplay() {
+    if (promptAudioAutoplay == false) {
+	promptAudioAutoplay = true;
+	var audio = document.getElementById("audio_prompt");
+	audio.setAttribute("autoplay","true");
+    } else {
+	promptAudioAutoplay = false;
+	var audio = document.getElementById("audio_prompt");
+	audio.removeAttribute("autoplay");
+    }
+}
 
+function toggleShortcuts() {
+    var s = document.getElementById("shortcuts");
+    if ( s.hasAttribute("open") ) { 
+	s.removeAttribute("open");
+    } else {
+	s.setAttribute("open","true");
+    }
+}
+
+function next() {
+    var next_button = document.getElementById("next_button");
+    next_button.click();
+}
+
+function prev() {
+    var prev_button = document.getElementById("prev_button");
+    prev_button.click();
+}
 
       
 showRecImage();
@@ -363,38 +424,47 @@ document.onkeydown = function(event) {
         event.preventDefault();
 	toggleShowAudioPlayer();
     }
+    else if (keyCode==81) {
+	//q to toggle prompt audio player
+        event.preventDefault();
+	toggleShowPromptAudioPlayer();
+    }
+    else if (keyCode==87) {
+	//w to toggle prompt audio autoplay
+        event.preventDefault();
+	togglePromptAudioAutoplay();
+    }
     else if (keyCode==78) {
 	//n to toggle automatic next
         event.preventDefault();
 	autoNext = !autoNext;
     }
     else if (keyCode==80) {
-	//p to play audio
+	//p to play prompt audio
+        event.preventDefault();
+	var audio = document.getElementById("audio_prompt");
+	audio.play();
+    }
+    else if (keyCode==82) {
+	//r to play recorded audio
         event.preventDefault();
 	var audio = document.getElementById("audio");
 	audio.play();
     }
     else if (keyCode==83) {
 	//s to show/hide shortcuts
-        event.preventDefault();
-	var s = document.getElementById("shortcuts");
-	if ( s.hasAttribute("open") ) { 
-	    s.removeAttribute("open");
-	} else {
-	    s.setAttribute("open","true");
-	}
+	event.preventDefault();
+	toggleShortcuts();
     }
     else if (keyCode==39) {
 	//right arrow for next
         event.preventDefault();
-	var next_button = document.getElementById("next_button");
-	next_button.click();
+	next();
     }
     else if (keyCode==37) {
 	//left arrow for prev
         event.preventDefault();
-	var prev_button = document.getElementById("prev_button");
-	prev_button.click();
+	prev();
     }
 }
 

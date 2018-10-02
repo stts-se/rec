@@ -108,13 +108,100 @@ window.onload = function () {
 
     //HB not sure about this..
     //maybe we can get the first utterance instead?
-    prevButton.click();
+    //prevButton.click();
+    getFirst();
 
     // getAudioButton.click(); HL using this for quicker dev with spectrograms
 };
 
+function getFirst() {
+
+    var num = 1;
+    
+    document.getElementById("message").innerHTML = "";
+    document.getElementById("num").innerHTML = "";
+    document.getElementById("tot").innerHTML = "";
+    
+    // TODO Error check user name
+    
+    let userName = document.getElementById('username').value
+    
+    var xhr = new XMLHttpRequest();
+    //xhr.open("GET", baseURL + "/get_previous_utterance/" + userName , true);
+    xhr.open("GET", baseURL + "/get_utterance/" + userName + "/" + num, true);
+
+    
+    // TODO error handling
+    
+    
+    xhr.onloadend = function () {
+
+	let resp = JSON.parse(xhr.response);
+	
+	document.getElementById("recording_id").innerHTML = resp.recording_id;
+	document.getElementById("recording_id2").setAttribute('value',resp.recording_id);
+	document.getElementById("text").innerHTML = resp.text;
+	document.getElementById("num").innerHTML = resp.num;
+	document.getElementById("tot").innerHTML = resp.of;
+	document.getElementById("message").innerHTML = resp.message;
+
+	//HB audio-prompt
+	getAudioPrompt(resp.recording_id);
+
+
+    };
+
+    xhr.send();
+
+}
 
 function getPrev() {
+
+    var num = parseInt(document.getElementById("num").innerText) - 1;
+    
+    document.getElementById("message").innerHTML = "";
+    //document.getElementById("num").innerHTML = "";
+    
+    // TODO Error check user name
+    
+    let userName = document.getElementById('username').value
+    
+    var xhr = new XMLHttpRequest();
+    //xhr.open("GET", baseURL + "/get_previous_utterance/" + userName , true);
+    xhr.open("GET", baseURL + "/get_utterance/" + userName + "/" + num, true);
+
+    
+    // TODO error handling
+    
+    
+    xhr.onloadend = function () {
+
+	if ( xhr.status == 200 ) {
+	    let resp = JSON.parse(xhr.response);
+	
+	    document.getElementById("recording_id").innerHTML = resp.recording_id;
+	    document.getElementById("recording_id2").setAttribute('value',resp.recording_id);
+	    document.getElementById("text").innerHTML = resp.text;
+	    document.getElementById("num").innerHTML = resp.num;
+	    document.getElementById("tot").innerHTML = resp.of;
+	    document.getElementById("message").innerHTML = resp.message;
+
+	    //HB audio-prompt
+	    getAudioPrompt(resp.recording_id);
+	} else {
+	    document.getElementById("text").innerHTML = "No previous utterance!";
+	    document.getElementById("num").innerHTML = "0";
+	}	    
+
+
+    };
+
+    xhr.send();
+
+}
+
+
+function getPrevOLD() {
 
     document.getElementById("message").innerHTML = "";
     document.getElementById("num").innerHTML = "";
@@ -139,6 +226,11 @@ function getPrev() {
 	document.getElementById("text").innerHTML = resp.text;
 	document.getElementById("num").innerHTML = resp.num +"/"+ resp.of;
 	document.getElementById("message").innerHTML = resp.message;
+
+	//HB audio-prompt
+	getAudioPrompt(resp.recording_id);
+
+
     };
 
     xhr.send();
@@ -179,7 +271,7 @@ function initWavesurferJS() {
     document.getElementById("js-wavesurfer-timeline").setAttribute("style", maxWidth);
 }
 
-function getNext() {
+function getNextOLD() {
 
     document.getElementById("num").innerHTML = "";
     document.getElementById("message").innerHTML = "";
@@ -203,6 +295,56 @@ function getNext() {
 	document.getElementById("text").innerHTML = resp.text;
 	document.getElementById("num").innerHTML = resp.num +"/"+ resp.of;
 	document.getElementById("message").innerHTML = resp.message;
+
+	//HB audio-prompt
+	getAudioPrompt(resp.recording_id);
+	
+    };
+    
+    xhr.send();
+    
+}
+function getNext() {
+
+    var num = parseInt(document.getElementById("num").innerText) + 1;
+    //var tot = parseInt(document.getElementById("tot").innerText)
+    
+    
+    //document.getElementById("num").innerHTML = "";
+    document.getElementById("message").innerHTML = "";
+    
+    // TODO Error check user name
+
+    let userName = document.getElementById('username').value
+    
+    var xhr = new XMLHttpRequest();
+    //xhr.open("GET", baseURL + "/get_next_utterance/" + userName , true);
+    xhr.open("GET", baseURL + "/get_utterance/" + userName + "/" + num, true);
+
+    
+    // TODO error handling
+    
+    
+    xhr.onloadend = function () {
+
+	if ( xhr.status == 200 ) {
+	    
+	    let resp = JSON.parse(xhr.response);
+	
+	    document.getElementById("recording_id").innerHTML = resp.recording_id;
+	    document.getElementById("text").innerHTML = resp.text;
+	    document.getElementById("num").innerHTML = resp.num;
+	    document.getElementById("tot").innerHTML = resp.of;
+	    document.getElementById("message").innerHTML = resp.message;
+	    
+	    //HB audio-prompt
+	    getAudioPrompt(resp.recording_id);
+	} else {
+	    document.getElementById("text").innerHTML = "All done!";
+	    document.getElementById("num").innerHTML = "11";
+
+	}
+	
     };
     
     xhr.send();
@@ -385,6 +527,51 @@ function getAudio() {
     let audio = document.getElementById('audio_from_server');
 
     let audioURL = baseURL + "/get_audio/" + userName + "/" + utteranceID;
+    console.log("getAudio URL " + audioURL);
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", audioURL, true);
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+
+    // TODO error handling
+    
+    
+    xhr.onloadend = function () {
+     	// done
+	console.log("STATUS: "+ xhr.statusText);
+	audio.src = "";
+	let resp = JSON.parse(xhr.response);
+
+	// https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript#16245768
+	let byteCharacters = atob(resp.data);  
+
+	var byteNumbers = new Array(byteCharacters.length);
+	for (var i = 0; i < byteCharacters.length; i++) {
+	    byteNumbers[i] = byteCharacters.charCodeAt(i);
+	}
+	var byteArray = new Uint8Array(byteNumbers);
+
+	let blob = new Blob([byteArray], {'type' : resp.file_type});
+	audio.src = URL.createObjectURL(blob);
+	console.log("getAudio onloadend")
+	//audio.play();
+
+	//wavesurfer.loadBlob(blob);
+    };
+    
+    xhr.send();
+
+}
+
+function getAudioPrompt(utteranceID) {
+
+    console.log("getAudioPrompt()");
+    //hideJSAudioPane();
+    
+    let userName = document.getElementById('username2').value;
+    //let utteranceID = document.getElementById('recording_id2').value;
+    let audio = document.getElementById('audio_prompt');
+
+    let audioURL = baseURL + "/get_audio/" + userName + "/" + utteranceID + "-prompt";
     console.log("getAudio URL " + audioURL);
     let xhr = new XMLHttpRequest();
     xhr.open("GET", audioURL, true);

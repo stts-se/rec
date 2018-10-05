@@ -320,7 +320,7 @@ type audioResponse struct {
 // TODO Protect with mutex?
 
 //TODO Cut and paste from getAudio: refactor stuff into single
-//function
+//function?
 func getPromptAudio(w http.ResponseWriter, r *http.Request) {
 	var res audioResponse
 	vars := mux.Vars(r)
@@ -362,44 +362,48 @@ func getPromptAudio(w http.ResponseWriter, r *http.Request) {
 	_, err := os.Stat(audioFile.Path())
 	if os.IsNotExist(err) {
 
-		// No exact match of file name. Try to list files with same base name + running number
-		basePath := filepath.Join(audioDir, subDir /*userName*/, utteranceID)
-		files, err := filepath.Glob(basePath + "_[0-9][0-9][0-9][0-9]." + ext)
-		if err != nil {
-			log.Printf("getAudio: problem listing files : %v\n", err)
-		}
-		highest := 0
-		for _, f := range files {
+		// When looking for prompt audio file, we should match
+		// exact file name: removing stuff for running number
+		// file names
 
-			// numRE defined in generateNextFileNum
-			numStr := numRE.FindStringSubmatch(f)
-			if len(numStr) != 2 {
-				log.Printf("getAudio: failed to match number in file name: '%s'\n", f)
-				continue
-			}
-			n, err := strconv.Atoi(numStr[1])
-			if err != nil {
-				log.Printf("getAudio: failed to convert string to number: '%s' : %v\n", numStr, err)
-				continue
-			}
+		// // No exact match of file name. Try to list files with same base name + running number
+		// basePath := filepath.Join(audioDir, subDir /*userName*/, utteranceID)
+		// files, err := filepath.Glob(basePath + "_[0-9][0-9][0-9][0-9]." + ext)
+		// if err != nil {
+		// 	log.Printf("getAudio: problem listing files : %v\n", err)
+		// }
+		// highest := 0
+		// for _, f := range files {
 
-			if n > highest {
-				highest = n
-			}
-		}
+		// 	// numRE defined in generateNextFileNum
+		// 	numStr := numRE.FindStringSubmatch(f)
+		// 	if len(numStr) != 2 {
+		// 		log.Printf("getAudio: failed to match number in file name: '%s'\n", f)
+		// 		continue
+		// 	}
+		// 	n, err := strconv.Atoi(numStr[1])
+		// 	if err != nil {
+		// 		log.Printf("getAudio: failed to convert string to number: '%s' : %v\n", numStr, err)
+		// 		continue
+		// 	}
 
-		if highest == 0 {
-			msg := fmt.Sprintf("get_audio: no audio for script(/user) '%s'", subDir)
-			log.Print(msg)
-			http.Error(w, msg, http.StatusBadRequest)
-			return
-		}
+		// 	if n > highest {
+		// 		highest = n
+		// 	}
+		// }
 
-		// We have found a matching file with the highest running number
-		runningNum := fmt.Sprintf("_%04d", highest)
-		utteranceID = utteranceID + runningNum
+		// if highest == 0 {
+		msg := fmt.Sprintf("get_prompt_audio: audio file not found '%s/%s'", subDir, utteranceID+"."+ext)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusBadRequest)
+		return
+		//}
 
-		audioFile = rec.NewAudioFile(audioDir, subDir /*userName*/, utteranceID, "."+ext)
+		// // We have found a matching file with the highest running number
+		// runningNum := fmt.Sprintf("_%04d", highest)
+		// utteranceID = utteranceID + runningNum
+
+		// audioFile = rec.NewAudioFile(audioDir, subDir /*userName*/, utteranceID, "."+ext)
 
 	}
 

@@ -163,6 +163,7 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 		log.Printf("user set weights: %-v\n", input.Weights)
 	}
 
+	//TODO: remove hardwired "anon" user?
 	// anonymous user + undefined recording id => create an arbitrary recording id
 	if input.UserName == "anon" && strings.TrimSpace(input.RecordingID) == "" {
 		id, err := uuid.NewUUID()
@@ -184,9 +185,15 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 		return
 	}
 
-	log.Printf("GOT username: %s\ttext: %s\t recording id: %s\n", input.UserName, input.Text, input.RecordingID)
+	log.Printf("GOT scriptname: %s\tusername: %s\ttext: %s\t recording id: %s\n", input.ScriptName, input.UserName, input.Text, input.RecordingID)
 
-	audioDir := rec.AudioDir{BaseDir: audioDir, UserDir: input.UserName}
+	// TODO In future, don't allow empty ScriptName field
+	usrDir := input.UserName
+	if input.ScriptName != "" {
+		usrDir = filepath.Join(input.ScriptName, usrDir)
+	}
+
+	audioDir := rec.AudioDir{BaseDir: audioDir, UserDir: usrDir}
 	// writeAudioFile uses writeMutex internally
 	audioFile, err := writeAudioFile(audioDir, input)
 	if err != nil {

@@ -47,7 +47,8 @@ func generateDoc(w http.ResponseWriter, r *http.Request) {
 	}
 
 	processInSample := rec.ProcessInput{
-		UserName: "user0001",
+		ScriptName: "example_proj",
+		UserName:   "user0001",
 		Audio: rec.Audio{
 			FileType: "audio/webm",
 			Data:     "GkXfo59ChoEBQ ...",

@@ -571,7 +571,7 @@ function getAudioPrompt(utteranceID) {
     //let utteranceID = document.getElementById('recording_id2').value;
     let audio = document.getElementById('audio_prompt');
 
-    let audioURL = baseURL + "/get_audio/" + userName + "/" + utteranceID + "-prompt";
+    let audioURL = baseURL + "/get_prompt_audio/" + userName + "/" + utteranceID + "-prompt";
     console.log("getAudio URL " + audioURL);
     let xhr = new XMLHttpRequest();
     xhr.open("GET", audioURL, true);

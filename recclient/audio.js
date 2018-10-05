@@ -1,6 +1,6 @@
 var AUDIO = {};
 
-AUDIO.sendBlob = function(audioBlob, username, text, recording_id, onLoadEndFunc) {
+AUDIO.sendBlob = function(audioBlob, scriptname, username, text, recording_id, onLoadEndFunc) {
     console.log("audio.js : BLOB SIZE: "+ audioBlob.size);
     console.log("audio.js : BLOB TYPE: "+ audioBlob.type);
     
@@ -9,6 +9,7 @@ AUDIO.sendBlob = function(audioBlob, username, text, recording_id, onLoadEndFunc
     reader.addEventListener("loadend", function() {
 	let rez = reader.result //contains the contents of blob as a typed array
 	let payload = {
+	    scriptname : scriptname,
 	    username : username,
 	    audio : { file_type : audioBlob.type, data: btoa(rez)},
 	    text : text,

@@ -166,7 +166,7 @@ function sendAndReceiveBlob() {
     };
 
     AUDIO.sendBlob(currentBlob,
-		   "", //TODO IMPORTANT scritptname
+		   "", //TODO scrtptnam
 		   user,
 		   "", // input text
 		   "", // rec id

@@ -75,7 +75,7 @@ var uttLists = newUtteranceLists() //utteranceLists{}
 
 func getUtterance(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	userName := strings.ToLower(vars["username"])
+	userName := strings.ToLower(vars["scriptname"])
 	uttIndex, err := strconv.Atoi(vars["uttindex"])
 	if err != nil {
 		msg := fmt.Sprintf("getUtterance: failed to convert argument into integer: %v", err)
@@ -110,7 +110,10 @@ func getUtterance(w http.ResponseWriter, r *http.Request) {
 	res := utts[uttIndex-1]
 	res.Of = len(utts)
 	res.Num = uttIndex
-	res.UserName = userName
+	// Since we changed the dir structure to
+	// <audir_dir>/script_dir/user_dir, we cannot associate a
+	// username to an utterance of a script
+	//res.UserName = userName
 
 	resJSON, err := json.Marshal(res)
 	if err != nil {

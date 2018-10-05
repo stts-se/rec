@@ -42,6 +42,11 @@ window.onload = function () {
 	document.getElementById('username2').setAttribute('value',user);
 	console.log("Setting user", user);
     }
+    var script = url.searchParams.get('scriptname');
+    if (script != null && script != "") {
+	document.getElementById('scriptname').setAttribute('value',script);
+	console.log("Setting script", script);
+    }
     
     prevButton  = document.getElementById('prev_button');
     prevButton.addEventListener('click', getPrev)

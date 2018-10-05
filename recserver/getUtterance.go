@@ -75,7 +75,7 @@ var uttLists = newUtteranceLists() //utteranceLists{}
 
 func getUtterance(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	userName := strings.ToLower(vars["scriptname"])
+	scriptName := strings.ToLower(vars["scriptname"])
 	uttIndex, err := strconv.Atoi(vars["uttindex"])
 	if err != nil {
 		msg := fmt.Sprintf("getUtterance: failed to convert argument into integer: %v", err)
@@ -88,9 +88,9 @@ func getUtterance(w http.ResponseWriter, r *http.Request) {
 
 	var utts []rec.Utterance
 
-	utts, ok := uttLists.uttsForUser[userName]
+	utts, ok := uttLists.uttsForUser[scriptName]
 	if !ok || len(utts) == 0 {
-		msg := fmt.Sprintf("get_next_utterance: no utterances for user '%s'", userName)
+		msg := fmt.Sprintf("get_utterance: no utterances for script '%s'", scriptName)
 		log.Print(msg)
 		http.Error(w, msg, http.StatusBadRequest)
 

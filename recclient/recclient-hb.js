@@ -124,11 +124,11 @@ function getFirst() {
     
     // TODO Error check user name
     
-    let userName = document.getElementById('username').value
+    let scriptName = document.getElementById('scriptname').value
     
     var xhr = new XMLHttpRequest();
     //xhr.open("GET", baseURL + "/get_previous_utterance/" + userName , true);
-    xhr.open("GET", baseURL + "/get_utterance/" + userName + "/" + num, true);
+    xhr.open("GET", baseURL + "/get_utterance/" + scriptName + "/" + num, true);
 
     
     // TODO error handling
@@ -164,11 +164,11 @@ function getPrev() {
     
     // TODO Error check user name
     
-    let userName = document.getElementById('username').value
+    let scriptName = document.getElementById('scriptname').value
     
     var xhr = new XMLHttpRequest();
     //xhr.open("GET", baseURL + "/get_previous_utterance/" + userName , true);
-    xhr.open("GET", baseURL + "/get_utterance/" + userName + "/" + num, true);
+    xhr.open("GET", baseURL + "/get_utterance/" + scriptName + "/" + num, true);
 
     
     // TODO error handling
@@ -315,11 +315,11 @@ function getNext() {
     
     // TODO Error check user name
 
-    let userName = document.getElementById('username').value
+    let scriptName = document.getElementById('scriptname').value
     
     var xhr = new XMLHttpRequest();
     //xhr.open("GET", baseURL + "/get_next_utterance/" + userName , true);
-    xhr.open("GET", baseURL + "/get_utterance/" + userName + "/" + num, true);
+    xhr.open("GET", baseURL + "/get_utterance/" + scriptName + "/" + num, true);
 
     
     // TODO error handling
@@ -426,10 +426,11 @@ function sendAndReceiveBlob() {
     };
 
     AUDIO.sendBlob(currentBlob,
-	     document.getElementById("username").value,
-	     document.getElementById("text").innerHTML,
-	     document.getElementById("recording_id").innerHTML,
-	     onLoadEndFunc);
+		   document.getElementById("scriptname").value, //TODO scriptname
+		   document.getElementById("username").value,
+		   document.getElementById("text").innerHTML,
+		   document.getElementById("recording_id").innerHTML,
+		   onLoadEndFunc);
 }
 
 function showError(data, recordingId) {

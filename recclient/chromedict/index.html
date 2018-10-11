@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Rec</title>
+    
+    <style>
+      label { display: inline-block; width: 110px; }
+    </style>
+    
+    
+  </head>
+  <body>
+    
+    <p>
+      <em>This demo client works in Chrome and Firefox only.
+	
+	(Firefox has a max number of simultaneous open tabs with microphone input, and for microphone capture to work in Chrome, you need to serve the JavaScript from HTTPS)</em>
+    </p>
+    <p>
+      Some rudimentary docs <a href="/rec/doc/">here</a>. <br>
+      
+    </p>
+    
+    <p>_____________________________________________________________</p>
+      
+    <div class="wrapper">
+      <canvas class="visualizer" width="640" height="100"></canvas> 
+    </div>
+      
+    
+    <p>
+      
+      <button id="rec">rec</button>
+      <button id="stopandsend">stop/send</button>
+      <!-- <button id="stop">stop</button> -->
+      
+      <progress id="rec_progress" value="0" max="5"></progress> (arbitrary max recording time, 5 secs)
+      
+    </p>
+    <p>
+      <audio id="audio" controls></audio>
+    </p>
+    
+    <p style="display:none">
+      <button id="send">send</button>
+      (sends audio to server) <br>
+    </p>
+
+    <p>_____________________________________________________________</p>
+    <details open="open">
+    <summary>Server response after send:</summary>
+    <p><pre id="response"></pre></p>
+    </details>
+    <p>_____________________________________________________________</p>
+        
+    
+  </body>
+  
+  <script src="audio.js"></script>
+  <script src="recclient.js"></script>
+  <script src="lib/jquery/3.1.0/jquery.min.js"></script>
+</html>
+

@@ -166,10 +166,11 @@ function sendAndReceiveBlob() {
     };
 
     AUDIO.sendBlob(currentBlob,
-	     user,
-	     "", // input text
-	     "", // rec id
-	     onLoadEndFunc);
+		   "", //TODO scrtptnam
+		   user,
+		   "", // input text
+		   "", // rec id
+		   onLoadEndFunc);
 }
 
 function showError(data, recordingId) {

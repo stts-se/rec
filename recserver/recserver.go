@@ -163,6 +163,7 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 		log.Printf("user set weights: %-v\n", input.Weights)
 	}
 
+	//TODO: remove hardwired "anon" user?
 	// anonymous user + undefined recording id => create an arbitrary recording id
 	if input.UserName == "anon" && strings.TrimSpace(input.RecordingID) == "" {
 		id, err := uuid.NewUUID()
@@ -184,9 +185,15 @@ func process0(w http.ResponseWriter, r *http.Request, verbMode bool) {
 		return
 	}
 
-	log.Printf("GOT username: %s\ttext: %s\t recording id: %s\n", input.UserName, input.Text, input.RecordingID)
+	log.Printf("GOT scriptname: %s\tusername: %s\ttext: %s\t recording id: %s\n", input.ScriptName, input.UserName, input.Text, input.RecordingID)
 
-	audioDir := rec.AudioDir{BaseDir: audioDir, UserDir: input.UserName}
+	// TODO In future, don't allow empty ScriptName field
+	usrDir := input.UserName
+	if input.ScriptName != "" {
+		usrDir = filepath.Join(input.ScriptName, usrDir)
+	}
+
+	audioDir := rec.AudioDir{BaseDir: audioDir, UserDir: usrDir}
 	// writeAudioFile uses writeMutex internally
 	audioFile, err := writeAudioFile(audioDir, input)
 	if err != nil {
@@ -318,11 +325,22 @@ type audioResponse struct {
 }
 
 // TODO Protect with mutex?
-func getAudio(w http.ResponseWriter, r *http.Request) {
+
+//TODO Cut and paste from getAudio: refactor stuff into single
+//function?
+func getPromptAudio(w http.ResponseWriter, r *http.Request) {
 	var res audioResponse
 	vars := mux.Vars(r)
-	userName := vars["username"]
+	scriptName := vars["scriptname"]
+	//userName := vars["username"]
 	utteranceID := vars["utterance_id"]
+
+	// if scriptName == "" {
+	// 	msg := fmt.Sprintf("get_audio: no value for 'scriptname' parameter, cannot get audio")
+	// 	log.Print(msg)
+	// 	http.Error(w, msg, http.StatusBadRequest)
+	// 	return
+	// }
 
 	// // TODO Remove the "noise reduced" audio variants?
 	// noiseRedS := getParam("noise_red", r)
@@ -340,12 +358,131 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 	if ext == "" {
 		ext = defaultExtension
 	}
-	audioFile := rec.NewAudioFile(audioDir, userName, utteranceID, "."+ext)
+
+	subDir := scriptName
+	//if userName != "" {
+	//	subDir = filepath.Join(subDir, userName)
+	//}
+
+	audioFile := rec.NewAudioFile(audioDir, subDir /*userName*/, utteranceID, "."+ext)
+	fmt.Printf("AUDIOFILE: %#v\n", audioFile)
+	_, err := os.Stat(audioFile.Path())
+	if os.IsNotExist(err) {
+
+		// When looking for prompt audio file, we should match
+		// exact file name: removing stuff for running number
+		// file names
+
+		// // No exact match of file name. Try to list files with same base name + running number
+		// basePath := filepath.Join(audioDir, subDir /*userName*/, utteranceID)
+		// files, err := filepath.Glob(basePath + "_[0-9][0-9][0-9][0-9]." + ext)
+		// if err != nil {
+		// 	log.Printf("getAudio: problem listing files : %v\n", err)
+		// }
+		// highest := 0
+		// for _, f := range files {
+
+		// 	// numRE defined in generateNextFileNum
+		// 	numStr := numRE.FindStringSubmatch(f)
+		// 	if len(numStr) != 2 {
+		// 		log.Printf("getAudio: failed to match number in file name: '%s'\n", f)
+		// 		continue
+		// 	}
+		// 	n, err := strconv.Atoi(numStr[1])
+		// 	if err != nil {
+		// 		log.Printf("getAudio: failed to convert string to number: '%s' : %v\n", numStr, err)
+		// 		continue
+		// 	}
+
+		// 	if n > highest {
+		// 		highest = n
+		// 	}
+		// }
+
+		// if highest == 0 {
+		msg := fmt.Sprintf("get_prompt_audio: audio file not found '%s/%s'", subDir, utteranceID+"."+ext)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusBadRequest)
+		return
+		//}
+
+		// // We have found a matching file with the highest running number
+		// runningNum := fmt.Sprintf("_%04d", highest)
+		// utteranceID = utteranceID + runningNum
+
+		// audioFile = rec.NewAudioFile(audioDir, subDir /*userName*/, utteranceID, "."+ext)
+
+	}
+
+	bytes, err := ioutil.ReadFile(audioFile.Path())
+	if err != nil {
+		msg := fmt.Sprintf("get_audio: failed to read audio file : %v", err)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusInternalServerError)
+		return
+	}
+
+	data := base64.StdEncoding.EncodeToString(bytes)
+
+	res.FileType = mimeType(ext)
+	res.Data = data
+
+	resJSON, err := rec.PrettyMarshal(res)
+	if err != nil {
+		msg := fmt.Sprintf("get_audio: failed to create JSON from struct : %v", res)
+		log.Print(msg)
+		http.Error(w, msg, http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Fprintf(w, "%s\n", string(resJSON))
+}
+
+// TODO Protect with mutex?
+func getAudio(w http.ResponseWriter, r *http.Request) {
+	var res audioResponse
+	vars := mux.Vars(r)
+	scriptName := vars["scriptname"]
+	userName := vars["username"]
+	utteranceID := vars["utterance_id"]
+
+	// if scriptName == "" {
+	// 	msg := fmt.Sprintf("get_audio: no value for 'scriptname' parameter, cannot get audio")
+	// 	log.Print(msg)
+	// 	http.Error(w, msg, http.StatusBadRequest)
+	// 	return
+	// }
+
+	// // TODO Remove the "noise reduced" audio variants?
+	// noiseRedS := getParam("noise_red", r)
+	// useNoiseReduction := false
+	// if onRegexp.MatchString(noiseRedS) {
+	// 	useNoiseReduction = true
+	// }
+	// if useNoiseReduction {
+	// 	msg := fmt.Sprintf("get_audio: noise_red option is deprecated")
+	// 	log.Print(msg)
+	// 	http.Error(w, msg, http.StatusBadRequest)
+	// 	return
+	// }
+	var ext = vars["ext"]
+	if ext == "" {
+		ext = defaultExtension
+	}
+
+	subDir := scriptName
+	if userName != "" {
+		subDir = filepath.Join(subDir, userName)
+	}
+
+	audioFile := rec.NewAudioFile(audioDir, subDir /*userName*/, utteranceID, "."+ext)
+	fmt.Printf("AUDIOFILE: %#v\n", audioFile)
 	_, err := os.Stat(audioFile.Path())
 	if os.IsNotExist(err) {
 
 		// No exact match of file name. Try to list files with same base name + running number
-		basePath := filepath.Join(audioDir, userName, utteranceID)
+		basePath := filepath.Join(audioDir, subDir /*userName*/, utteranceID)
 		files, err := filepath.Glob(basePath + "_[0-9][0-9][0-9][0-9]." + ext)
 		if err != nil {
 			log.Printf("getAudio: problem listing files : %v\n", err)
@@ -371,7 +508,7 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if highest == 0 {
-			msg := fmt.Sprintf("get_audio: no audio for user '%s'", userName)
+			msg := fmt.Sprintf("get_audio: no audio for script(/user) '%s'", subDir)
 			log.Print(msg)
 			http.Error(w, msg, http.StatusBadRequest)
 			return
@@ -381,7 +518,7 @@ func getAudio(w http.ResponseWriter, r *http.Request) {
 		runningNum := fmt.Sprintf("_%04d", highest)
 		utteranceID = utteranceID + runningNum
 
-		audioFile = rec.NewAudioFile(audioDir, userName, utteranceID, "."+ext)
+		audioFile = rec.NewAudioFile(audioDir, subDir /*userName*/, utteranceID, "."+ext)
 
 	}
 
@@ -539,8 +676,13 @@ func main() {
 	r.HandleFunc("/rec/doc/", generateDoc).Methods("GET")
 
 	// TODO Should this rather be a POST request?
-	r.HandleFunc("/rec/get_audio/{username}/{utterance_id}/{ext}", getAudio).Methods("GET")
-	r.HandleFunc("/rec/get_audio/{username}/{utterance_id}", getAudio).Methods("GET") // with default extension
+
+	r.HandleFunc("/rec/get_prompt_audio/{scriptname}/{utterance_id}/{ext}", getPromptAudio).Methods("GET")
+	r.HandleFunc("/rec/get_prompt_audio/{scriptname}/{utterance_id}", getPromptAudio).Methods("GET") // with default extension
+
+	// getAudio figures out if the request has only <script> dir or <scriptdir/username> in URL
+	r.HandleFunc("/rec/get_audio/{scriptname}/{username}/{utterance_id}/{ext}", getAudio).Methods("GET")
+	r.HandleFunc("/rec/get_audio/{scriptname}/{username}/{utterance_id}", getAudio).Methods("GET") // with default extension
 
 	// audioproc.go
 	// r.HandleFunc("/rec/build_spectrogram/{username}/{utterance_id}/{ext}", buildSpectrogram).Methods("GET")
@@ -549,9 +691,11 @@ func main() {
 	//r.HandleFunc("/rec/analyse_audio/{username}/{utterance_id}", analyseAudio).Methods("GET")
 
 	// Defined in getUtterance.go
-	r.HandleFunc("/rec/get_next_utterance/{username}", getNextUtterance).Methods("GET")
-	r.HandleFunc("/rec/get_previous_utterance/{username}", getPreviousUtterance).Methods("GET")
-	r.HandleFunc("/rec/get_utterance/{username}/{uttindex}", getUtterance).Methods("GET")
+	// TODO remove
+	//r.HandleFunc("/rec/get_next_utterance/{username}", getNextUtterance).Methods("GET")
+	// TODO remove
+	//r.HandleFunc("/rec/get_previous_utterance/{username}", getPreviousUtterance).Methods("GET")
+	r.HandleFunc("/rec/get_utterance/{scriptname}/{uttindex}", getUtterance).Methods("GET")
 
 	r.HandleFunc("/rec/admin/ping_recognisers", pingRecognisers).Methods("GET")
 

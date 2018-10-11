@@ -27,6 +27,7 @@ type Audio struct {
 }
 
 type ProcessInput struct {
+	ScriptName  string             `json:"scriptname"`
 	UserName    string             `json:"username"`
 	Audio       Audio              `json:"audio"`
 	Text        string             `json:"text"`

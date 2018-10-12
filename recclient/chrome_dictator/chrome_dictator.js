@@ -37,20 +37,105 @@ let baseURL = window.location.origin +"/rec"; // TODO: should probably be : let 
 console.log(baseURL);
 var currentBlob;
 var recorder;
-var recogniser;
+var recognition;
 
 let defaultScriptName = "dictator";
 let user = "anon";
 
 
+function autosize(area){
+    area.style.cssText = 'width: 100%; border: none; height:' + area.scrollHeight + 'px';
+}
+
+
 window.onload = function () {
+    
+    if (!('webkitSpeechRecognition' in window)) {
+	alert("This browser does not support webkit speech recognition. Try Google Chrome.");
+	return;
+    };
+    
+    recognition = new webkitSpeechRecognition();
+    
+    let langSelect = document.getElementById("lang");
+    langSelect.addEventListener("change", function(event) {
+	
+	var i  = langSelect.selectedIndex
+	var lang = langSelect.options[i].value
+	//if (startButton.disabled) {
+	//    stopButton.click();
+	//};
+	recognition.lang = lang;
+	
+    });
+    
+    let tempResponse = document.getElementById("tempresponse");
+    let finalResponse = document.getElementById("finalresponse");
+    
+    
+    recognition.lang = langSelect.value;
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    
+    	recognition.onresult = function(event) {
+
+
+	    
+	    for (var i = event.resultIndex; i < event.results.length; ++i) {
+		if (event.results[i].isFinal) {
+		    let full = finalResponse.value + '\n' + event.results[i][0].transcript.trim(); // + '<br>';
+		    finalResponse.value = full.trim();
+		    autosize(finalResponse);
+		    tempResponse.innerHTML = '';
+
+		} else {
+		    tempResponse.innerHTML = event.results[i][0].transcript;
+		}
+	    }
+	};    
+    
+    recognition.onend = function() { // No 'event' arg?
+	recButton.disabled = false;
+	stopAndSendButton.disabled = true;
+	document.getElementById("micimage").src = "mic.gif";
+	//console.log("'onend' called!");
+    };
+    
+    recognition.onerror = function(event) {
+	console.log("Error: ", event);
+	
+	if (event.error == 'no-speech') {
+	    document.getElementById("micimage").src = "mic.gif";
+	    // TODO msg user
+	    document.getElementById("msg").innerHTML = 'No speech<br>';
+	    
+	};
+	if (event.error == 'audio-capture') {
+	    document.getElementById("micimage").src = "mic.gif";
+	    document.getElementById("msg").innerHTML = 'No microphone<br>';
+	    
+	};
+	if (event.error == 'not-allowed') {
+	    if (event.timeStamp - start_timestamp < 100) {
+		document.getElementById("msg").innerHTML = 'Blocked<br>';
+	    } else {
+		document.getElementById("msg").innerHTML = 'Denied<br>';
+	    }
+	    
+	};
+	    if (event.error == 'network') {
+		document.getElementById("msg").innerHTML = 'Network error<br>';
+	    }
+	};
+
+
     
     var url = new URL(document.URL);
     
     recButton = document.getElementById('rec');
     recButton.addEventListener('click', startRecording);
     recButton.disabled = false;
-     
+    
     stopAndSendButton = document.getElementById('stopandsend');
     stopAndSendButton.addEventListener('click', stopAndSend);
     stopAndSendButton.disabled = true;
@@ -97,6 +182,12 @@ function startRecording() {
     stopAndSendButton.disabled = false;
     recorder.start();
 
+    // TODO Don't clear between calls, but save text i text area
+    document.getElementById("tempresponse").innerHTML = '';
+    document.getElementById("finalresponse").value = '';
+    
+    recognition.start();
+    
     document.getElementById("micimage").src = "mic-animate.gif";
     
     clearResponse();
@@ -120,6 +211,8 @@ function stopAndSend() {
     console.log("stopAndSend()");
 
     recButton.disabled = false;
+    
+    recognition.stop();
     
     // make MediaRecorder stop recording
     // eventually this will trigger the dataavailable event

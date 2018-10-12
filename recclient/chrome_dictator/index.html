@@ -1,39 +1,80 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <title>Rec</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
-    <style>
-      label { display: inline-block; width: 110px; }
-    </style>
-    
-    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Dictator</title>
   </head>
   <body>
-    
-    <p>
-      <em>This demo works in Google Chrome only.</em>
-    </p>
-    
-   
-      
-    <div class="wrapper">
-      <canvas class="visualizer" width="640" height="100"></canvas> 
+    <div class="jumbotron text-center">
+      <h1>Dictator</h1>
+      <em>You need to run this demo in Google Chrome</em>
+      <p>
+	<div class="wrapper">
+	  <canvas class="visualizer" width="640" height="100"></canvas> 
+	</div>      
     </div>
-      
     
+    
+    
+    
+    <div class="container-fluid">
+      
+      
+      
+      
+      
+      
+      <div class="row">
+
+	<div class="col-md-12">  
+	  <label>Language</label>
+	  <select id="lang" class="mr-3">
+	    <option selected value="sv-SE">sv-SE</option>
+	    <option value="en-UK">en-UK</option>
+	    <option value="en-US">en-US</option>
+	    <option value="da-DK">da-DK</option>
+	  </select>
+	  
+	  
+	  <button type="button" class="btn btn-outline-primary mr-3" id="rec">rec</button>
+
+	  <button type="button" class="btn btn-outline-danger mr-1" id="stopandsend">stop/send</button>
+
+	  <image type="button" id="micimage" src="mic.gif"></image>
+	  
+	  <!-- TODO Chenge to Bootrap 4 .progress -->
+	  <progress id="rec_progress" value="0" max="15"></progress> (<em>arbitrary max recording time, 15 secs</em>)
+	  
+	</div>
+
+      </div>
+
+      
+      <div class="row">
+	<div class="col-md-12">
+	  <audio id="audio" controls></audio>
+	</div>
+      </div>
+      <div class="row">
+	<div class="col-md-12">
+	  <span style="color: red" id="msg"></span>
+	</div>
+      </div>
+      
+    </div> <!-- <- container -->
+
+    
+    
+<!-- <button id="stop">stop</button> -->
+
+
+
+
     <p>
       
-      <button id="rec">rec</button>
-      <button id="stopandsend">stop/send</button>
-      <!-- <button id="stop">stop</button> -->
-      
-      <progress id="rec_progress" value="0" max="5"></progress> (arbitrary max recording time, 5 secs)
-      
-    </p>
-    <p>
-      <audio id="audio" controls></audio>
     </p>
     
     <p style="display:none">
@@ -50,9 +91,13 @@
         
     
   </body>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  
+
   
   <script src="../audio.js"></script>
-  <script src="chromedict.js"></script>
-  <script src="lib/jquery/3.1.0/jquery.min.js"></script>
+  <script src="chrome_dictator.js"></script>
 </html>
-

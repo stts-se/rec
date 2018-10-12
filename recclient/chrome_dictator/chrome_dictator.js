@@ -1,9 +1,14 @@
+"use strict";
+
+//TODO: Clean up: refactor common functions and put into lib. Beware
+//of HTML interaction sprinkled everywhere (see getElementById calls,
+//for instance).
+
 // See:
 // https://developer.mozilla.org/en-US/docs/Web/API/MediaStream_Recording_API 
 // https://mozdevs.github.io/MediaRecorder-examples/record-live-audio.html
 // https://github.com/mdn/voice-change-o-matic
 
-//'use strict'
 
 // //
 // //
@@ -32,31 +37,30 @@ let baseURL = window.location.origin +"/rec"; // TODO: should probably be : let 
 console.log(baseURL);
 var currentBlob;
 var recorder;
-// var wavesurfer;
+var recogniser;
+
+let defaultScriptName = "dictator";
 let user = "anon";
 
-window.onload = function () {
 
+window.onload = function () {
+    
     var url = new URL(document.URL);
     
     recButton = document.getElementById('rec');
     recButton.addEventListener('click', startRecording);
     recButton.disabled = false;
-    
-    // stopButton = document.getElementById('stop');
-    // stopButton.addEventListener('click', stopRecording);
-    // stopButton.disabled = true;
-    
+     
     stopAndSendButton = document.getElementById('stopandsend');
     stopAndSendButton.addEventListener('click', stopAndSend);
     stopAndSendButton.disabled = true;
     
-    console.log("navigator.mediaDevices:", navigator.mediaDevices);
-    mediaAccess = navigator.mediaDevices.getUserMedia({'audio': true, video: false});
-    console.log("navigator.mediaDevices.getUserMedia:", mediaAccess);
+    //console.log("navigator.mediaDevices:", navigator.mediaDevices);
+    let mediaAccess = navigator.mediaDevices.getUserMedia({'audio': true, video: false});
+    //console.log("navigator.mediaDevices.getUserMedia:", mediaAccess);
     
     //navigator.mediaDevices.getUserMedia({'audio': true, video: false}).then(function(stream) {
-	mediaAccess.then(function(stream) {
+    mediaAccess.then(function(stream) {
 	console.log("navigator.mediaDevices.getUserMedia was called")
 	source = audioCtx.createMediaStreamSource(stream);
         source.connect(analyser);
@@ -74,18 +78,18 @@ window.onload = function () {
 	console.log("error from getUserMedia:", err);
 	alert("Couldn't initialize recorder: " + err);
     });
-
+    
 };
 
 function startRecording() {
-
+    
     if (recorder == null) {
 	msg = "Cannot record -- recorder is undefined"
 	console.log(msg);
 	alert(msg);
     }
     
-
+    
     // TODO set max recording time limit
     
     recButton.disabled = true;
@@ -93,6 +97,8 @@ function startRecording() {
     stopAndSendButton.disabled = false;
     recorder.start();
 
+    document.getElementById("micimage").src = "mic-animate.gif";
+    
     clearResponse();
     countDown();
 }
@@ -100,7 +106,7 @@ function startRecording() {
 //     console.log("stopRecording()");
 
 //     recButton.disabled = false;
-    
+
 //     // make MediaRecorder stop recording
 //     // eventually this will trigger the dataavailable event
 //     recorder.cancel();
@@ -118,26 +124,32 @@ function stopAndSend() {
     // make MediaRecorder stop recording
     // eventually this will trigger the dataavailable event
     recorder.stop();
+
+    document.getElementById("micimage").src = "mic.gif";
+    
     stopAndSendButton.disabled = true;
     // stopButton.disabled = false;
     clearInterval(setIntFunc);
     document.getElementById("rec_progress").value = "0";
+    document.getElementById("rec_progress").setAttribute("aria-valuenow", "0");
 }
 
 var setIntFunc;
 
 function countDown() {
-    var max = 5;
+    var max = 15;
     let tick = 10;
     var dur = 0;
 
     document.getElementById("rec_progress").value = ""+ dur;
+    document.getElementById("rec_progress").setAttribute("aria-valuenow", ""+ dur);
     
     setIntFunc = setInterval(function() {
 
 	dur = dur + (tick / 1000);
 	
 	document.getElementById("rec_progress").value = ""+ dur;
+	document.getElementById("rec_progress").setAttribute("aria-valuenow", ""+ dur);
 	
 	if (dur > max + 1) {
 	    clearInterval(setIntFunc);
@@ -164,10 +176,10 @@ function sendAndReceiveBlob() {
 	    showError(data, document.getElementById("recording_id").innerHTML);
 	}
     };
-
+    
     AUDIO.sendBlob(currentBlob,
-		   "", //TODO scrtptnam
-		   user,
+		   defaultScriptName, //Woohoo, hardwired! ("dictator", see above)
+		   user,              //Woohoo, hardvirew! ("anon", see above)
 		   "", // input text
 		   "", // rec id
 		   onLoadEndFunc);
@@ -176,15 +188,15 @@ function sendAndReceiveBlob() {
 function showError(data, recordingId) {
     var resp = document.getElementById("response");
     clearResponse();
-
-//     type processResponse struct {
-// 	Ok                bool    `json:"ok"`
-// 	Confidence        float64 `json:"confidence"`
-// 	RecognitionResult string  `json:"recognition_result"`
-// 	RecordingID       string  `json:"recording_id"`
-// 	Message           string  `json:"message"`
-// }
-
+    
+    //     type processResponse struct {
+    // 	Ok                bool    `json:"ok"`
+    // 	Confidence        float64 `json:"confidence"`
+    // 	RecognitionResult string  `json:"recognition_result"`
+    // 	RecordingID       string  `json:"recording_id"`
+    // 	Message           string  `json:"message"`
+    // }
+    
     var json = {
 	"ok": false,
 	"confidence": -1,

@@ -10,11 +10,7 @@
   <body>
     <div class="jumbotron text-center">
       <h1>Dictator</h1>
-      <em>You need to run this demo in Google Chrome</em>
-      <p>
-	<div class="wrapper">
-	  <canvas class="visualizer" width="640" height="100"></canvas> 
-	</div>      
+      <em>You need to run this demo in Google Chrome</em> 
     </div>
     
     
@@ -24,11 +20,29 @@
       
       
       
-      
-      
+      <div class="row">
+	
+	<div class="col-md-12">
+	  
+      	  <div class="wrapper">
+	    <canvas class="visualizer" width="640" height="100"></canvas> 
+	  </div>	  
+	  
+	</div>
+	
+	
+	<div class="col-md-12">
+	  
+	  <image type="button" id="micimage" src="mic.gif"></image>
+	  
+	</div>
+	
+      </div>
       
       <div class="row">
 
+	
+	
 	<div class="col-md-12">  
 	  <label>Language</label>
 	  <select id="lang" class="mr-3">
@@ -43,13 +57,12 @@
 
 	  <button type="button" class="btn btn-outline-danger mr-1" id="stopandsend">stop/send</button>
 
-	  <image type="button" id="micimage" src="mic.gif"></image>
 	  
-	  <!-- TODO Chenge to Bootrap 4 .progress -->
+	  <!-- TODO Change to Bootrap 4 .progress -->
 	  <progress id="rec_progress" value="0" max="15"></progress> (<em>arbitrary max recording time, 15 secs</em>)
 	  
 	</div>
-
+	
       </div>
 
       

@@ -16,31 +16,27 @@
     
     
     
-    <div class="container-fluid">
+    <div class="container">
       
       
       
       <div class="row">
 	
 	<div class="col-md-12">
-	  
       	  <div class="wrapper">
 	    <canvas class="visualizer" width="640" height="100"></canvas> 
 	  </div>	  
-	  
 	</div>
 	
 	
 	<div class="col-md-12">
-	  
 	  <image type="button" id="micimage" src="mic.gif"></image>
-	  
 	</div>
 	
       </div>
       
       <div class="row">
-
+	
 	
 	
 	<div class="col-md-12">  
@@ -54,9 +50,9 @@
 	  
 	  
 	  <button type="button" class="btn btn-outline-primary mr-3" id="rec">rec</button>
-
+	  
 	  <button type="button" class="btn btn-outline-danger mr-1" id="stopandsend">stop/send</button>
-
+	  
 	  
 	  <!-- TODO Change to Bootrap 4 .progress -->
 	  <progress id="rec_progress" value="0" max="15"></progress> (<em>arbitrary max recording time, 15 secs</em>)
@@ -64,21 +60,66 @@
 	</div>
 	
       </div>
-
+      
       
       <div class="row">
 	<div class="col-md-12">
 	  <audio id="audio" controls></audio>
 	</div>
       </div>
+      
       <div class="row">
 	<div class="col-md-12">
 	  <span style="color: red" id="msg"></span>
 	</div>
       </div>
       
+      <!-- Recognition result text area -->
+      <div class="row">
+	<div class="col-md-12" style="border:1px solid #cecece; width: 100vw; height: 50vh;">
+	  <!-- <div style="width: 100%; border: none" id="finalresponse"></div> -->
+	  <textarea style="height: 0; width: 100%; border: none" id="finalresponse"></textarea>
+	  <em><div style="color: grey" id="tempresponse"></div></em>
+	</div>
+      </div>
+      
+      <div class="row">
+	<div class="col-md-12">
+	  <label>Abbrev</label>
+	  <input id="input_abbrev"></input>
+	  <label>Expansion</label><input id="input_expansion"><br/>
+	  <button class="btn btn-outline-primary mr-3" id="add_abbrev_button">Add</button>
+	  <button class="btn btn-outline-danger mr-1" id="delete_abbrev_button">Delete</button> <br/>
+	</div>
+      </div>
+      
+      
+      <div class="row">
+	
+	<div class="col-md-12">
+	  
+	  <div style="height:400px;overflow:auto;">
+	    <table id="abbrev_table">
+	      <thead>
+		<tr>
+		  <th>Abbrev</th><th>Expansion</th>
+		</tr>
+	      </thead>
+	      
+	      <tbody id="abbrev_table_body">
+		
+	      </tbody>
+	      
+	    </table>
+	  </div>
+	</div>
+      </div>
+      
+      
+	
+      
     </div> <!-- <- container -->
-
+    
     
     
 <!-- <button id="stop">stop</button> -->

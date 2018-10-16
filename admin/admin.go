@@ -64,18 +64,18 @@ func subDirs(dirPath string) []os.FileInfo {
 	return res
 }
 
-var defaultTestUtterances = `testutt_0001_is	is
-testutt_0002_bi	bi
-testutt_0003_rose	rose
-testutt_0004_blaes	blæs
-testutt_0005_mus	mus
-testutt_0006_sne	sne
-testutt_0007_e	e
-testutt_0008_i	i
-testutt_0009_o	o
-testutt_0010_u	u
-testutt_0011_å	å
-`
+// var defaultTestUtterances = `testutt_0001_is	is
+// testutt_0002_bi	bi
+// testutt_0003_rose	rose
+// testutt_0004_blaes	blæs
+// testutt_0005_mus	mus
+// testutt_0006_sne	sne
+// testutt_0007_e	e
+// testutt_0008_i	i
+// testutt_0009_o	o
+// testutt_0010_u	u
+// testutt_0011_å	å
+// `
 
 func AddUser(baseDir, userName string) error {
 	_, err := os.Stat(baseDir)

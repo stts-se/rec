@@ -1,3 +1,5 @@
+'use strict'
+
 // See:
 // https://developer.mozilla.org/en-US/docs/Web/API/MediaStream_Recording_API 
 // https://mozdevs.github.io/MediaRecorder-examples/record-live-audio.html
@@ -80,7 +82,7 @@ window.onload = function () {
 
 
     console.log("navigator.mediaDevices:", navigator.mediaDevices);
-    mediaAccess = navigator.mediaDevices.getUserMedia({'audio': true, video: false});
+    let mediaAccess = navigator.mediaDevices.getUserMedia({'audio': true, video: false});
     console.log("navigator.mediaDevices.getUserMedia:", mediaAccess);
     
     //navigator.mediaDevices.getUserMedia({'audio': true, video: false}).then(function(stream) {
@@ -573,11 +575,12 @@ function getAudioPrompt(utteranceID) {
     console.log("getAudioPrompt()");
     //hideJSAudioPane();
     
-    let userName = document.getElementById('username2').value;
+    //let userName = document.getElementById('username').value;
+    let scriptName = document.getElementById('scriptname').value;
     //let utteranceID = document.getElementById('recording_id2').value;
     let audio = document.getElementById('audio_prompt');
 
-    let audioURL = baseURL + "/get_prompt_audio/" + userName + "/" + utteranceID + "-prompt";
+    let audioURL = baseURL + "/get_prompt_audio/" + scriptName + "/" + utteranceID + "-prompt";
     console.log("getAudio URL " + audioURL);
     let xhr = new XMLHttpRequest();
     xhr.open("GET", audioURL, true);

@@ -42,17 +42,17 @@ func getParam(paramName string, r *http.Request) string {
 	return vars[paramName]
 }
 
-func index(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "../recclient/index.html")
-}
+// func index(w http.ResponseWriter, r *http.Request) {
+// 	http.ServeFile(w, r, "../recclient/index.html")
+// }
 
-func indexOLD(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "../recclient/index_old.html")
-}
+// func indexOLD(w http.ResponseWriter, r *http.Request) {
+// 	http.ServeFile(w, r, "../recclient/index_old.html")
+// }
 
-func indexHBTest(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "../recclient/index_hbtest.html")
-}
+// func indexHBTest(w http.ResponseWriter, r *http.Request) {
+// 	http.ServeFile(w, r, "../recclient/index_hbtest.html")
+// }
 
 const defaultExtension = "wav"
 
@@ -663,19 +663,24 @@ func main() {
 	p := config.MyConfig.ServerPort
 	r := mux.NewRouter()
 	r.StrictSlash(true)
-	r.HandleFunc("/rec/", index)
-	r.HandleFunc("/rec/old", indexOLD)
+	// r.HandleFunc("/rec/", index)
+	//r.HandleFunc("/rec/old", indexOLD)
 	r.HandleFunc("/rec/process/", process).Methods("POST", "OPTIONS")
 	docs["/rec/process/"] = "send param verb=true for verbose response"
 
 	//HB
-	r.HandleFunc("/rec/simple_recorder", indexHBTest)
-	docs["/rec/hbtest"] = "simple recorder with utterance list and optional audio prompts"
+	//r.HandleFunc("/rec/simple_recorder", indexHBTest)
+	//docs["/rec/hbtest"] = "simple recorder with utterance list and optional audio prompts"
+	docs["/rec/simple_recorder"] = "simple recorder with utterance list and optional audio prompts"
+	docs["/rec/chrome_dictator"] = "chrome dictator demo"
+	docs["/rec/old"] = "OLD demo"
 
 	// generateDoc is definied in file generateDoc.go
 	r.HandleFunc("/rec/doc/", generateDoc).Methods("GET")
 
 	// TODO Should this rather be a POST request?
+
+	// get_prompt_audio and get_audio should be the same (when folder structure has been merged)
 
 	r.HandleFunc("/rec/get_prompt_audio/{scriptname}/{utterance_id}/{ext}", getPromptAudio).Methods("GET")
 	r.HandleFunc("/rec/get_prompt_audio/{scriptname}/{utterance_id}", getPromptAudio).Methods("GET") // with default extension
@@ -717,6 +722,7 @@ func main() {
 	// Defined in admin.go
 	r.HandleFunc("/rec/admin/list_users", listUsers).Methods("GET")
 	r.HandleFunc("/rec/admin/add_user/{username}", addUser).Methods("GET")
+	//TODO: r.HandleFunc("/rec/admin/add_script/{scriptname}", addUser).Methods("GET")
 	//r.HandleFunc("/rec/admin/delete_user/{username}", deleteUser).Methods("GET")
 	//r.HandleFunc("/rec/admin/get_utts/{username}", getUtts).Methods("GET")
 	//r.HandleFunc("/rec/admin/list_files/{username}", listFiles).Methods("GET")
@@ -734,7 +740,8 @@ func main() {
 		http.ServeFile(w, r, "favicon.ico")
 	})
 
-	r.PathPrefix("/rec/recclient/").Handler(http.StripPrefix("/rec/recclient/", http.FileServer(http.Dir("../recclient"))))
+	//r.PathPrefix("/rec/recclient/").Handler(http.StripPrefix("/rec/recclient/", http.FileServer(http.Dir("../recclient"))))
+	r.PathPrefix("/").Handler(http.StripPrefix("/rec", http.FileServer(http.Dir("../recclient/"))))
 
 	ps := fmt.Sprintf("%d", p)
 	//HB addr := fmt.Sprintf("127.0.0.1:%s", ps) // access only from localhost (and morf since apache is handeling external access)

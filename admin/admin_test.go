@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"fmt"
 	"os"
 	"testing"
 

@@ -77,22 +77,19 @@ window.onload = function () {
     recognition.continuous = true;
     recognition.interimResults = true;
     
-    	recognition.onresult = function(event) {
-
-
-	    
-	    for (var i = event.resultIndex; i < event.results.length; ++i) {
-		if (event.results[i].isFinal) {
-		    let full = finalResponse.value + '\n' + event.results[i][0].transcript.trim(); // + '<br>';
-		    finalResponse.value = full.trim();
-		    autosize(finalResponse);
-		    tempResponse.innerHTML = '';
-
-		} else {
-		    tempResponse.innerHTML = event.results[i][0].transcript;
-		}
+    recognition.onresult = function(event) {	
+	for (var i = event.resultIndex; i < event.results.length; ++i) {
+	    if (event.results[i].isFinal) {
+		let full = finalResponse.value + '\n' + event.results[i][0].transcript.trim(); // + '<br>';
+		finalResponse.value = full.trim();
+		autosize(finalResponse);
+		tempResponse.innerHTML = '';
+		
+	    } else {
+		tempResponse.innerHTML = event.results[i][0].transcript;
 	    }
-	};    
+	}
+    };    
     
     recognition.onend = function() { // No 'event' arg?
 	recButton.disabled = false;
@@ -209,7 +206,7 @@ function startRecording() {
 
 function stopAndSend() {
     console.log("stopAndSend()");
-
+    
     recButton.disabled = false;
     
     recognition.stop();
@@ -217,7 +214,7 @@ function stopAndSend() {
     // make MediaRecorder stop recording
     // eventually this will trigger the dataavailable event
     recorder.stop();
-
+    
     document.getElementById("micimage").src = "mic.gif";
     
     stopAndSendButton.disabled = true;
@@ -273,7 +270,7 @@ function sendAndReceiveBlob() {
     AUDIO.sendBlob(currentBlob,
 		   defaultScriptName, //Woohoo, hardwired! ("dictator", see above)
 		   user,              //Woohoo, hardvirew! ("anon", see above)
-		   "", // input text
+		   document.getElementById("finalresponse").value, // text TODO Send as argument to function rather that getting it from HTML...
 		   "", // rec id
 		   onLoadEndFunc);
 }

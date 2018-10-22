@@ -76,10 +76,17 @@
       
       <!-- Recognition result text area -->
       <div class="row">
-	<div class="col-md-12" style="border:1px solid #cecece; width: 100vw; height: 50vh;">
+	<div class="col-md-10" style="border:1px solid #cecece; width: 100vw; height: 50vh;">
 	  <!-- <div style="width: 100%; border: none" id="finalresponse"></div> -->
 	  <textarea style="height: 0; width: 100%; border: none" id="finalresponse"></textarea>
 	  <em><div style="color: grey" id="tempresponse"></div></em>
+	</div>
+	<div class="col-md-2">
+	  <button  disabled class="btn btn-outline-success mr-1" id="saveeditedtext">Save text
+	  </button>
+	  <div id="unsavedindicator">
+	  </div>
+	  
 	</div>
       </div>
       

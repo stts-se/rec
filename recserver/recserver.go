@@ -704,6 +704,11 @@ func main() {
 
 	r.HandleFunc("/rec/admin/ping_recognisers", pingRecognisers).Methods("GET")
 
+	// Stuff for handling expansions of abbreviations when manually editing text
+	r.HandleFunc("/rec/list_abbrevs", listAbbrevs)
+	r.HandleFunc("/rec/add_abbrev/{abbrev}/{expansion}", addAbbrev)
+	r.HandleFunc("/rec/delete_abbrev/{abbrev}", deleteAbbrev)
+
 	// List route URLs to use as simple on-line documentation
 	r.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
 		t, err := route.GetPathTemplate()

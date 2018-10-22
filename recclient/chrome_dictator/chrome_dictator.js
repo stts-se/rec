@@ -61,9 +61,9 @@ window.onload = function () {
     };
 
 
-    var finalResponse = document.getElementById("finalresponse");
+    //var finalResponse = document.getElementById("finalresponse");
     //finalResponse.addEventListener('keyup', keyupAutosize);
-    finalResponse.addEventListener('keyup', checkForAbbrev);
+    
     
     
     recognition = new webkitSpeechRecognition();
@@ -82,6 +82,22 @@ window.onload = function () {
     
     let tempResponse = document.getElementById("tempresponse");
     let finalResponse = document.getElementById("finalresponse");
+    finalResponse.addEventListener('keyup', checkForAbbrev);
+    
+    // TODO What's this?
+    finalResponse.addEventListener('keyup', keyupAutosize);
+    function keyupAutosize(){
+	//console.log("keyup event called");
+	var el = this;
+	setTimeout(function(){
+	    autosize(el);
+	},0);
+    }
+    
+    function autosize(area){
+	area.style.cssText = 'width: 100%; border: none; height:' + area.scrollHeight + 'px';
+    }
+    
     
     
     recognition.lang = langSelect.value;

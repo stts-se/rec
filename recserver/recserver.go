@@ -655,6 +655,20 @@ func main() {
 		log.Print(msg)
 		os.Exit(1)
 	}
+
+	//TODO Put abbrev file path in config
+	// Load persisted abbrev map if it exists
+	if _, err := os.Stat(abbrevFilePath); !os.IsNotExist(err) {
+
+		m, err := gobFile2Map(abbrevFilePath)
+		if err != nil {
+			fmt.Printf("Major disaster: %v\n", err)
+			return
+		}
+
+		abbrevs = m
+	}
+
 	//log.Printf("recserver Loaded utts\n")
 	//uttLists = uls
 

@@ -42,6 +42,7 @@ var recognition;
 let defaultScriptName = "dictator";
 let user = "anon";
 
+var abbrevMap = {};
 
 function autosize(area){
     area.style.cssText = 'width: 100%; border: none; height:' + area.scrollHeight + 'px';
@@ -163,7 +164,7 @@ window.onload = function () {
 
 
     // Set up abbreviations table, etc
-        // Init abbrev hash table from server
+    // Init abbrev hash table from server
     loadAbbrevTable();
     
     
@@ -545,8 +546,13 @@ function visualize() {
 // clients hashmap
 function loadAbbrevTable() {
     let xhr = new XMLHttpRequest();
+
+    console.log("loading abbrevs");
     
     xhr.onload = function() {
+
+	console.log("loading abbrevs !!!");
+	
 	if ( xhr.readyState === 4 && 
      	     xhr.status === 200) {
 	    
@@ -555,12 +561,14 @@ function loadAbbrevTable() {
 	    //console.log("#######", serverAbbrevs);
 	    abbrevMap = {};
 	    for (var i = 0; i < serverAbbrevs.length; i++) {
-		//console.log("i: ", i, serverAbbrevs[i]);
+		console.log("i: ", i, serverAbbrevs[i]);
 		let a = serverAbbrevs[i];
 		abbrevMap[a.abbrev] = a.expansion;
 	    };
 	    updateAbbrevTable();
 	    
+	} else {
+	    console.log("failed to list expansions of abbreviations: ", xhr.ResponseText);
 	};
     };
     

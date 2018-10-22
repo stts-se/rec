@@ -160,6 +160,78 @@ window.onload = function () {
 	console.log("error from getUserMedia:", err);
 	alert("Couldn't initialize recorder: " + err);
     });
+
+
+    // Set up abbreviations table, etc
+        // Init abbrev hash table from server
+    loadAbbrevTable();
+    
+    
+    // Bootstrap already has JQuery as a dependancy
+
+    
+    $("#abbrev_table").on('click', 'tr', function(evt) {
+	let row = $(this);
+	//let row = row0[0];
+	let dts = row.children('td');
+	//console.log("KLIKKETIKLIKK ++", dts);
+	//console.log("KLIKKETIKLIKK --", dts[0]);
+	//console.log("KLIKKETIKLIKK --", dts[1]);
+	//console.log("---------------------");
+    } );
+    
+    
+    $("#add_abbrev_button").on('click', function(evt) {
+	let abbrev = document.getElementById("input_abbrev").value.trim();
+	let expansion = document.getElementById("input_expansion").value.trim();
+	
+	// TODO add button should be disablem without text in both input fields, etc
+	// TODO proper validation
+	if (abbrev === "") {
+	    document.getElementById("msg").innerText = "Cannot add empty abbreviation";
+	    return;
+	};
+	if (expansion === "") {
+	    document.getElementById("msg").innerText = "Cannot add empty expansion";
+	    return;
+	};
+	
+	abbrevMap[abbrev] = expansion;
+	
+	// TODO Nested async calls: NOT NICE, change to promises instead
+	//addAbbrev contains a(n async) call to loadAbbrevTable();
+	
+	addAbbrev(abbrev, expansion);	
+
+	
+	//console.log("abbrev", abbrev);
+	//console.log("expansion", expansion);
+    });
+    
+    $("#delete_abbrev_button").on('click', function(evt) {
+	let abbrev = document.getElementById("input_abbrev").value.trim();
+	
+	
+	// TODO add button should be disablem without text in both input fields, etc
+	// TODO proper validation
+	if (abbrev === "") {
+	    document.getElementById("msg").innerText = "Cannot delete empty abbreviation";
+	    return;
+	};
+	
+	delete abbrevMap[abbrev];
+	
+	// TODO Nested async calls: NOT NICE, change to promises instead
+	//addAbbrev contains a(n async) call to loadAbbrevTable();
+	
+	deleteAbbrev(abbrev);	
+
+	
+	//console.log("abbrev", abbrev);
+	//console.log("expansion", expansion);
+    });
+
+
     
 };
 
@@ -464,4 +536,92 @@ function visualize() {
     
     draw(); 
 }
+
+
+// Stuff to add possibility of entering abbreviations that are
+// automatically expanded in manually edited text
+
+// Asks sever for list of persited abbrevisations, and fills in the
+// clients hashmap
+function loadAbbrevTable() {
+    let xhr = new XMLHttpRequest();
+    
+    xhr.onload = function() {
+	if ( xhr.readyState === 4 && 
+     	     xhr.status === 200) {
+	    
+	    // TODO Catch errors here
+	    let serverAbbrevs = JSON.parse(xhr.responseText);
+	    //console.log("#######", serverAbbrevs);
+	    abbrevMap = {};
+	    for (var i = 0; i < serverAbbrevs.length; i++) {
+		//console.log("i: ", i, serverAbbrevs[i]);
+		let a = serverAbbrevs[i];
+		abbrevMap[a.abbrev] = a.expansion;
+	    };
+	    updateAbbrevTable();
+	    
+	};
+    };
+    
+    xhr.open("GET", baseURL+ "/list_abbrevs" , true)
+    xhr.send();
+};
+
+function updateAbbrevTable() {
+    let at = document.getElementById("abbrev_table_body");
+    at.innerHTML = '';
+    Object.keys(abbrevMap).forEach(function(k) {
+	let v = abbrevMap[k];
+	let tr = document.createElement('tr');
+	let td1 = document.createElement('td');
+	let td2 = document.createElement('td');
+
+	td1.innerText = k;
+	td2.innerText = v;
+	
+	tr.appendChild(td1);
+	tr.appendChild(td2);
+	at.appendChild(tr);
+    });
+    
+    
+}
+
+function addAbbrev(abbrev, expansion) {
+    let xhr = new XMLHttpRequest();
+    
+    //TODO Notify user of response
+    // TODO error handling
+    
+    xhr.onload = function(resp) {
+	//console.log("RESP", resp);
+
+	// TODO Show response in client
+	
+	// TODO Nested async calls: NOT NICE, change to promises instead
+	loadAbbrevTable();
+    };
+    
+    xhr.open("GET", baseURL+ "/add_abbrev/"+ abbrev + "/"+ expansion , true)
+    xhr.send();
+};
+function deleteAbbrev(abbrev) {
+    let xhr = new XMLHttpRequest();
+    
+    //TODO Notify user of response
+    // TODO error handling
+    
+    xhr.onload = function(resp) {
+	//console.log("RESP", resp);
+
+	// TODO Show response in client
+	
+	// TODO Nested async calls: NOT NICE, change to promises instead
+	loadAbbrevTable();
+    };
+    
+    xhr.open("GET", baseURL+ "/delete_abbrev/"+ abbrev, true)
+    xhr.send();
+};
 

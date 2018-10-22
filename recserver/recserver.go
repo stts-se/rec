@@ -662,7 +662,7 @@ func main() {
 
 		m, err := gobFile2Map(abbrevFilePath)
 		if err != nil {
-			fmt.Printf("Major disaster: %v\n", err)
+			fmt.Fprintf(os.Stderr, "failed to load abbreviations file : %v\n", err)
 			return
 		}
 

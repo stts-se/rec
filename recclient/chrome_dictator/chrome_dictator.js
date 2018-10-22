@@ -83,6 +83,7 @@ window.onload = function () {
     let tempResponse = document.getElementById("tempresponse");
     let finalResponse = document.getElementById("finalresponse");
     finalResponse.addEventListener('keyup', checkForAbbrev);
+    finalResponse.addEventListener('keyup', singnalUnsavedEdit);
     
     // TODO What's this?
     finalResponse.addEventListener('keyup', keyupAutosize);
@@ -692,8 +693,18 @@ function checkForAbbrev(evt) {
 	};
 	
 	
-	// TODO Take wordBeforeSpace and look up in abbrev dictionary.
-	// If abbrev found, expand abbrev in place into target word
-	
     }
+}
+
+
+function singnalUnsavedEdit(evt) {
+    let saveBtn = document.getElementById("saveeditedtext");
+    if (saveBtn.disabled) {
+	saveBtn.disabled = false;
+	saveBtn.style["transform"] = "rotate(0deg)";
+    }
+}
+
+function saveEditedText(utteranceId, text) {
+    
 }

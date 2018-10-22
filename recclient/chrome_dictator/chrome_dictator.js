@@ -44,17 +44,27 @@ let user = "anon";
 
 var abbrevMap = {};
 
+
+
 function autosize(area){
     area.style.cssText = 'width: 100%; border: none; height:' + area.scrollHeight + 'px';
 }
 
 
+
+// TODO Refactor this growing ball of mud
 window.onload = function () {
     
     if (!('webkitSpeechRecognition' in window)) {
 	alert("This browser does not support webkit speech recognition. Try Google Chrome.");
 	return;
     };
+
+
+    var finalResponse = document.getElementById("finalresponse");
+    //finalResponse.addEventListener('keyup', keyupAutosize);
+    finalResponse.addEventListener('keyup', checkForAbbrev);
+    
     
     recognition = new webkitSpeechRecognition();
     
@@ -633,3 +643,41 @@ function deleteAbbrev(abbrev) {
     xhr.send();
 };
 
+var leftWordRE = /(?:^| )([^ ]+)$/; // TODO Really no need for regexp,
+				    // just pick off characters until
+				    // space, etc, or end of string?
+
+
+function checkForAbbrev(evt) {
+    if ( evt.key === " ") {
+	// Ugh... going in circles...
+	let ta = document.getElementById("finalresponse");
+	let startPos = ta.selectionStart;
+	let end = ta.selectionEnd;
+	
+	let text = ta.value;
+	// -1 is to remove the trailing space
+	let stringUp2Cursor = text.substring(0,startPos-1);
+	
+	// wordBeforeSpace will have a trailing space
+	let wordBeforeSpace = leftWordRE.exec(stringUp2Cursor)[0];
+	
+	if (abbrevMap.hasOwnProperty(wordBeforeSpace.trim())) {
+	    //console.log(wordBeforeSpace, abbrevMap[wordBeforeSpace]);
+	    // Match found. Replace abbreviation with its expansion
+	    let textBefore = text.substring(0,startPos - wordBeforeSpace.length);
+	    let textAfter = text.substring(startPos);
+	    let expansion = abbrevMap[wordBeforeSpace.trim()];
+	    
+	    
+	    ta.value = textBefore.trim() + " " + expansion + " " + textAfter.trim();
+	    // Move cursor to directly after expanded word + 1 (space)
+	    ta.selectionEnd =  (textBefore.trim() + " " + expansion).length + 1;
+	};
+	
+	
+	// TODO Take wordBeforeSpace and look up in abbrev dictionary.
+	// If abbrev found, expand abbrev in place into target word
+	
+    }
+}

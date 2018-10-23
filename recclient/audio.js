@@ -43,4 +43,3 @@ function uuidv4() {
   )
 }
 
-console.log(uuidv4());

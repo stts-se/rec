@@ -718,6 +718,14 @@ func main() {
 
 	r.HandleFunc("/rec/admin/ping_recognisers", pingRecognisers).Methods("GET")
 
+	// URL for saving a text file corresponding to an audio file
+	// name. To be used for, e.g., saving a manually edited version
+	// of a recogniser result. Currently does not end up in the
+	// corresponding JSON file accompanying an andio file.
+
+	// saveTextForUtterance is defined in saveTextForUtterance.go
+	r.HandleFunc("/rec/save_text/{scriptname}/{username}/{utteranceid}/{text}", saveTextForUtterance)
+
 	// Stuff for handling expansions of abbreviations when manually editing text
 	r.HandleFunc("/rec/list_abbrevs", listAbbrevs)
 	r.HandleFunc("/rec/add_abbrev/{abbrev}/{expansion}", addAbbrev)

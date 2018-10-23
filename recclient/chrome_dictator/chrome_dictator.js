@@ -79,11 +79,16 @@ window.onload = function () {
 	recognition.lang = lang;
 	
     });
+
+
+    let saveBtn = document.getElementById("saveeditedtext");
+    saveBtn.addEventListener('click', saveEditedText);
     
     let tempResponse = document.getElementById("tempresponse");
     let finalResponse = document.getElementById("finalresponse");
     finalResponse.addEventListener('keyup', checkForAbbrev);
     finalResponse.addEventListener('keyup', singnalUnsavedEdit);
+
     
     // TODO What's this?
     finalResponse.addEventListener('keyup', keyupAutosize);
@@ -202,10 +207,6 @@ window.onload = function () {
 	let row = $(this);
 	//let row = row0[0];
 	let dts = row.children('td');
-	//console.log("KLIKKETIKLIKK ++", dts);
-	//console.log("KLIKKETIKLIKK --", dts[0]);
-	//console.log("KLIKKETIKLIKK --", dts[1]);
-	//console.log("---------------------");
     } );
     
     
@@ -366,6 +367,9 @@ function sendAndReceiveBlob() {
 	    showError(data, document.getElementById("recording_id").innerHTML);
 	}
     };
+    
+    let recID = uuidv4();
+    document.getElementById("currentrecordingid").innerHTML = recID;
     
     AUDIO.sendBlob(currentBlob,
 		   defaultScriptName, //Woohoo, hardwired! ("dictator", see above)
@@ -660,7 +664,7 @@ function deleteAbbrev(abbrev) {
     xhr.send();
 };
 
-var leftWordRE = /(?:^| )([^ ]+)$/; // TODO Really no need for regexp,
+var leftWordRE = /(?:^| +)([^ ]+)$/; // TODO Really no need for regexp,
 				    // just pick off characters until
 				    // space, etc, or end of string?
 
@@ -677,7 +681,11 @@ function checkForAbbrev(evt) {
 	let stringUp2Cursor = text.substring(0,startPos-1);
 	
 	// wordBeforeSpace will have a trailing space
-	let wordBeforeSpace = leftWordRE.exec(stringUp2Cursor)[0];
+	let regexRes = leftWordRE.exec(stringUp2Cursor);
+	if (regexRes === null) {
+	    return;
+	};
+	let wordBeforeSpace = regexRes[0]; 
 	
 	if (abbrevMap.hasOwnProperty(wordBeforeSpace.trim())) {
 	    //console.log(wordBeforeSpace, abbrevMap[wordBeforeSpace]);
@@ -705,6 +713,28 @@ function singnalUnsavedEdit(evt) {
     }
 }
 
-function saveEditedText(utteranceId, text) {
+// TODO temp hack for saving text that has been manually edited after
+// the audio has been sent to the server. We put the edited text in a
+// separate text file with the same name as the audio file, but with a
+// .txt extension
+function saveEditedText() {
+    
+    let text = document.getElementById("finalresponse").value;
+    let recID = document.getElementById("currentrecordingid").innerText;
+    
+    
+    if (recID.trim() === "") {
+	return;
+    };
+
+    if (text.trim() === "") {
+	return;
+    };
+
+    fetch().then();
+    
+    let saveBtn = document.getElementById("saveeditedtext");
+    saveBtn.disabled = true;
+    saveBtn.style["transform"] = "rotate(-45deg)";
     
 }

@@ -81,7 +81,9 @@ name audio prompts <utt_id>-prompt.wav in same directory
       <input type="text" id="scriptname" value="irish_corpasbeag_10">
       <input type="text" id="username" value="defaultUser">
       <div id="recording_id"></div>
-    </div>
+      </div>
+
+	
     <div id="utt_nr" class="hideXX">
       <span id="num"></span> <span style="color:blue" id="message"></span>
 /
@@ -108,7 +110,7 @@ name audio prompts <utt_id>-prompt.wav in same directory
     <button id="stopandsend" class="hide">stop/send</button>      
 
     <div id="rec_progress_div" class="hide">
-      <progress id="rec_progress" value="0" max="5"></progress> (arbitrary max recording time, 5 secs)
+      <progress id="rec_progress" value="0" max="20"></progress> (arbitrary max recording time, 20 secs)
     </div>
 
     <div id="audio_wrapper" class="center hide">
@@ -161,7 +163,7 @@ name audio prompts <utt_id>-prompt.wav in same directory
     <div id="recognition_result" class="hide">...</div>
 
     <details id="shortcuts">
-      <summary>Shortcuts (s)</summary>
+      <summary>Shortcuts (alt+s)</summary>
       <table>
 	<!--	  <tr>
 		  <th>key</th>
@@ -181,35 +183,35 @@ name audio prompts <utt_id>-prompt.wav in same directory
 	  <td>next</td>
 	</tr>
 	<tr onclick="autoNext = !autoNext;">
-	  <td>n</td>
+	  <td>alt+n</td>
 	  <td>automatic next on/off</td>
 	</tr>
 	<tr onclick="toggleShowAudioPlayer()">
-	  <td>a</td>
+	  <td>alt+a</td>
 	  <td>audio player show/hide</td>
 	</tr>
 	<tr onclick="toggleShowPromptAudioPlayer();">
-	  <td>q</td>
+	  <td>alt+q</td>
 	  <td>prompt audio player show/hide</td>
 	</tr>
 	<tr onclick="togglePromptAudioAutoplay();">
-	  <td>w</td>
+	  <td>alt+w</td>
 	  <td>prompt audio autoplay on/off</td>
 	</tr>
 	<tr onclick="var audio = document.getElementById('audio_prompt');audio.play();">
-	  <td>p</td>
+	  <td>alt+p</td>
 	  <td>play audio prompt</td>
 	</tr>
 	<tr onclick="var audio = document.getElementById('audio');audio.play();">
-	  <td>r</td>
+	  <td>alt+o</td>
 	  <td>play recorded audio</td>
 	</tr>
 	<tr onclick="toggleShowRecognitionResult();">
-	  <td>r</td>
+	  <td>alt+r</td>
 	  <td>recognition result show/hide</td>
 	</tr>
 	<tr onclick="toggleShortcuts();">
-	  <td>s</td>
+	  <td>alt+s</td>
 	  <td>shortcuts show/hide</td>
 	</tr>
       </table>
@@ -263,6 +265,7 @@ name audio prompts <utt_id>-prompt.wav in same directory
       
       
     </div>
+
   
   <script src="recclient/audio.js"></script>
   <script src="recclient/recclient-hb.js"></script>
@@ -416,44 +419,44 @@ document.onkeydown = function(event) {
         event.preventDefault();
 	switchState();
     }
-    else if (keyCode==82) {
+    else if (event.altKey && keyCode==82) {
 	//r to toggle recognition result
         event.preventDefault();
 	toggleShowRecognitionResult();
     }
-    else if (keyCode==65) {
+    else if (event.altKey && keyCode==65) {
 	//a to toggle audio player
         event.preventDefault();
 	toggleShowAudioPlayer();
     }
-    else if (keyCode==81) {
+    else if (event.altKey && keyCode==81) {
 	//q to toggle prompt audio player
         event.preventDefault();
 	toggleShowPromptAudioPlayer();
     }
-    else if (keyCode==87) {
+    else if (event.altKey && keyCode==87) {
 	//w to toggle prompt audio autoplay
         event.preventDefault();
 	togglePromptAudioAutoplay();
     }
-    else if (keyCode==78) {
+    else if (event.altKey && keyCode==78) {
 	//n to toggle automatic next
         event.preventDefault();
 	autoNext = !autoNext;
     }
-    else if (keyCode==80) {
+    else if (event.altKey && keyCode==80) {
 	//p to play prompt audio
         event.preventDefault();
 	var audio = document.getElementById("audio_prompt");
 	audio.play();
     }
-    else if (keyCode==82) {
-	//r to play recorded audio
+    else if (event.altKey && keyCode==79) {
+	//o to play recorded audio
         event.preventDefault();
 	var audio = document.getElementById("audio");
 	audio.play();
     }
-    else if (keyCode==83) {
+    else if (event.altKey && keyCode==83) {
 	//s to show/hide shortcuts
 	event.preventDefault();
 	toggleShortcuts();

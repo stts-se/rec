@@ -706,6 +706,15 @@ function checkForAbbrev(evt) {
 
 
 function singnalUnsavedEdit(evt) {
+
+    // Without a recID there is no corresponding audio file, so no
+    // point in allowing to save the text
+    let recID = document.getElementById("currentrecordingid").innerText;
+    if (recID.trim() === "") {
+	return;
+    };
+
+    
     let saveBtn = document.getElementById("saveeditedtext");
     if (saveBtn.disabled) {
 	saveBtn.disabled = false;
@@ -731,6 +740,8 @@ function saveEditedText() {
 	return;
     };
 
+    // TODO URL encode, etc
+    let url = baseURL + "/save_text/" + defaultScriptName + "/" + user + "/" + recID + "/" + text; 
     fetch().then();
     
     let saveBtn = document.getElementById("saveeditedtext");

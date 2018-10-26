@@ -368,14 +368,19 @@ function sendAndReceiveBlob() {
 	}
     };
     
+
+
     let recID = uuidv4();
+    console.log("Generated recID", recID);
+    
     document.getElementById("currentrecordingid").innerHTML = recID;
+
     
     AUDIO.sendBlob(currentBlob,
 		   defaultScriptName, //Woohoo, hardwired! ("dictator", see above)
 		   user,              //Woohoo, hardvirew! ("anon", see above)
 		   document.getElementById("finalresponse").value, // text TODO Send as argument to function rather that getting it from HTML...
-		   "", // rec id
+		   recID, 
 		   onLoadEndFunc);
 }
 
@@ -573,7 +578,7 @@ function visualize() {
 // Stuff to add possibility of entering abbreviations that are
 // automatically expanded in manually edited text
 
-// Asks sever for list of persited abbrevisations, and fills in the
+// Asks server for list of persited abbrevisations, and fills in the
 // clients hashmap
 function loadAbbrevTable() {
     let xhr = new XMLHttpRequest();
@@ -739,10 +744,20 @@ function saveEditedText() {
     if (text.trim() === "") {
 	return;
     };
-
+    
     // TODO URL encode, etc
     let url = baseURL + "/save_text/" + defaultScriptName + "/" + user + "/" + recID + "/" + text; 
-    fetch().then();
+    fetch(url)
+	.then(resp => resp.text())
+	.then(function(text) { 
+	    console.log("server says: ", text);
+	}
+	     )
+	.catch(function(err){
+	    console.error("server failed to save text: ", err);
+	    let msg = document.getElementById("msg");
+	    msg.innerText = "Server failed to save text for utterance "+ recID;
+	});
     
     let saveBtn = document.getElementById("saveeditedtext");
     saveBtn.disabled = true;

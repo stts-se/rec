@@ -748,12 +748,14 @@ function saveEditedText() {
     // TODO URL encode, etc
     let url = baseURL + "/save_text/" + defaultScriptName + "/" + user + "/" + recID + "/" + text; 
     fetch(url)
-	.then(resp => resp.text())
-	.then(function(text) { 
-	    console.log("server says: ", text);
-	}
-	     )
-	.catch(function(err){
+	.then(resp => {
+	    if (!resp.ok) {
+		throw Error(resp.responseText);
+	    };
+	    return resp.text();
+	})
+	.then(text =>  console.log("server says: ", text))
+	.catch(err => {
 	    console.error("server failed to save text: ", err);
 	    let msg = document.getElementById("msg");
 	    msg.innerText = "Server failed to save text for utterance "+ recID;

@@ -1,0 +1,1246 @@
+ConamaraCorpusBeag_0001	﻿Níl oiread is ceann amháin fágtha
+ConamaraCorpusBeag_0002	Cén t-ábhar cainte a bhí acu?
+ConamaraCorpusBeag_0003	Ná habair tada
+ConamaraCorpusBeag_0004	Abair amach é
+ConamaraCorpusBeag_0005	Tá sí ag teacht abhaile
+ConamaraCorpusBeag_0006	Níl éinne sa mbaile
+ConamaraCorpusBeag_0007	Níl mé ábalta aige níos mó
+ConamaraCorpusBeag_0008	Tá sé chomh hábhallach leis an diabhal
+ConamaraCorpusBeag_0009	Thit sí isteach san abhainn
+ConamaraCorpusBeag_0010	Is geall le banbh muice é
+ConamaraCorpusBeag_0011	Nach deas an carabhat atá air
+ConamaraCorpusBeag_0012	Bhí sí ann murab ionann agus daoine eile
+ConamaraCorpusBeag_0013	Bronnadh duais ar an ab
+ConamaraCorpusBeag_0014	Ach a Dhia, táim tuirseach
+ConamaraCorpusBeag_0015	Tá sí déanach arís inniu
+ConamaraCorpusBeag_0016	Beannacht Dé léi
+ConamaraCorpusBeag_0017	Cén t-achar amach é
+ConamaraCorpusBeag_0018	Bhí gach bacach bóthair ann
+ConamaraCorpusBeag_0019	Cac an diabhail nó cac an diabhail
+ConamaraCorpusBeag_0020	Ná bac le mac an bhacaigh is ní bhacfaidh mac an bhacaigh leat
+ConamaraCorpusBeag_0021	Níl oiread is acra talún fágtha acu
+ConamaraCorpusBeag_0022	As go brách leo
+ConamaraCorpusBeag_0023	Tá teach breá acu
+ConamaraCorpusBeag_0024	Faigh réidh leis an mbastard bradach brocach sin
+ConamaraCorpusBeag_0025	Bhí an t-ádh dearg leis
+ConamaraCorpusBeag_0026	Tá sé in am adhastar a chur air
+ConamaraCorpusBeag_0027	Is fada an bóthar é
+ConamaraCorpusBeag_0028	Níl radharc agam air
+ConamaraCorpusBeag_0029	Sin é a deirtear
+ConamaraCorpusBeag_0030	Cuir adhmaid leis
+ConamaraCorpusBeag_0031	Adaigh an tine sula dtéann tú amach
+ConamaraCorpusBeag_0032	Ná fág an áit gan admháil
+ConamaraCorpusBeag_0033	Cheapfá gurbh é féin a scoilt an t-adamh
+ConamaraCorpusBeag_0034	Tháinig sé aniar aduaigh orm
+ConamaraCorpusBeag_0035	Ní mór Dia a adhradh
+ConamaraCorpusBeag_0036	Is duine adhmhar í
+ConamaraCorpusBeag_0037	Tá an bád ag dul go tóin poill
+ConamaraCorpusBeag_0038	Is duine éadmhar é
+ConamaraCorpusBeag_0039	D’fheicfeá an t-éad ina shúile
+ConamaraCorpusBeag_0040	Bhí bradán breá bruite ar an mbord
+ConamaraCorpusBeag_0041	D’fhan Aodán san áit ina raibh sé
+ConamaraCorpusBeag_0042	Sin é agat é mar a déarfá
+ConamaraCorpusBeag_0043	Sin é a deirtear ar aon nós
+ConamaraCorpusBeag_0044	Is mar sin a dhéanfadh éinne é
+ConamaraCorpusBeag_0045	Ba mhaith liom é seo a bhronnadh ort
+ConamaraCorpusBeag_0046	Bhain siad an caladh amach faoi dheireadh
+ConamaraCorpusBeag_0047	Bronnadh an duais mhór orthu
+ConamaraCorpusBeag_0048	B’shin é mar a dúirt sí é
+ConamaraCorpusBeag_0049	Adhlachtadh é tar éis Aifrinn a dó dhéag
+ConamaraCorpusBeag_0050	Cuir adhastar air
+ConamaraCorpusBeag_0051	Marbh ag tae agus marbh gan é
+ConamaraCorpusBeag_0052	Bhí teannas san aer
+ConamaraCorpusBeag_0053	Bhí aenna muc leagtha ar na boird acu
+ConamaraCorpusBeag_0054	Níl Gaeilge na muice acu
+ConamaraCorpusBeag_0055	Tá na laethanta saoire ag teacht (tíocht)
+ConamaraCorpusBeag_0056	Níor chuimhin lé é, áfach
+ConamaraCorpusBeag_0057	D’fhan sí i gcalafort Dhún Laoghaire
+ConamaraCorpusBeag_0058	Tá siad gafa ag na póilíní
+ConamaraCorpusBeag_0059	Beidh taraifí go leor le n-íoc as sin
+ConamaraCorpusBeag_0060	Cuir ar an ngraf é
+ConamaraCorpusBeag_0061	Cuir ort do chóta is do scairf
+ConamaraCorpusBeag_0062	Is agat féin atá a fhios
+ConamaraCorpusBeag_0063	Táinig lagar orm
+ConamaraCorpusBeag_0064	Is ag magadh atá tú
+ConamaraCorpusBeag_0065	Ní haon bhagairt é sin
+ConamaraCorpusBeag_0066	Ba shága mór fada gan chríoch é
+ConamaraCorpusBeag_0067	Fág marbh anois é
+ConamaraCorpusBeag_0068	Ceannaigh ceann eile dom
+ConamaraCorpusBeag_0069	Níl a fhios agam faoi sin
+ConamaraCorpusBeag_0070	An bhfuil a fhios agatsa é?
+ConamaraCorpusBeag_0071	Níl tuairim aige sin
+ConamaraCorpusBeag_0072	Tá a fhios again é
+ConamaraCorpusBeag_0073	Is agaibh féin atá sé
+ConamaraCorpusBeag_0074	Ní mór duit scagadh maith a dhéanamh air
+ConamaraCorpusBeag_0075	Tá go leor agóidíochta ar bun faoi láthair
+ConamaraCorpusBeag_0076	Caitheadh aigéad ar a héadan
+ConamaraCorpusBeag_0077	Sin é an scéal gan aon agó
+ConamaraCorpusBeag_0078	Seacht n-uaire in aghaidh an lae
+ConamaraCorpusBeag_0079	Níl a fhios agam an ar do leas nó d’aighleas é
+ConamaraCorpusBeag_0080	Ceann beag bídeach a bhí ann
+ConamaraCorpusBeag_0081	Tá sé beagán aisteach
+ConamaraCorpusBeag_0082	Fágadh ar an gcraig é
+ConamaraCorpusBeag_0083	Bhí sé crochta ansin ar imeall na creige
+ConamaraCorpusBeag_0084	Ní bhfuair mé aga air
+ConamaraCorpusBeag_0085	Bhí sé eagraithe go maith
+ConamaraCorpusBeag_0086	Chonaic sí é mar bhagairt 
+ConamaraCorpusBeag_0087	Tá cnag ar an doras
+ConamaraCorpusBeag_0088	Suigh anseo in aice liom
+ConamaraCorpusBeag_0089	Tá an scéal ar fad áiféiseach
+ConamaraCorpusBeag_0090	Aibhléis is mó a thugtaí ar an leictreachas an uair sin
+ConamaraCorpusBeag_0091	I dtosach na haicíde ‘sea is fusa é a leigheas
+ConamaraCorpusBeag_0092	Cén aicme lena mbaineann sé?
+ConamaraCorpusBeag_0093	Níl sa scéal ach áibhéil agus cur i gcéill
+ConamaraCorpusBeag_0094	Duine cúng-aigeantach é
+ConamaraCorpusBeag_0095	Cén aidhm atá agat?
+ConamaraCorpusBeag_0096	Bhí aighneas mór eatarthu
+ConamaraCorpusBeag_0097	Chomh fairsing leis an Aigéan Atlantach
+ConamaraCorpusBeag_0098	Tá ganntanas copair ann faoi láthair
+ConamaraCorpusBeag_0099	Níl a fhios agam céard a d’imigh air
+ConamaraCorpusBeag_0100	Sheas na haillte amach sa phictiúr
+ConamaraCorpusBeag_0101	Ní raibh insint scéil ar a háilleacht
+ConamaraCorpusBeag_0102	Ailse atá uirthi
+ConamaraCorpusBeag_0103	Is breá liom mí Aibreáin
+ConamaraCorpusBeag_0104	D’ailp sé siar é
+ConamaraCorpusBeag_0105	Tá fáilte is fiche romhat
+ConamaraCorpusBeag_0106	Is ailtire cliste cumasach í
+ConamaraCorpusBeag_0107	In ainneoin sin agus uile, d’éirigh leo
+ConamaraCorpusBeag_0108	Tá an aimsir go hálainn
+ConamaraCorpusBeag_0109	Áine a bhí ann
+ConamaraCorpusBeag_0110	Is aingeal ó Neamh í
+ConamaraCorpusBeag_0111	Eoin Ó hÁinle atá air
+ConamaraCorpusBeag_0112	Tá báibín beag acu
+ConamaraCorpusBeag_0113	Ainniseoir bocht cráite is ea é
+ConamaraCorpusBeag_0114	Bhí m’aintín ar cuairt chugainn
+ConamaraCorpusBeag_0115	Tabhair aire mhaith duit féin
+ConamaraCorpusBeag_0116	Chuaigh sé in airde ar an gcrann
+ConamaraCorpusBeag_0117	Tá mise níos airde ná tusa
+ConamaraCorpusBeag_0118	Airím uaim go mór é
+ConamaraCorpusBeag_0119	Braitheann sé ar airde an tsléibhe
+ConamaraCorpusBeag_0120	Bhíothas san airdeall ina dhiaidh sin
+ConamaraCorpusBeag_0121	Bláth na n-áirní ar an droighneán donn
+ConamaraCorpusBeag_0122	Níor chaill sé riamh ar pháirc an áir é
+ConamaraCorpusBeag_0123	Tar ar ais chugam
+ConamaraCorpusBeag_0124	Is áis mhór dúinn uilig í
+ConamaraCorpusBeag_0125	Bhí an t-aifreann léite is gach rud déanta
+ConamaraCorpusBeag_0126	‘Sí Aisling an buaiteoir
+ConamaraCorpusBeag_0127	Is aistear fada é
+ConamaraCorpusBeag_0128	Seo an áit is annsa liom agus is ait liom é
+ConamaraCorpusBeag_0129	Aithníonn ciaróg ciaróg eile
+ConamaraCorpusBeag_0130	Thug sé aitheasc uaidh a raibh muid uilig bródúil aisti
+ConamaraCorpusBeag_0131	Caithfidh tú aithrí a dhéanamh sara nglacfar ar ais leat
+ConamaraCorpusBeag_0132	Níor aithin mé é
+ConamaraCorpusBeag_0133	Níor thaitin sé sin liom
+ConamaraCorpusBeag_0134	Ní bheidh muintir Chiarraí ró-shásta leis
+ConamaraCorpusBeag_0135	An Ciarraíoch malaithe
+ConamaraCorpusBeag_0136	Bhí sé mar ghiorraí i lár páirce
+ConamaraCorpusBeag_0137	Bhí cearc ann lena hál sicíní
+ConamaraCorpusBeag_0138	Cheap an tAlbanach go raibh said go hálainn
+ConamaraCorpusBeag_0139	Is álainn an radharc é
+ConamaraCorpusBeag_0140	‘Sí Alba an tír is giorra dúinn
+ConamaraCorpusBeag_0141	Feicfidh mé thú sa halla
+ConamaraCorpusBeag_0142	Bhí eala aonair sa chuan
+ConamaraCorpusBeag_0143	Dá gcloisfeá an macalla a bhí ann
+ConamaraCorpusBeag_0144	Bhí sí dall ar feadh a saoil
+ConamaraCorpusBeag_0145	Ainmhí allta is ea é
+ConamaraCorpusBeag_0146	Tá sé ar ais sa diallait
+ConamaraCorpusBeag_0147	Sa Ghalltacht atá sé ina chónaí
+ConamaraCorpusBeag_0148	An ball atá mall sa Toyota
+ConamaraCorpusBeag_0149	Níl cártaí ballraíochta acu
+ConamaraCorpusBeag_0150	Niall Ó hAllúin atá air
+ConamaraCorpusBeag_0151	Bhí sí ag cur allais
+ConamaraCorpusBeag_0152	Tháinig an sagart amach ar an altóir
+ConamaraCorpusBeag_0153	Níor léigh mé an t-alt sin fós
+ConamaraCorpusBeag_0154	Alt nua is ea é
+ConamaraCorpusBeag_0155	Ná ceangail é
+ConamaraCorpusBeag_0156	Bhí camall ag stánadh tríd an ngeata orm
+ConamaraCorpusBeag_0157	Bíonn na sobaldrámaí ar fad mar a chéile
+ConamaraCorpusBeag_0158	Sheas sí ar son an phobail i gcónaí
+ConamaraCorpusBeag_0159	Bhí pobal Dé ag scaipeadh
+ConamaraCorpusBeag_0160	B’éigean dúinn an puball a thógáil ar dtús
+ConamaraCorpusBeag_0161	Tá talann nach beag aige
+ConamaraCorpusBeag_0162	Féach ar an amadán
+ConamaraCorpusBeag_0163	Feicfidh mé amárach thú
+ConamaraCorpusBeag_0164	Cén t-am é?
+ConamaraCorpusBeag_0165	Níl aon am fágtha againn
+ConamaraCorpusBeag_0166	Níor mhaith liom iasc amh a ithe
+ConamaraCorpusBeag_0167	Ceann amháin atá fágtha
+ConamaraCorpusBeag_0168	Labhair sí amhail is nach raibh éinne ann
+ConamaraCorpusBeag_0169	Bhí amhras ag teacht orm
+ConamaraCorpusBeag_0170	Ní hamhlaidh atá
+ConamaraCorpusBeag_0171	Cur amú ama atá ann
+ConamaraCorpusBeag_0172	Seasann sí amach ón slua
+ConamaraCorpusBeag_0173	D’fhan said amuigh leo féin
+ConamaraCorpusBeag_0174	Ní féidir leamh talamh slán a dhéanamh de
+ConamaraCorpusBeag_0175	An rud is annamh is iontach
+ConamaraCorpusBeag_0176	Chraith mé lámh leis
+ConamaraCorpusBeag_0177	Bhí siad ag léamh leabhair
+ConamaraCorpusBeag_0178	Is maith liom liamhás a ithe ó am go chéile
+ConamaraCorpusBeag_0179	Tá Liam ag feabhsú
+ConamaraCorpusBeag_0180	Bí cúramach ar an mbóthar
+ConamaraCorpusBeag_0181	Seo é rúndiamhair an chreidimh
+ConamaraCorpusBeag_0182	An cúiseamh is mó a cuireadh ina leith ná go raibh sé bréagach
+ConamaraCorpusBeag_0183	Ní raibh aon deireadh leis an gclampar a bhí ar bun
+ConamaraCorpusBeag_0184	Ó lampa go lampa sráide
+ConamaraCorpusBeag_0185	Duine beag ramhar is ea é
+ConamaraCorpusBeag_0186	Áitreamhóirí nua is ea iad
+ConamaraCorpusBeag_0187	Bhí an mhuc thiar sa gharraí
+ConamaraCorpusBeag_0188	An bhfuil tú ag magadh?
+ConamaraCorpusBeag_0189	Ní raibh siad ann
+ConamaraCorpusBeag_0190	An mbeidh ceann eile agat?
+ConamaraCorpusBeag_0191	Bhí siad anseo is ansiúd
+ConamaraCorpusBeag_0192	Faoiseamh anama a bhí ann
+ConamaraCorpusBeag_0193	Rith sí anall chugam
+ConamaraCorpusBeag_0194	Tá siad an-mhaith
+ConamaraCorpusBeag_0195	Faraor, thit sé le handúileachas
+ConamaraCorpusBeag_0196	Chuaigh mé anon chuige
+ConamaraCorpusBeag_0197	Is maith an t-anlann an t-ocras
+ConamaraCorpusBeag_0198	Téann ord agus anord le hais a chéile
+ConamaraCorpusBeag_0199	Tagann sé liom gach maidin
+ConamaraCorpusBeag_0200	Cuireann sí déistean orm
+ConamaraCorpusBeag_0201	Ba chóir glas a choinneáil ar an stóras ceimiceán
+ConamaraCorpusBeag_0202	Ceann bán atá uaim
+ConamaraCorpusBeag_0203	Níl aon arán fágtha
+ConamaraCorpusBeag_0204	Bhí cuma ghalánta uirthi
+ConamaraCorpusBeag_0205	Anuraidh a tharla sé dom
+ConamaraCorpusBeag_0206	Anocht is tábhachtaí
+ConamaraCorpusBeag_0207	Anna a bhí ann
+ConamaraCorpusBeag_0208	Is annamh a thagann sí
+ConamaraCorpusBeag_0209	Ab é sin an ceann céanna?
+ConamaraCorpusBeag_0210	Is mó anró is cruatan a ndeachaigh sé tríd
+ConamaraCorpusBeag_0211	‘Siad seo na daoine is aineolaí amuigh
+ConamaraCorpusBeag_0212	Thit an díon anuas uirthi
+ConamaraCorpusBeag_0213	‘Sé Ultan is sine sa chlann
+ConamaraCorpusBeag_0214	Is aoibhinn liom é
+ConamaraCorpusBeag_0215	Bíonn Aodh déanach go minic
+ConamaraCorpusBeag_0216	Beidh aoichainteoir acu ar ball
+ConamaraCorpusBeag_0217	Tá sé caite sa charn aoiligh
+ConamaraCorpusBeag_0218	Feicfidh mé thú Dé hAoine
+ConamaraCorpusBeag_0219	Níor tháinig lá aoise uirthi
+ConamaraCorpusBeag_0220	Ní baol duit é
+ConamaraCorpusBeag_0221	Níl aon dul as agat
+ConamaraCorpusBeag_0222	Bhí teach beag aol-daite acu
+ConamaraCorpusBeag_0223	Bhí beithigh aige ar an aonach
+ConamaraCorpusBeag_0224	‘Sé Aonghus is óige sa chlann
+ConamaraCorpusBeag_0225	Aor atá sa dán sin
+ConamaraCorpusBeag_0226	Cén aois tú?
+ConamaraCorpusBeag_0227	Níl iontu ach aosánaigh
+ConamaraCorpusBeag_0228	Tá ailse in aorta an bhoilg uirthi
+ConamaraCorpusBeag_0229	Tá sé ansin ar an gcathaoir
+ConamaraCorpusBeag_0230	Thosaigh siad ag caoineadh os ard
+ConamaraCorpusBeag_0231	Tabhair dom mo chaipín
+ConamaraCorpusBeag_0232	Chaitheadh sí aprún bán i gcónaí
+ConamaraCorpusBeag_0233	Bhí capall luachmhar aige
+ConamaraCorpusBeag_0234	Seo é mo chapaillín
+ConamaraCorpusBeag_0235	Tá sé ansin ar an mapa
+ConamaraCorpusBeag_0236	Tá ár ré caite
+ConamaraCorpusBeag_0237	D’ardaigh sí léi é
+ConamaraCorpusBeag_0238	Déan arís é
+ConamaraCorpusBeag_0239	Tar ar ais
+ConamaraCorpusBeag_0240	Ara, fág é
+ConamaraCorpusBeag_0241	Bíonn adharca fada ar na ba thar lear
+ConamaraCorpusBeag_0242	Arbh fhiú é?
+ConamaraCorpusBeag_0243	Tá na Gardaí amuigh anocht
+ConamaraCorpusBeag_0244	Bhíodh bard ag gach Taoiseach fadó
+ConamaraCorpusBeag_0245	Is fear cara sa chúirt ná punt sa sparán
+ConamaraCorpusBeag_0246	Éist liom a chairde
+ConamaraCorpusBeag_0247	Tabhair aire dom chara
+ConamaraCorpusBeag_0248	Níl aon arán sa teach
+ConamaraCorpusBeag_0249	D’fhan sí ina haonar
+ConamaraCorpusBeag_0250	Is aonarán ceart é
+ConamaraCorpusBeag_0251	Sin bun agus barr an scéil
+ConamaraCorpusBeag_0252	Is bairille fir é
+ConamaraCorpusBeag_0253	D’fhág siad an baraiméadar ar an díon
+ConamaraCorpusBeag_0254	‘Sí mí Eanáir an tréimhse is dearóile sa mbliain
+ConamaraCorpusBeag_0255	Púdar, péint agus araile
+ConamaraCorpusBeag_0256	Is beag arbhair a bhí fágtha acu
+ConamaraCorpusBeag_0257	Ní fiú é sin a chur san áireamh
+ConamaraCorpusBeag_0258	Tá siad araon sa phuiteach anois
+ConamaraCorpusBeag_0259	Ní stopfadh sé ach ag argóint
+ConamaraCorpusBeag_0260	Cuireadh an t-arm isteach
+ConamaraCorpusBeag_0261	‘Sé ceannasaí an airm é
+ConamaraCorpusBeag_0262	Ní bheidh me ann, dar ndóigh
+ConamaraCorpusBeag_0263	Leag an stoirm an crann breá daire
+ConamaraCorpusBeag_0264	Thit sé as a chéile
+ConamaraCorpusBeag_0265	Níl sé ag teastáil níos mó
+ConamaraCorpusBeag_0266	Baineadh geit aisti
+ConamaraCorpusBeag_0267	Níl muinín ar bith agam asam féin
+ConamaraCorpusBeag_0268	Tá an t-asal réidh
+ConamaraCorpusBeag_0269	Tá casadh eile ar an scéal anois
+ConamaraCorpusBeag_0270	Ní bheidh na heaspaigh sásta leis
+ConamaraCorpusBeag_0271	Ní raibh le heaspórtáil againn ach ár n-óige
+ConamaraCorpusBeag_0272	Beidh oifig na bpas dúnta go ceann seachtaine
+ConamaraCorpusBeag_0273	Ná fág aon rud sa phasáiste
+ConamaraCorpusBeag_0274	Bhí curaí sicín madras againn
+ConamaraCorpusBeag_0275	Bhí dreas beag cainte acu
+ConamaraCorpusBeag_0276	B’éigean an teach a ath-thógáil
+ConamaraCorpusBeag_0277	Níor athraigh siad tada, áfach
+ConamaraCorpusBeag_0278	Caithfidh tú é sin a athdhéanamh
+ConamaraCorpusBeag_0279	Is mór an t-athrú é sin dóibh
+ConamaraCorpusBeag_0280	Thug sí aitheasc breá uaithi
+ConamaraCorpusBeag_0281	Tugadh bata is bothar dóibh
+ConamaraCorpusBeag_0282	Is ait an mac an saol
+ConamaraCorpusBeag_0283	An tseachtain seo caite
+ConamaraCorpusBeag_0284	A Thomáis agus a Thaidhg
+ConamaraCorpusBeag_0285	Ní mór do gach neach beo atáirgeadh
+ConamaraCorpusBeag_0286	Tá sí ag súil le bheith ina haturnae
+ConamaraCorpusBeag_0287	Cuir ort do hata
+ConamaraCorpusBeag_0288	D’fhan sé ina theach
+ConamaraCorpusBeag_0289	D’fhan sí ina teach
+ConamaraCorpusBeag_0290	D’fhan siad ina dteach
+ConamaraCorpusBeag_0291	Tabhair aire do na ba
+ConamaraCorpusBeag_0292	Ba léi féin é
+ConamaraCorpusBeag_0293	Níl siad balbh ná baol air
+ConamaraCorpusBeag_0294	Fágadh babhla torthaí os ár gcomhair
+ConamaraCorpusBeag_0295	Tá sí ina ball den gClub Rothaíochta
+ConamaraCorpusBeag_0296	Tá sé ina bhall den gclub céanna
+ConamaraCorpusBeag_0297	Tá siad uilig ina mbaill
+ConamaraCorpusBeag_0298	Is baill den eagras iad
+ConamaraCorpusBeag_0299	Tugadh bábóg nua don bpáiste
+ConamaraCorpusBeag_0300	Tá na bachlóga ag teacht ar na crainn arís
+ConamaraCorpusBeag_0301	Tóg tusa é an babhta seo
+ConamaraCorpusBeag_0302	Tá sé sa chistin ag bácáil
+ConamaraCorpusBeag_0303	Tá báibín nua aici
+ConamaraCorpusBeag_0304	Tá na báid ag teacht i dtír
+ConamaraCorpusBeag_0305	An bhfuil tú sa mbaile?
+ConamaraCorpusBeag_0306	Sheas báineacht an tí amach
+ConamaraCorpusBeag_0307	Bain díot do chóta
+ConamaraCorpusBeag_0308	Tá an focal sin baininscneach
+ConamaraCorpusBeag_0309	Mhair an bhainis seacht lá is seacht oíche
+ConamaraCorpusBeag_0310	Ní chuirfidh suas leis an mbáirseach sin níos mó
+ConamaraCorpusBeag_0311	Níl luibh ná leigheas in aghaidh an bháis
+ConamaraCorpusBeag_0312	Baisteadh an páiste sa séipéal
+ConamaraCorpusBeag_0313	Tá mé báite ó bhonn go baitheas
+ConamaraCorpusBeag_0314	Balcaire leathan íseal ab ea é
+ConamaraCorpusBeag_0315	Níl sé féin taobh thiar den mballa
+ConamaraCorpusBeag_0316	Is banaltra í
+ConamaraCorpusBeag_0317	Tá go leor airgid sa bhanc againn
+ConamaraCorpusBeag_0318	Feistigh an baoite ar an ndorú
+ConamaraCorpusBeag_0319	B’éigean dom barántas a thabhairt
+ConamaraCorpusBeag_0320	Thug sí barróg dom
+ConamaraCorpusBeag_0321	Phreab sí san aer
+ConamaraCorpusBeag_0322	Is beag difríochta a dhéanann sé
+ConamaraCorpusBeag_0323	Scanraigh na beacha an capall
+ConamaraCorpusBeag_0324	Fágadh an bád béal fúithi sa chuan
+ConamaraCorpusBeag_0325	Déan do bhealach féin ann
+ConamaraCorpusBeag_0326	Tiocfaidh sí abhaile mí Bealtaine
+ConamaraCorpusBeag_0327	Beannacht Dé leis
+ConamaraCorpusBeag_0328	Shroicheamar an beann ar deireadh
+ConamaraCorpusBeag_0329	Tá bearna bheag sa scéal
+ConamaraCorpusBeag_0330	Bhí sé istigh á bhearradh féin
+ConamaraCorpusBeag_0331	Níl aon bhéasa aige
+ConamaraCorpusBeag_0332	Bheinn sásta é sin a dhéanamh
+ConamaraCorpusBeag_0333	Beir air sin soicind
+ConamaraCorpusBeag_0334	Níl a fhios agam beo
+ConamaraCorpusBeag_0335	Bhí beoir agus bia réidh don gcóisir
+ConamaraCorpusBeag_0336	Bíonn siad go maith i gcónaí
+ConamaraCorpusBeag_0337	Chuir sí bib ar an bpáiste
+ConamaraCorpusBeag_0338	Cé atá i bhfeighil anseo?
+ConamaraCorpusBeag_0339	B’shin é mar a bhíodh sé
+ConamaraCorpusBeag_0340	Is duine binb í
+ConamaraCorpusBeag_0341	Tá sí os cionn scór bliain 
+ConamaraCorpusBeag_0342	Bhí blúire páipéir ina láimh aici
+ConamaraCorpusBeag_0343	Tá na bláthannaí go hálainn
+ConamaraCorpusBeag_0344	Tá bleachtaire nua tagthaí
+ConamaraCorpusBeag_0345	Tá sé leagthaí ar an mbord sa gcistineach
+ConamaraCorpusBeag_0346	Bhuail sí bob air
+ConamaraCorpusBeag_0347	Tá bogha báistí ag bun na spéire
+ConamaraCorpusBeag_0348	Ní raibh bolgam le n-ól againn
+ConamaraCorpusBeag_0349	Níl bonn ná barr leat
+ConamaraCorpusBeag_0350	Tá cúpla duine eile ag teacht ar bord
+ConamaraCorpusBeag_0351	Ní dhearna sé brabús ar bith air
+ConamaraCorpusBeag_0352	As go brách leo
+ConamaraCorpusBeag_0353	Nach é an bastard bradach é
+ConamaraCorpusBeag_0354	Tá píosa de bhradán fágthaí
+ConamaraCorpusBeag_0355	Tá na braillíní sa gcófra
+ConamaraCorpusBeag_0356	Cuireadh bréaga ina leith
+ConamaraCorpusBeag_0357	Braithim go bhfuil breall ort
+ConamaraCorpusBeag_0358	Tá sí ag breathnú ort
+ConamaraCorpusBeag_0359	Rinne sí é leis an mbréidín ab fhearr
+ConamaraCorpusBeag_0360	An bhfuair tú aon rud sa mbreis?
+ConamaraCorpusBeag_0361	Sin é Briathar Dé
+ConamaraCorpusBeag_0362	Buachaillín beag le bricíní air
+ConamaraCorpusBeag_0363	Bhí an bhrídeog ag doras an tséipéil
+ConamaraCorpusBeag_0364	Níl tú ach ag brionglóidigh
+ConamaraCorpusBeag_0365	Anois tá an bhróg ar an gcois eile
+ConamaraCorpusBeag_0366	Bheadh sé chomh maith agat a bheith i mbraighdeanas ná a bheith anseo
+ConamaraCorpusBeag_0367	Bhí bromach deas aige thiar sa ngarraí
+ConamaraCorpusBeag_0368	Slán go deo le brón is buairt
+ConamaraCorpusBeag_0369	D’fhan muid ansin faoi bhrothall an lae
+ConamaraCorpusBeag_0370	Brú amach ansin ar an mbruach
+ConamaraCorpusBeag_0371	D’fhan na buachaillí sa gclós
+ConamaraCorpusBeag_0372	B’é sin an buaicphointe an lá sin
+ConamaraCorpusBeag_0373	Dath buí atá orthu a bhuíochas sin daoibhse
+ConamaraCorpusBeag_0374	Bhí iad ar buile
+ConamaraCorpusBeag_0375	Bhí siad ar fiuchadh
+ConamaraCorpusBeag_0376	Bhí siad le ceangal
+ConamaraCorpusBeag_0377	Tháinig an bhuinneach air tar éis an bhéile
+ConamaraCorpusBeag_0378	Níl a fhios agam céard é an bhunchiall atá leis
+ConamaraCorpusBeag_0379	Éist liom a chailín bhig
+ConamaraCorpusBeag_0380	Ní bhfuair mé cabhair ar bith
+ConamaraCorpusBeag_0381	Níl sa scéal sin ach cacamas
+ConamaraCorpusBeag_0382	Ba chadhain aonair é
+ConamaraCorpusBeag_0383	Céard a bhéas faoi chaibidil acu?
+ConamaraCorpusBeag_0384	Ní raibh aon chaidreamh agam leis
+ConamaraCorpusBeag_0385	Chuaigh a gcáil rompu
+ConamaraCorpusBeag_0386	An bhfuil sé caillte agat?
+ConamaraCorpusBeag_0387	D’fhan siad ag caint is ag comhrá
+ConamaraCorpusBeag_0388	‘Sí an chailleach í
+ConamaraCorpusBeag_0389	Thosaigh cairde ag bailiú timpeall
+ConamaraCorpusBeag_0390	Caitheann sí éadaí deasa i gcónaí
+ConamaraCorpusBeag_0391	Bhí an Cháisc déanach i mbliana
+ConamaraCorpusBeag_0392	Beidh cuimhne i gcónaí ar aimsir na Cásca
+ConamaraCorpusBeag_0393	Caisleán ársa a bhí ann
+ConamaraCorpusBeag_0394	Chuaigh a gcáil rompu
+ConamaraCorpusBeag_0395	Tá sé chomh cam le hadharc reithe
+ConamaraCorpusBeag_0396	Caithfidh tú camógaí a chur isteach
+ConamaraCorpusBeag_0397	Bhí camán ina láimh aige
+ConamaraCorpusBeag_0398	Cén chaoi a bhfuil tú?
+ConamaraCorpusBeag_0399	Bhí na héiníní ag canadh in ard a gcinn
+ConamaraCorpusBeag_0400	An bhfuil tú caoch nó céard atá ort?
+ConamaraCorpusBeag_0401	Tá sí caoga bliain d’aois
+ConamaraCorpusBeag_0402	Tá na caoirigh ar an gcnoc
+ConamaraCorpusBeag_0403	Bóthar caol cúng a bhí ann
+ConamaraCorpusBeag_0404	Tá Caoimhín ag teacht isteach
+ConamaraCorpusBeag_0405	Is fearr cara sa gcúirt ná punt sa sparán
+ConamaraCorpusBeag_0406	Sin casadh eile ar an scéal
+ConamaraCorpusBeag_0407	Bhí gruaig rua chatach ar an ngasúr
+ConamaraCorpusBeag_0408	Chaith siad go maith linn
+ConamaraCorpusBeag_0409	Tá an cat marbh
+ConamaraCorpusBeag_0410	Bhuaigh sé an cath sin
+ConamaraCorpusBeag_0411	Níl béasa an chait aige
+ConamaraCorpusBeag_0412	Ach an bhfuair tú cead?
+ConamaraCorpusBeag_0413	Go maire tú an céad!
+ConamaraCorpusBeag_0414	Seo’d é mo chéad lá san áit
+ConamaraCorpusBeag_0415	An chaint chéanna arís is arís eile!
+ConamaraCorpusBeag_0416	D’imigh siad ceal oibre
+ConamaraCorpusBeag_0417	Bhí sí ar céalacan ar feadh dhá lá
+ConamaraCorpusBeag_0418	Ceangail anois é
+ConamaraCorpusBeag_0419	Slíbhín cealgach colgach is ea é
+ConamaraCorpusBeag_0420	An raibh tú riamh ann cheana?
+ConamaraCorpusBeag_0421	Ba dheacair é a cheansú
+ConamaraCorpusBeag_0422	Cuireadh ar ceant é
+ConamaraCorpusBeag_0423	Bhí cearc uisce ar an mbruach
+ConamaraCorpusBeag_0424	Is maith liom ubh circe anois is arís
+ConamaraCorpusBeag_0425	Is ceardaí oilte cliste é
+ConamaraCorpusBeag_0426	Cearrbhach amach is amach a bhí ann
+ConamaraCorpusBeag_0427	Tá mé céasta aige
+ConamaraCorpusBeag_0428	‘Siad an dá mar a chéile iad
+ConamaraCorpusBeag_0429	Bhí ceiliúradh mór acu
+ConamaraCorpusBeag_0430	Ag tochras ar a ceirtlín féin is mó a bhíonn sí
+ConamaraCorpusBeag_0431	Ceist agam ort…
+ConamaraCorpusBeag_0432	Chaith sí bliain agus ráithe ag foghlaim a ceirde
+ConamaraCorpusBeag_0433	Tá sí anois i gcré na cille
+ConamaraCorpusBeag_0434	Cén cineál cinnidh é sin?
+ConamaraCorpusBeag_0435	Tá siad cíocrach chun eolais
+ConamaraCorpusBeag_0436	Tá cion agam ort
+ConamaraCorpusBeag_0437	Bhí sí ag cíoradh a cuid gruaige
+ConamaraCorpusBeag_0438	Ní raibh cíos, cás ná cathú orthu
+ConamaraCorpusBeag_0439	Tá sé ciotach go maith
+ConamaraCorpusBeag_0440	Bhí cipíní faoina hascaill aici
+ConamaraCorpusBeag_0441	B’éigean dóibh ciseach a dhéanamh le fáil amach
+ConamaraCorpusBeag_0442	Bhí císte deas aráin acu
+ConamaraCorpusBeag_0443	Bhí siad thíos ar an gcladach
+ConamaraCorpusBeag_0444	D’fhan sé ciúin sa chúinne
+ConamaraCorpusBeag_0445	Is cladhaire críochnaithe é
+ConamaraCorpusBeag_0446	Bhí an bháisteach ag clagarnach ar an bhfuinneog
+ConamaraCorpusBeag_0447	Coinnigh i do chloigeann é
+ConamaraCorpusBeag_0448	Cleachtaigh é sin anois
+ConamaraCorpusBeag_0449	Rinneadh cleamhnas dóibh
+ConamaraCorpusBeag_0450	Ní réiteoidh sé sin leis an gcléir
+ConamaraCorpusBeag_0451	Níor fhág sí barr cleite amach ná bun cleite isteach sa saothar ar fad
+ConamaraCorpusBeag_0452	Bhí páiste beag sa gcliabhán
+ConamaraCorpusBeag_0453	Bhí siad thiar ar an gClochán
+ConamaraCorpusBeag_0454	Tá sí istigh sa chlochar
+ConamaraCorpusBeag_0455	Ar bhuail an clog?
+ConamaraCorpusBeag_0456	Tá lámh an chloig briste
+ConamaraCorpusBeag_0457	Cuir cluas na héisteachta ort féin
+ConamaraCorpusBeag_0458	Bhí an cluiche thar barr
+ConamaraCorpusBeag_0459	An gcloiseann tú mé?
+ConamaraCorpusBeag_0460	Is cneámhaire cráifeach é
+ConamaraCorpusBeag_0461	Dún do chnaipí
+ConamaraCorpusBeag_0462	Bhris mé cnámh i mo chois
+ConamaraCorpusBeag_0463	Thóg sé píosa maith air cneasú
+ConamaraCorpusBeag_0464	Is maith liom cnónna an t-am seo bliana
+ConamaraCorpusBeag_0465	Bhí cnuasach maith filíochta aici
+ConamaraCorpusBeag_0466	Bhí coca féir sa ngarraí
+ConamaraCorpusBeag_0467	Chuaigh sí a codladh
+ConamaraCorpusBeag_0468	Tá codarsnacht idir an dá thaobh
+ConamaraCorpusBeag_0469	Tá siopa cogasaíochta acu
+ConamaraCorpusBeag_0470	Céard é an coibhneas atá eatarthu
+ConamaraCorpusBeag_0471	Is ar an gcoigríoch a chaith sé a shaol
+ConamaraCorpusBeag_0472	Ba choir duit é a dhéanamh
+ConamaraCorpusBeag_0473	Coimeádadh na coirpigh faoi ghlas
+ConamaraCorpusBeag_0474	Tá na coinnle ar lasadh
+ConamaraCorpusBeag_0475	Tá na comharthaí bother contúirteach
+ConamaraCorpusBeag_0476	Rinne mé comhbhrón leis
+ConamaraCorpusBeag_0477	Cuir ort do chóta
+ConamaraCorpusBeag_0478	Tá Maigh Eo i gCúige Chonnachta
+ConamaraCorpusBeag_0479	Tá Maigh Cuillin i nGaillimh
+ConamaraCorpusBeag_0480	Is i gCill Dara atá Maigh Nuad
+ConamaraCorpusBeag_0481	Cathal Ó Conghaile is ainm dó
+ConamaraCorpusBeag_0482	Shínigh siad conradh ar deireadh
+ConamaraCorpusBeag_0483	Bhí saol corrach aici
+ConamaraCorpusBeag_0484	Caithfidh tú coinne a dhéanamh
+ConamaraCorpusBeag_0485	Ní rud coitianta é sin
+ConamaraCorpusBeag_0486	Caithfidh tú iad a chomhaireamh
+ConamaraCorpusBeag_0487	Rinne sí é as a conlán féin
+ConamaraCorpusBeag_0488	Céard é an contae is mó in Éirinn?
+ConamaraCorpusBeag_0489	Tá constaic eile ar an mbealach anois
+ConamaraCorpusBeag_0490	Fágadh an corp ar an láthair thar oíche
+ConamaraCorpusBeag_0491	Bhí siad ag glanadh an choirp
+ConamaraCorpusBeag_0492	Leag siad an crann
+ConamaraCorpusBeag_0493	Tá crannog ag bun na páirce
+ConamaraCorpusBeag_0494	Is í Máire bainisteoir na craoibhe
+ConamaraCorpusBeag_0495	Ní haon chreabhar é chun a cheart a thabhairt dó
+ConamaraCorpusBeag_0496	Tá creideamh láidir aici
+ConamaraCorpusBeag_0497	An bhfuil tú críochnaithe fós?
+ConamaraCorpusBeag_0498	Chrochfadh sé thú
+ConamaraCorpusBeag_0499	Is crá croí é
+ConamaraCorpusBeag_0500	Fear le croiméal ab ea é
+ConamaraCorpusBeag_0501	Chrom sé síos ar a ghogaide
+ConamaraCorpusBeag_0502	Tá sé chomh crua le cloch
+ConamaraCorpusBeag_0503	Leag bó a crúb air
+ConamaraCorpusBeag_0504	Ó, a Dhia na cruinne!
+ConamaraCorpusBeag_0505	Tá an crúiscín lán
+ConamaraCorpusBeag_0506	Is duine craosach cantalach crosta é
+ConamaraCorpusBeag_0507	Tá cruach móna sa ngarraí acu
+ConamaraCorpusBeag_0508	Is cuid den mhuc a eireaball
+ConamaraCorpusBeag_0509	An bhfuil ceann ag chuile dhuine?
+ConamaraCorpusBeag_0510	D’fhás sé as cuimse
+ConamaraCorpusBeag_0511	Cuireadh cuing úrnua sa chonradh
+ConamaraCorpusBeag_0512	Tá fuil Éireannach ina cuisle
+ConamaraCorpusBeag_0513	Fuair sé culaith nua éadaí
+ConamaraCorpusBeag_0514	Bhí siad marbh le cumha
+ConamaraCorpusBeag_0515	Tá cúrsa fada romhat amach
+ConamaraCorpusBeag_0516	Seo iad ár gcuspóirí
+ConamaraCorpusBeag_0517	Tá na coscáin briste
+ConamaraCorpusBeag_0518	Fuair sé dabhach uisce do na beithigh
+ConamaraCorpusBeag_0519	Tú féin a dúirt gan dabht
+ConamaraCorpusBeag_0520	Tá sí ag obair sa Dáil
+ConamaraCorpusBeag_0521	Bhí greim docht daingean aici air
+ConamaraCorpusBeag_0522	Bhí sé dall i gcónaí
+ConamaraCorpusBeag_0523	Is léachtóir í i ndámh an léinn Cheiltigh 
+ConamaraCorpusBeag_0524	Bhí siad ag damhsa le háthas
+ConamaraCorpusBeag_0525	Tá sé damanta deacair
+ConamaraCorpusBeag_0526	Tá sé fós i gcuimhne na ndaoine
+ConamaraCorpusBeag_0527	Bíonn gach rud an-daor sa siopa sin
+ConamaraCorpusBeag_0528	Tá dath dubh air
+ConamaraCorpusBeag_0529	Ba bhean dheabhóideach í
+ConamaraCorpusBeag_0530	Cén deacracht atá agat leis?
+ConamaraCorpusBeag_0531	Níl a fhios agam cén diabhal nó deamhan atá air
+ConamaraCorpusBeag_0532	Ba dheachtóir críochnaithe é
+ConamaraCorpusBeag_0533	Sin dea-scéal
+ConamaraCorpusBeag_0534	Bhí deatach sa teach
+ConamaraCorpusBeag_0535	Níor thug mé faoi deara é
+ConamaraCorpusBeag_0536	Tá an t-ádh dearg leat
+ConamaraCorpusBeag_0537	Cén dearcadh atá agatsa air?
+ConamaraCorpusBeag_0538	Tá sé ar an dé deiridh
+ConamaraCorpusBeag_0539	Cén deifir atá ort?
+ConamaraCorpusBeag_0540	Beidh sé ann go deo
+ConamaraCorpusBeag_0541	Tá sí ag déanamh cúrsa Diagachta
+ConamaraCorpusBeag_0542	Tharla sé diaidh ar ndiaidh
+ConamaraCorpusBeag_0543	Rinne sí a dícheall
+ConamaraCorpusBeag_0544	Fágadh ina ndílleachtaí iad
+ConamaraCorpusBeag_0545	Níl dílseacht dá laghad acu
+ConamaraCorpusBeag_0546	Díolfaidh siad go daor as
+ConamaraCorpusBeag_0547	Fágadh díomhaoin é
+ConamaraCorpusBeag_0548	Thaispeán sí an dímheas a bhí aici air
+ConamaraCorpusBeag_0549	Bhí dlúthbhaint aici leis
+ConamaraCorpusBeag_0550	Níl sé sin dleathach níos mó
+ConamaraCorpusBeag_0551	Níl dochar ar bith ann
+ConamaraCorpusBeag_0552	Ní dóigh liom é
+ConamaraCorpusBeag_0553	“Dún an doras go daingean” arsa Domhnall go dána le Donncha
+ConamaraCorpusBeag_0554	Fuair sé dorn sa smut
+ConamaraCorpusBeag_0555	Bhí na dordáin le cloisteáil go soiléir
+ConamaraCorpusBeag_0556	Tá dath donn air
+ConamaraCorpusBeag_0557	Níl againn ach dornán beag airgid
+ConamaraCorpusBeag_0558	Nach bhfuil do dhóthain agat?
+ConamaraCorpusBeag_0559	Tá sé sin dodhéanta
+ConamaraCorpusBeag_0560	Ní fada uainn lá an dreoilín
+ConamaraCorpusBeag_0561	Ní raibh ach dríodar fágthaí sa ngloine
+ConamaraCorpusBeag_0562	Sin é mo dheartháir
+ConamaraCorpusBeag_0563	Sin í mo dheirfiúr
+ConamaraCorpusBeag_0564	D’fhan siad diongbháilte lena dtuairimí
+ConamaraCorpusBeag_0565	Bhí sé socair ar an dromchla
+ConamaraCorpusBeag_0566	Sin é mar is dual dó
+ConamaraCorpusBeag_0567	Bhí sí scantraithe ag duibhe na hoíche
+ConamaraCorpusBeag_0568	Bhí dúil an chait aige ann
+ConamaraCorpusBeag_0569	Is dúinn uilig é sin
+ConamaraCorpusBeag_0570	Níl mé ag dul ann
+ConamaraCorpusBeag_0571	Ghuigh sí go dúthrachtach an lá sin
+ConamaraCorpusBeag_0572	Tá na cearca sa gcró
+ConamaraCorpusBeag_0573	Tá beacha sa nead
+ConamaraCorpusBeag_0574	Níl agam ach an curfá
+ConamaraCorpusBeag_0575	Ní gá duit é a dhéanamh
+ConamaraCorpusBeag_0576	Is uimhir phríomha í sin
+ConamaraCorpusBeag_0577	Éist leis an mbanna ceoil
+ConamaraCorpusBeag_0578	Bhí grúpa acu ann
+ConamaraCorpusBeag_0579	Bhí glór binb le cloisteáil
+ConamaraCorpusBeag_0580	Tá na bainbh ag fás
+ConamaraCorpusBeag_0581	Labhair sé go borb
+ConamaraCorpusBeag_0582	“Geanc” a thug said air
+ConamaraCorpusBeag_0583	Chuaigh sí isteach sa mbanc
+ConamaraCorpusBeag_0584	Ardaigh é
+ConamaraCorpusBeag_0585	Éabha a thug siad uirthi
+ConamaraCorpusBeag_0586	Tá siad thall i Nua-Eabhrac
+ConamaraCorpusBeag_0587	Mhúin sí an ceacht
+ConamaraCorpusBeag_0588	Bhí éad air
+ConamaraCorpusBeag_0589	Roinn siad eatarthu é
+ConamaraCorpusBeag_0590	Bhí éadóchas le brath san áit
+ConamaraCorpusBeag_0591	Tháinig eagla uirthi
+ConamaraCorpusBeag_0592	Níl ann ach déagóirí
+ConamaraCorpusBeag_0593	Bhí trí eala ar an loch
+ConamaraCorpusBeag_0594	Rugadh é in Eamhain Mhacha
+ConamaraCorpusBeag_0595	Tá sí san eangach
+ConamaraCorpusBeag_0596	Chomh cantalach le mála easóg
+ConamaraCorpusBeag_0597	Seo iad na hearráidí is mó a bhíonn acu
+ConamaraCorpusBeag_0598	‘Sé an t-easpag a dúirt é
+ConamaraCorpusBeag_0599	Tá sé sin éasca le déanamh
+ConamaraCorpusBeag_0600	Bhí éide scoile uirthi
+ConamaraCorpusBeag_0601	Níl sé sin ró-éifeachtach
+ConamaraCorpusBeag_0602	Ní raibh ach éileamh amháin acu
+ConamaraCorpusBeag_0603	Rugadh in Éirinn mé
+ConamaraCorpusBeag_0604	Tá mé ag éirí tuirseach de seo
+ConamaraCorpusBeag_0605	Níl éirim sciortáin aige
+ConamaraCorpusBeag_0606	Ní bhfuair siad ach eiteach eile
+ConamaraCorpusBeag_0607	Tá an eochair caillte agam
+ConamaraCorpusBeag_0608	Eoin an t-ainm atá air
+ConamaraCorpusBeag_0609	Is leo nod don eolach
+ConamaraCorpusBeag_0610	Tá sé chomh mór le heilifint
+ConamaraCorpusBeag_0611	Is breá liom fabhal-scéalta
+ConamaraCorpusBeag_0612	Tá siad ag fágáil anois
+ConamaraCorpusBeag_0613	Scéal fadálach gan bhrí is ea é
+ConamaraCorpusBeag_0614	Tá Fianna Fáil ag déanamh go maith
+ConamaraCorpusBeag_0615	Bhí sé ansin is gan fallach air
+ConamaraCorpusBeag_0616	Tá na fáinleoga tagtha(í) arís
+ConamaraCorpusBeag_0617	Tá an fháinleog sin réidh le titim
+ConamaraCorpusBeag_0618	Chuir sí ar mhéar an fháinne é
+ConamaraCorpusBeag_0619	Is duine fáilteach í
+ConamaraCorpusBeag_0620	Beidh mé ag faire amach duit
+ConamaraCorpusBeag_0621	Tá siad fairsing go leor i mbliana
+ConamaraCorpusBeag_0622	Thit sé isteach sa bhfarraige
+ConamaraCorpusBeag_0623	D’fháisc sí an t-uisce amach as
+ConamaraCorpusBeag_0624	Is falsacht é sin
+ConamaraCorpusBeag_0625	Is fánach an áit a bhfaighfeá gliomach
+ConamaraCorpusBeag_0626	Faigh ceann nua dom
+ConamaraCorpusBeag_0627	Mura bhfaigheann tú é dean dearmad air
+ConamaraCorpusBeag_0628	Bhí a fhios agam go bhfaigheadh sé é
+ConamaraCorpusBeag_0629	Beidh ort fanacht
+ConamaraCorpusBeag_0630	Tá faobhar ar an scian
+ConamaraCorpusBeag_0631	Céard faoi a bhfuil tú ag caint?
+ConamaraCorpusBeag_0632	Tháinig faoileán mór isteach an fhuinneog
+ConamaraCorpusBeag_0633	Ba mhór an faoiseamh é do gach duine
+ConamaraCorpusBeag_0634	Níl ann ach fás aon oíche
+ConamaraCorpusBeag_0635	Níor tháinig feabhas ar bith air
+ConamaraCorpusBeag_0636	Beidh feachtas eile ag tosú go luath
+ConamaraCorpusBeag_0637	Ní féidir a bheith ag cogaint mine agus ag feadaíl
+ConamaraCorpusBeag_0638	‘Sé an feall é
+ConamaraCorpusBeag_0639	Tá an fheamainn bainte acu (acab)
+ConamaraCorpusBeag_0640	Bhain an fear an féar
+ConamaraCorpusBeag_0641	Tá siad ag baint an fhéir
+ConamaraCorpusBeag_0642	Tháinig fearg air
+ConamaraCorpusBeag_0643	Chaoin sé le teann feirge
+ConamaraCorpusBeag_0644	Cuireadh an scian go feirc ann
+ConamaraCorpusBeag_0645	Bhí féasóg air
+ConamaraCorpusBeag_0646	Caithfidh tú an fearas ceart a úsaid
+ConamaraCorpusBeag_0647	Sin é mar is fearr é
+ConamaraCorpusBeag_0648	Bhearr sé é féin
+ConamaraCorpusBeag_0649	Ná déan é sin feasta
+ConamaraCorpusBeag_0650	Cé a bhí i bhfeighil ag an am?
+ConamaraCorpusBeag_0651	Níl a fhios agam cén fheidhm a bhí leis
+ConamaraCorpusBeag_0652	Tá sé ag feidhmiú mar bhainisteoir
+ConamaraCorpusBeag_0653	Sin é an chéad rud eile ar an bhféilire
+ConamaraCorpusBeag_0654	Is i mBéal Feirste atá sé
+ConamaraCorpusBeag_0655	Tá mé ag feitheamh leat
+ConamaraCorpusBeag_0656	Thaitin an fheoil sin liom
+ConamaraCorpusBeag_0657	Taitníonn feoil liom de ghnáth
+ConamaraCorpusBeag_0658	Chaith siad an lá ag fiach
+ConamaraCorpusBeag_0659	Níor chuir sí fiacal ann
+ConamaraCorpusBeag_0660	Is duine fial flaithiúil í
+ConamaraCorpusBeag_0661	Bhíodh scéalta Fiannaíochta aige
+ConamaraCorpusBeag_0662	Fiarach atá fós ann ach tá sé á fhuirseadh 
+ConamaraCorpusBeag_0663	Tá sé bliain is fiche
+ConamaraCorpusBeag_0664	Taitníonn an ról mar fhibín leis
+ConamaraCorpusBeag_0665	Ní théann sí in aon áit gan a fidil
+ConamaraCorpusBeag_0666	Is file mór le rá í
+ConamaraCorpusBeag_0667	Bhí sé fillte suas acu
+ConamaraCorpusBeag_0668	Is ball d’Fhine Gael é
+ConamaraCorpusBeag_0669	Sheas finne a cuid gruaige amach
+ConamaraCorpusBeag_0670	Tá finné agam
+ConamaraCorpusBeag_0671	Fionn Mac Cumhaill
+ConamaraCorpusBeag_0672	Cuireadh ar fionraí é
+ConamaraCorpusBeag_0673	Sin fírinne ghlan an scéil
+ConamaraCorpusBeag_0674	Beidh fliuchadh do bhéil agat
+ConamaraCorpusBeag_0675	Titfidh sneachta nó flichshneachta anocht
+ConamaraCorpusBeag_0676	Tháinig floscadh air ansin
+ConamaraCorpusBeag_0677	Chuir mé focal ina chluais
+ConamaraCorpusBeag_0678	Bhain mé úsáid as an bhfoclóir
+ConamaraCorpusBeag_0679	Sheas sí an fód
+ConamaraCorpusBeag_0680	Caithfidh tú é a fhoghlaim
+ConamaraCorpusBeag_0681	Bhí sé i bhfogas cúpla slat díom
+ConamaraCorpusBeag_0682	Tháinig fógra nua amach
+ConamaraCorpusBeag_0683	Bhí fóidín beag móna ina láimh
+ConamaraCorpusBeag_0684	Slán go foil
+ConamaraCorpusBeag_0685	Níor tháinig aon duine i bhfóir orm
+ConamaraCorpusBeag_0686	Fágadh folamh é
+ConamaraCorpusBeag_0687	Chuaigh sí i bhfolach orm
+ConamaraCorpusBeag_0688	Chuir sé foirceann aisteach ar an bhfocal
+ConamaraCorpusBeag_0689	Tá foireann mhaith peile acu
+ConamaraCorpusBeag_0690	Tá sé ag cur fola
+ConamaraCorpusBeag_0691	Bhí an folcadh sin ag teastáil go géar
+ConamaraCorpusBeag_0692	An bhfuil fonn oibre ort?
+ConamaraCorpusBeag_0693	Tá sí ag obair le Foras na Gaeilge
+ConamaraCorpusBeag_0694	Bhí formhór na ndaoine imithe
+ConamaraCorpusBeag_0695	Fuair muid foscadh don oíche
+ConamaraCorpusBeag_0696	Ní raibh fágtha ach fothrach
+ConamaraCorpusBeag_0697	Chaith mé bliain sa bhFrainc
+ConamaraCorpusBeag_0698	Bhí francach sa teach
+ConamaraCorpusBeag_0699	Ní raibh aon fhreagra acu air
+ConamaraCorpusBeag_0700	Bhí mé an-tógtha(í) le friotal an dáin
+ConamaraCorpusBeag_0701	Tá dearcadh frith-Ghaelach acu
+ConamaraCorpusBeag_0702	Is fuath liom é
+ConamaraCorpusBeag_0703	Fuadaíodh bainisteoir an bhainc
+ConamaraCorpusBeag_0704	Bíonn sí ag fuáil go minic
+ConamaraCorpusBeag_0705	Bhí fual gach áit
+ConamaraCorpusBeag_0706	Lá fuar fliuch a bhí ann
+ConamaraCorpusBeag_0707	Níl an fuinneamh agam níos mó
+ConamaraCorpusBeag_0708	Anois, caithfear an taos a fhuineadh
+ConamaraCorpusBeag_0709	Tá mé ag fulaingt inniu
+ConamaraCorpusBeag_0710	Is fondúireacht oideachasúil é
+ConamaraCorpusBeag_0711	Tá sé sin uafásach
+ConamaraCorpusBeag_0712	Tá sé gafa acu(b)
+ConamaraCorpusBeag_0713	Is maith liom na grafaicí a théann leis
+ConamaraCorpusBeag_0714	Bhíonn a gcuid fáithe féin ag gach creideamh
+ConamaraCorpusBeag_0715	Tá mé i bhfabhar an ruin
+ConamaraCorpusBeag_0716	Is gabha geal é
+ConamaraCorpusBeag_0717	Bhí gabháil féir aige
+ConamaraCorpusBeag_0718	Gabhadh iad go luath ina dhiaidh sin
+ConamaraCorpusBeag_0719	Bhí mé ag gabháil tríd an mbaile
+ConamaraCorpusBeag_0720	Tháinig na gathanna gréine isteach
+ConamaraCorpusBeag_0721	Fuair sé cic sa ngabhal
+ConamaraCorpusBeag_0722	Ní hionann an Ghaeltacht agus an Galltacht
+ConamaraCorpusBeag_0723	Gabh amach as seo
+ConamaraCorpusBeag_0724	Tá an gabhar imithe arís
+ConamaraCorpusBeag_0725	Bhí an gadhar ag dul as a mheabhar
+ConamaraCorpusBeag_0726	Seo é an gad is giorra don scórnach
+ConamaraCorpusBeag_0727	Bíonn sé i gcónaí ag gadaíocht
+ConamaraCorpusBeag_0728	Tá siad istigh i gCathair na Gaillimhe
+ConamaraCorpusBeag_0729	Piocann gach duine a ghairm bheatha féin
+ConamaraCorpusBeag_0730	Ní raibh mé gar dó
+ConamaraCorpusBeag_0731	Bhí gaineamh ar fud an urláir
+ConamaraCorpusBeag_0732	Tá sé in am gail a chaitheamh
+ConamaraCorpusBeag_0733	Níl aon ghaol agam leis
+ConamaraCorpusBeag_0734	Gaimbíneachas arís
+ConamaraCorpusBeag_0735	Feicfidh mé go gairid thú
+ConamaraCorpusBeag_0736	Níor stop sí ag ag gáire
+ConamaraCorpusBeag_0737	Rinne tú gaisce
+ConamaraCorpusBeag_0738	Tá galar éigin air
+ConamaraCorpusBeag_0739	Bhí an ghaoth ag séideadh
+ConamaraCorpusBeag_0740	Tá ganntanas bia ann
+ConamaraCorpusBeag_0741	Is duine garbh gáirsiúil é
+ConamaraCorpusBeag_0742	Tá gé agus gandal acu
+ConamaraCorpusBeag_0743	Bhris sé géag
+ConamaraCorpusBeag_0744	Ní raibh sé fós geal
+ConamaraCorpusBeag_0745	Geallaim duit go mbeidh sé ann
+ConamaraCorpusBeag_0746	Is gealt iomlán é
+ConamaraCorpusBeag_0747	Caint ghéar a bhí aige
+ConamaraCorpusBeag_0748	Tá mé ag iarraidh gearán a dhéanamh
+ConamaraCorpusBeag_0749	Ghearr sí í féin le gloine
+ConamaraCorpusBeag_0750	Thug sé óráid ghearr uaidh
+ConamaraCorpusBeag_0751	Coimeádadh i ngéibheann iad
+ConamaraCorpusBeag_0752	Géillfidh mé an méid sin duit
+ConamaraCorpusBeag_0753	Geimhreadh fada fuar a bhí ann
+ConamaraCorpusBeag_0754	Bhí na beithigh ag géimneach sa ngarraí
+ConamaraCorpusBeag_0755	Choimeád siad na céadta giallta
+ConamaraCorpusBeag_0756	Dhúisigh gile an lae mé
+ConamaraCorpusBeag_0757	Ní raibh gíog as
+ConamaraCorpusBeag_0758	Tugann na giollaí daoine amach sna báid
+ConamaraCorpusBeag_0759	Thug sé freagra giorraisc orm
+ConamaraCorpusBeag_0760	Tá sí anois ina giúistís
+ConamaraCorpusBeag_0761	Bhí giorra i lár na páirce
+ConamaraCorpusBeag_0762	Glac leis nó fág ann é
+ConamaraCorpusBeag_0763	Bhí an fhuinneog glé glan 
+ConamaraCorpusBeag_0764	Bhí slam maith airgid aici
+ConamaraCorpusBeag_0765	Lig an gadhar glam as
+ConamaraCorpusBeag_0766	Céard atá ar an gclár?
+ConamaraCorpusBeag_0767	Is breá liom gleacaíocht
+ConamaraCorpusBeag_0768	Bhí ceo sa ngleann
+ConamaraCorpusBeag_0769	Bhí sé gléasta go maith
+ConamaraCorpusBeag_0770	Chuala muid gleo i bhfad uainn
+ConamaraCorpusBeag_0771	Nach é atá glic, an gligín
+ConamaraCorpusBeag_0772	Bhí rud éicinnt ag gliogarnach sa gcarr
+ConamaraCorpusBeag_0773	A Dhia na Glóire, céard atá déanta agat?
+ConamaraCorpusBeag_0774	B’shin ceann de na gluaisteachtaí ba thábhachtaí
+ConamaraCorpusBeag_0775	Ghortaigh sí a glúin
+ConamaraCorpusBeag_0776	Ba ghnách liom dul isteach go luath
+ConamaraCorpusBeag_0777	Gnáthdhuine ab ea é
+ConamaraCorpusBeag_0778	Bhí gnéithe eile den scéal nár thaitin liom
+ConamaraCorpusBeag_0779	Tá mé gnóthach faoi láthair
+ConamaraCorpusBeag_0780	Shuigh sí síos ar a gogaide
+ConamaraCorpusBeag_0781	Ní féidir leis an ngobadán an dá thrá a fhreastal
+ConamaraCorpusBeag_0782	Ghoidfeadh sí an tsúil as do chloigeann
+ConamaraCorpusBeag_0783	Bhí sé ag gol is ag caoineadh
+ConamaraCorpusBeag_0784	Ghoin sé sin go mór orm 
+ConamaraCorpusBeag_0785	Chuir gontacht a chuid cainte isteach orainn
+ConamaraCorpusBeag_0786	Tá cearc ar gor sa sciobal
+ConamaraCorpusBeag_0787	Labhair mé leis ar an nguthán
+ConamaraCorpusBeag_0788	Bhí sé i dtuilleamaí Grá Dé na gcomharsan
+ConamaraCorpusBeag_0789	Tá sé gránna
+ConamaraCorpusBeag_0790	Gread leat amach as seo
+ConamaraCorpusBeag_0791	Bhí greann sa dráma
+ConamaraCorpusBeag_0792	Scéal greannmhar é sin
+ConamaraCorpusBeag_0793	Ní raibh greim le n-ithe againn
+ConamaraCorpusBeag_0794	Tá na gréithe le nigh fós
+ConamaraCorpusBeag_0795	Bhí sé ag iarraidh iad a ghríosadh 
+ConamaraCorpusBeag_0796	Tá an gual éirithe daor
+ConamaraCorpusBeag_0797	Tá sé ag obair leis an nGúm
+ConamaraCorpusBeag_0798	Tá gúna deas agam
+ConamaraCorpusBeag_0799	Bhí gunna ina láimh aici
+ConamaraCorpusBeag_0800	Cuireadh iallach orm é a dhéanamh
+ConamaraCorpusBeag_0801	Tá cúpla iarann sa tine anois
+ConamaraCorpusBeag_0802	Tá sé in am imeacht
+ConamaraCorpusBeag_0803	Tá beirt iníon aici
+ConamaraCorpusBeag_0804	Bhuail mé léi Máirt na hInide
+ConamaraCorpusBeag_0805	Inis dom faoi
+ConamaraCorpusBeag_0806	Tá mé in inmhe é a chríochnú anois
+ConamaraCorpusBeag_0807	Tá inneall nua sa gcarr anois
+ConamaraCorpusBeag_0808	Tháinig athrú intinne air
+ConamaraCorpusBeag_0809	Íoctar go maith é
+ConamaraCorpusBeag_0810	B’éigean di go leor íobairtí a dhéanamh
+ConamaraCorpusBeag_0811	Tá iolair ar ais in Éirinn arís
+ConamaraCorpusBeag_0812	Is ealaíontóir ildánach é
+ConamaraCorpusBeag_0813	Tá an iomarca agat cheana féin
+ConamaraCorpusBeag_0814	Sin é an t-iomlán anois
+ConamaraCorpusBeag_0815	An dtiocfaidh tú isteach im ionad?
+ConamaraCorpusBeag_0816	Is ionann sin agus teip
+ConamaraCorpusBeag_0817	Bhris mé m’ionga ar maidin
+ConamaraCorpusBeag_0818	Ní chuireann sé sin iontas orm
+ConamaraCorpusBeag_0819	Ní bheadh aon iontaoibh agam as
+ConamaraCorpusBeag_0820	Níl d’áras aige ach íoslach tais
+ConamaraCorpusBeag_0821	Níl uasal ná íseal ann ach thuas seal, thíos seal
+ConamaraCorpusBeag_0822	Lá dár saol é
+ConamaraCorpusBeag_0823	Ná cuir do ladhar sa scéal
+ConamaraCorpusBeag_0824	Tháinig lagar air nuair a chuala sé é
+ConamaraCorpusBeag_0825	Tagann sí isteach go laethúil
+ConamaraCorpusBeag_0826	Bhuaigh siad craobh Laighean anuraidh
+ConamaraCorpusBeag_0827	Tá spéis agam sa Laidin
+ConamaraCorpusBeag_0828	Tar amach láithreach
+ConamaraCorpusBeag_0829	Bhí leanbh beag ag lámhacán timpeall
+ConamaraCorpusBeag_0830	Bhí faobhar ar an lann
+ConamaraCorpusBeag_0831	Bhí sí sa leabharlann
+ConamaraCorpusBeag_0832	Las ceann eile dom
+ConamaraCorpusBeag_0833	Tá siad as láthair inniu
+ConamaraCorpusBeag_0834	D’fhan mé sa leaba formhór an lae
+ConamaraCorpusBeag_0835	Bhí leacht bán sa bhuicéad aici
+ConamaraCorpusBeag_0836	Bhí an leabhar leadránach
+ConamaraCorpusBeag_0837	Tá sé imithe thar lear
+ConamaraCorpusBeag_0838	Fuair mé léargas maith air
+ConamaraCorpusBeag_0839	Seo é an leagan leasaithe
+ConamaraCorpusBeag_0840	Níl sé ach leathdhéanta fós
+ConamaraCorpusBeag_0841	Bhí leisce orm é a leanúint
+ConamaraCorpusBeag_0842	Léigh amach dom é
+ConamaraCorpusBeag_0843	Bhí sí ag léimt suas anuas
+ConamaraCorpusBeag_0844	Is cneamhaire leithleasach é
+ConamaraCorpusBeag_0845	Bhí go leor leor botún ann
+ConamaraCorpusBeag_0846	Caitheadh an liathróid isteach
+ConamaraCorpusBeag_0847	Níl aon duine níos liobrálaí ná mé féin
+ConamaraCorpusBeag_0848	Tá lion na scoláirí ag titim 
+ConamaraCorpusBeag_0849	Tá an lonn dubh ag canadh
+ConamaraCorpusBeag_0850	Bhí leann éigin sa gcupán
+ConamaraCorpusBeag_0851	Tá liosta mór fada agam
+ConamaraCorpusBeag_0852	Is cuid den gcúrsa í an litríocht
+ConamaraCorpusBeag_0853	Níl aon locht agam air
+ConamaraCorpusBeag_0854	Tá spéis agam i Logainmneacha
+ConamaraCorpusBeag_0855	Bíonn sí i gcónaí liom leat
+ConamaraCorpusBeag_0856	Níl aon lón agam
+ConamaraCorpusBeag_0857	Ní dóigh liom go bhfuil sé sin loighciúil
+ConamaraCorpusBeag_0858	Chuaigh sé ar bord loinge
+ConamaraCorpusBeag_0859	Sin lom na fírinne
+ConamaraCorpusBeag_0860	Fuair mé lóistín don oíche
+ConamaraCorpusBeag_0861	Bhí long ag dul thar braid
+ConamaraCorpusBeag_0862	Tá sé ina chónaí i Luimneach
+ConamaraCorpusBeag_0863	Glan amach an luaithreach ar dtús
+ConamaraCorpusBeag_0864	Feicfidh mé thú Dé Luain
+ConamaraCorpusBeag_0865	Tarlóidh sé luath nó mall
+ConamaraCorpusBeag_0866	Tá lúb ar lár ann
+ConamaraCorpusBeag_0867	Is rud luachmhar é sin
+ConamaraCorpusBeag_0868	Níl luibh ná leigheas in aghaidh an bháis
+ConamaraCorpusBeag_0869	Tá dhá chapall acu
+ConamaraCorpusBeag_0870	Bhí an callán ag cur isteach orainn
+ConamaraCorpusBeag_0871	Bhí cillín ar thaobh an tséipéil
+ConamaraCorpusBeag_0872	Tá talamh acu ar mhachaire méith na Mídhe
+ConamaraCorpusBeag_0873	Ní fhaca mé a mhacasamhail riamh
+ConamaraCorpusBeag_0874	Faigh réidh leis an madadh sin
+ConamaraCorpusBeag_0875	An ag magadh atá tú?
+ConamaraCorpusBeag_0876	Bhí maide ina láimh aici
+ConamaraCorpusBeag_0877	Bhí ceol go maidin acu
+ConamaraCorpusBeag_0878	Ó, a Mhaighdean Mhuire, céard é sin?
+ConamaraCorpusBeag_0879	Bhí an máistir is an mháistreás ann
+ConamaraCorpusBeag_0880	Chonaic mé Micheál Ó Máille ann
+ConamaraCorpusBeag_0881	Maireann a mhac agus beirt iníon
+ConamaraCorpusBeag_0882	Is maith liom é
+ConamaraCorpusBeag_0883	Tá sé seo tábhachtach go ghach mac máthair
+ConamaraCorpusBeag_0884	D’fhan na máithreacha lasmuigh
+ConamaraCorpusBeag_0885	Bhí mála ina láimh aici
+ConamaraCorpusBeag_0886	Mallacht Chroim orm 
+ConamaraCorpusBeag_0887	Tá mana na scoile os cionn an dorais
+ConamaraCorpusBeag_0888	Tá sé manntach leis na blianta
+ConamaraCorpusBeag_0889	Tá Máirtín Ó Maoileáin anseo
+ConamaraCorpusBeag_0890	Bhí maor tráchta ag stánadh uirthi
+ConamaraCorpusBeag_0891	Dán beag maoithneach atá ann
+ConamaraCorpusBeag_0892	Cnoc maol sceirdiúil atá ann
+ConamaraCorpusBeag_0893	Tá mé marbh agat
+ConamaraCorpusBeag_0894	Fuair sí marc maith sa scrúdú
+ConamaraCorpusBeag_0895	Is masla dúinn uilig é sin
+ConamaraCorpusBeag_0896	Tá sí go maith ag Mata
+ConamaraCorpusBeag_0897	An bhfuil tú as do mheabhair?
+ConamaraCorpusBeag_0898	Méala mór a bhás dá chéile Máire
+ConamaraCorpusBeag_0899	Bhí meangadh ar a bhéal
+ConamaraCorpusBeag_0900	Tá tú ag cur mearbhall orm
+ConamaraCorpusBeag_0901	Tháinig meath air
+ConamaraCorpusBeag_0902	Sean rud meirgeach atá ann
+ConamaraCorpusBeag_0903	Bhí sé ar meisce
+ConamaraCorpusBeag_0904	Tá meon aisteach aige
+ConamaraCorpusBeag_0905	Déanfaidh mé é más mian leat
+ConamaraCorpusBeag_0906	Is breá léi milseáin
+ConamaraCorpusBeag_0907	Tá sé sin mídhleathach
+ConamaraCorpusBeag_0908	Níl agam ach mion-airgead
+ConamaraCorpusBeag_0909	Tá scéalta miotaseolaíochta aige
+ConamaraCorpusBeag_0910	Tá misneach acu
+ConamaraCorpusBeag_0911	Gortaíodh mogall a súile 
+ConamaraCorpusBeag_0912	Níl aon mhodh taistil agam
+ConamaraCorpusBeag_0913	Tá sé níos mó ná sin
+ConamaraCorpusBeag_0914	An bhfuil an mhóin bainte agaibh
+ConamaraCorpusBeag_0915	Moladh go hard na spéire í
+ConamaraCorpusBeag_0916	Páiste beag mothallach is ea é
+ConamaraCorpusBeag_0917	Meilleann muilte Dé go mall
+ConamaraCorpusBeag_0918	Tá sí ag obair le Muintearas
+ConamaraCorpusBeag_0919	Fáiltigí roimh Mháirtín Ó Muiríosa
+ConamaraCorpusBeag_0920	Bhí muid beagnach ag mullach an chnoic
+ConamaraCorpusBeag_0921	Tá sé ag imirt le Cúige Mumhan
+ConamaraCorpusBeag_0922	Bíonn sé ar muir is ar tír
+ConamaraCorpusBeag_0923	Caithfimid múnla nua a réiteach
+ConamaraCorpusBeag_0924	Chuirfeadh sé fonn muisce ort
+ConamaraCorpusBeag_0925	Cá bhfuil Colm?
+ConamaraCorpusBeag_0926	Is duine deas nádúrtha í
+ConamaraCorpusBeag_0927	Bíonn sé namhdach uaireanta
+ConamaraCorpusBeag_0928	Bhí naoi nó deich gcinn aige
+ConamaraCorpusBeag_0929	Bhí naíonán beag ina baclainn aici
+ConamaraCorpusBeag_0930	Ní féidir an dá rud a nascadh
+ConamaraCorpusBeag_0931	Bhí siad ag féachaint isteach ar na nathracha nimhe
+ConamaraCorpusBeag_0932	Bhí an t-éan sa nead
+ConamaraCorpusBeag_0933	Ár nAthair atá ar Neamh
+ConamaraCorpusBeag_0934	Labhair an t-athair naofa go séimh
+ConamaraCorpusBeag_0935	Tá Niamh ag teacht isteach anois
+ConamaraCorpusBeag_0936	Tá an scéal nochtaithe anois acu
+ConamaraCorpusBeag_0937	Is leor nod don eolach
+ConamaraCorpusBeag_0938	Is breá liom an Nollaig
+ConamaraCorpusBeag_0939	Bhí na nóiníní ag teacht arís
+ConamaraCorpusBeag_0940	Tá Nóra ag teacht
+ConamaraCorpusBeag_0941	Is mór an onóir dom é
+ConamaraCorpusBeag_0942	Fuair mé nóta uaidh 
+ConamaraCorpusBeag_0943	Aon scéal nua agat?
+ConamaraCorpusBeag_0944	Go maire tú do nuaíocht
+ConamaraCorpusBeag_0945	Bhí nuacht an lae aici
+ConamaraCorpusBeag_0946	Bhí Fionnuala ar bís
+ConamaraCorpusBeag_0947	Níor oscail sé a bhéal go nuige seo
+ConamaraCorpusBeag_0948	Chan sí go binn
+ConamaraCorpusBeag_0949	Bhí canna stáin ar an mbord
+ConamaraCorpusBeag_0950	Rinne sí obair na gcapall
+ConamaraCorpusBeag_0951	Bhí bás obann aici ar deireadh
+ConamaraCorpusBeag_0952	Is ócáid stairiúil í seo
+ConamaraCorpusBeag_0953	Bhí ochtar sa mbád
+ConamaraCorpusBeag_0954	D’ofráil sé dom é
+ConamaraCorpusBeag_0955	Bhí slua mór ann idir óg is aosta
+ConamaraCorpusBeag_0956	Tá clocha Ogham le feiceáil sa gceantar
+ConamaraCorpusBeag_0957	Tháinig an bheirt ógánach slán
+ConamaraCorpusBeag_0958	D’oibrigh mé leo ar feadh píosa
+ConamaraCorpusBeag_0959	Oide oilte cumasach is ea í
+ConamaraCorpusBeag_0960	Is cuid dár n-oidhreacht é
+ConamaraCorpusBeag_0961	Tá císte san oigheann
+ConamaraCorpusBeag_0962	Ní raibh fonn óil ná ceoil air
+ConamaraCorpusBeag_0963	Bhí oighear ar fhuinneog an chairr
+ConamaraCorpusBeag_0964	Rugadh ar oileán mé
+ConamaraCorpusBeag_0965	Chuaigh siad ar oilithreacht go Cnoc Mhuire
+ConamaraCorpusBeag_0966	Níl inti ach óinseach
+ConamaraCorpusBeag_0967	Níl an oiread sin trua agam dó
+ConamaraCorpusBeag_0968	Tá sé ag obair leis an Roinn Oideachais
+ConamaraCorpusBeag_0969	Oireann siad a chéile
+ConamaraCorpusBeag_0970	Leathfaidh báisteach soir trasna na tire
+ConamaraCorpusBeag_0971	Tá gaoth anoir ann
+ConamaraCorpusBeag_0972	Tá sé mar a bheadh Oisín i ndiaidh na Féinne
+ConamaraCorpusBeag_0973	Níl braon ola sa gcarr
+ConamaraCorpusBeag_0974	Is olc an scéal é
+ConamaraCorpusBeag_0975	Tháinig olcas air
+ConamaraCorpusBeag_0976	Tá ollmhargadh nua ann anois
+ConamaraCorpusBeag_0977	Ní raibh ord ná eagar air
+ConamaraCorpusBeag_0978	Is binne guth a béil ná orgáin an tsaoil
+ConamaraCorpusBeag_0979	Chuir sé ornáidíocht laistigh den doras
+ConamaraCorpusBeag_0980	Tá an doras ar oscailt
+ConamaraCorpusBeag_0981	D’fhan mé in óstán an oíche sin 
+ConamaraCorpusBeag_0982	Tá na hothair san ospidéal
+ConamaraCorpusBeag_0983	Bhí paca cártaí ina póca
+ConamaraCorpusBeag_0984	Tá Pádraig, nó Páidín mar is fearr aithne air, ag dul ann
+ConamaraCorpusBeag_0985	Rinne sé paidir chapaill de
+ConamaraCorpusBeag_0986	Abair do phaidreacha anois
+ConamaraCorpusBeag_0987	Ní hí sin an chloch is mó ar a paidrín 
+ConamaraCorpusBeag_0988	D’fhan sé i lár na páirce
+ConamaraCorpusBeag_0989	Ní raibh baint ná páirt agam ann
+ConamaraCorpusBeag_0990	Déanann sé go paiteanta i gcónaí é
+ConamaraCorpusBeag_0991	Tugadh paltóg dó
+ConamaraCorpusBeag_0992	Tháinig an Pápa go hÉirinn fadó
+ConamaraCorpusBeag_0993	Tá sí ina ball de choiste Parlaiminte 
+ConamaraCorpusBeag_0994	Fágadh na paisinéirí sa traein
+ConamaraCorpusBeag_0995	Peadar de Paon is ainm dó
+ConamaraCorpusBeag_0996	Is mór an peaca é
+ConamaraCorpusBeag_0997	Is annamh a d’fheicfeá péacóg anois
+ConamaraCorpusBeag_0998	Tógann sé trí phiollaire in aghaidh an lae
+ConamaraCorpusBeag_0999	Is deas an peann é sin
+ConamaraCorpusBeag_1000	Bhí an pheannaireacht dochreidte
+ConamaraCorpusBeag_1001	Ná bac leis an bpeataireacht
+ConamaraCorpusBeag_1002	Bhí sé pianmhar le bheith ag breathnú air
+ConamaraCorpusBeag_1003	Tá an píce sa scioból
+ConamaraCorpusBeag_1004	Is deas an pictiúr é
+ConamaraCorpusBeag_1005	Cuireadh picéad ar an áit
+ConamaraCorpusBeag_1006	Tugadh piléar sa chloigeann dó
+ConamaraCorpusBeag_1007	Ní raibh na pingine aige níos mó
+ConamaraCorpusBeag_1008	Ná bí ag piocadh orm
+ConamaraCorpusBeag_1009	An olfaidh tú pionta?
+ConamaraCorpusBeag_1010	Beidh píosa eile agam
+ConamaraCorpusBeag_1011	Níl ansin ach piseoga
+ConamaraCorpusBeag_1012	Fuair sí puiscín beag dá breithlá
+ConamaraCorpusBeag_1013	Bhain sé plaic as
+ConamaraCorpusBeag_1014	Tá plandaí nua sa ghairdín
+ConamaraCorpusBeag_1015	Phléasc sí amach ag gáire
+ConamaraCorpusBeag_1016	Lean plá agus gorta é sin
+ConamaraCorpusBeag_1017	Tá an pláinéad i mbaol
+ConamaraCorpusBeag_1018	Tá sé lán le plámás
+ConamaraCorpusBeag_1019	Éirigh as an bpleidhcíocht sin
+ConamaraCorpusBeag_1020	Is mór an pléisiúr é
+ConamaraCorpusBeag_1021	Thit sé de phlimp ar an urlár
+ConamaraCorpusBeag_1022	Bhí sí ag plobarnach timpeall san uisce
+ConamaraCorpusBeag_1023	Tá mé plúchta le slaghdán
+ConamaraCorpusBeag_1024	Tharraing sí an phloid timpeall uirthi
+ConamaraCorpusBeag_1025	Níl plúr ar bith fanta
+ConamaraCorpusBeag_1026	Bhí pocán gabhair ag stánadh orm
+ConamaraCorpusBeag_1027	Labhair sé amach go poiblí
+ConamaraCorpusBeag_1028	Ní hé sin an pointe
+ConamaraCorpusBeag_1029	Bhí póit an diabhail orm
+ConamaraCorpusBeag_1030	Tá poll mór le feiceáil
+ConamaraCorpusBeag_1031	Chaith sé an lá ag polladh sa ngarraí
+ConamaraCorpusBeag_1032	Is breá liom portáin
+ConamaraCorpusBeag_1033	Pósadh iad bliain ó shin
+ConamaraCorpusBeag_1034	Níor mhair an pósadh i bhfad
+ConamaraCorpusBeag_1035	An bhfuil tae fágtha sa phota?
+ConamaraCorpusBeag_1036	Bhí sí ag preabadh timpeall
+ConamaraCorpusBeag_1037	Bhí na préacháin ar fud na háite
+ConamaraCorpusBeag_1038	Thosaigh sé ag obair mar phrintíseach
+ConamaraCorpusBeag_1039	Sin é an príomhrud
+ConamaraCorpusBeag_1040	Bhí cúrsa fada próis le déanamh
+ConamaraCorpusBeag_1041	Bhí an scéal ar fud an pharóiste
+ConamaraCorpusBeag_1042	Bhí púdar bán sa mhála
+ConamaraCorpusBeag_1043	Bhí putóga againn don mbricfeasta
+ConamaraCorpusBeag_1044	Chaill sí an stíoróip agus thit sí den gcapall
+ConamaraCorpusBeag_1045	Tá cóip eile agam
+ConamaraCorpusBeag_1046	Seo é mo chaipillín
+ConamaraCorpusBeag_1047	Fuair mé radharc maith air
+ConamaraCorpusBeag_1048	Thug an réiteoir rabhadh deiridh dó
+ConamaraCorpusBeag_1049	Tháinig sé isteach leis an rabharta
+ConamaraCorpusBeag_1050	Bhuail racht gáirí í
+ConamaraCorpusBeag_1051	Bronnadh gradam an Oireachtais air
+ConamaraCorpusBeag_1052	Sin é atá ráite
+ConamaraCorpusBeag_1053	Tá sí i rang a dó
+ConamaraCorpusBeag_1054	Seo é réamhfháisnéis na haimsire
+ConamaraCorpusBeag_1055	Tá sé ramhar
+ConamaraCorpusBeag_1056	Cá bhfuil mo bhróga reatha?
+ConamaraCorpusBeag_1057	Thug sí cuairt ar an reilig
+ConamaraCorpusBeag_1058	Tá sé ar fud an réigiúin
+ConamaraCorpusBeag_1059	Bhí muintir an Bhaile Riabhaigh ar bís
+ConamaraCorpusBeag_1060	Tá sé go maith ag rabhlóga 
+ConamaraCorpusBeag_1061	Tá sé sin rialaithe san ardchúirt
+ConamaraCorpusBeag_1062	Ní raibh ribe gruaige fágtha air
+ConamaraCorpusBeag_1063	Tá sí ina cónaí sa Rinn i bPort Láirge
+ConamaraCorpusBeag_1064	Bhí siad ag rince an oíche ar fad
+ConamaraCorpusBeag_1065	Dá bhfeicfeá an riocht ina raibh sé!
+ConamaraCorpusBeag_1066	Is breá liom ronnachaí úra an t-am seo bliana
+ConamaraCorpusBeag_1067	Níl a fhios agam cén rí-rá agus ruaile buaile a bhí ar bun 
+ConamaraCorpusBeag_1068	Cé atá ag ritheacht na háite anois?
+ConamaraCorpusBeag_1069	Ní raibh an dara rogha agam
+ConamaraCorpusBeag_1070	Tá siad amuigh ag rámhaíocht
+ConamaraCorpusBeag_1071	Briseadh an roth
+ConamaraCorpusBeag_1072	Ruadhán is ainm dó
+ConamaraCorpusBeag_1073	Tabhair dom ruainne beag
+ConamaraCorpusBeag_1074	Is Rúiseach í
+ConamaraCorpusBeag_1075	Bhí teachtaireacht rúnda aige
+ConamaraCorpusBeag_1076	Tá rútaí an chrainn ag dul isteach faoin teach
+ConamaraCorpusBeag_1077	Tá siad scartha
+ConamaraCorpusBeag_1078	Bhíodh scoileanna scairte ann fadó
+ConamaraCorpusBeag_1079	Tá mé slán sábháilte
+ConamaraCorpusBeag_1080	Thug sí sac fataí isteach
+ConamaraCorpusBeag_1081	Tá Sadhbh as láthair inniu
+ConamaraCorpusBeag_1082	Tá sé ina shagart
+ConamaraCorpusBeag_1083	Tá na saighdiúirí réidh chun imeacht
+ConamaraCorpusBeag_1084	Tá sí imithe thar sáile
+ConamaraCorpusBeag_1085	Níor cheart bia ar mhórán saille a ithe
+ConamaraCorpusBeag_1086	Níl aon saineolas agam faoi
+ConamaraCorpusBeag_1087	D’ith sí a sáith
+ConamaraCorpusBeag_1088	Ní chreidfeá an méid salachair a bhí fágtha
+ConamaraCorpusBeag_1089	Léadh salm os a chionn
+ConamaraCorpusBeag_1090	Ní fada uainn an samhradh
+ConamaraCorpusBeag_1091	Athraíonn an aimsir i mí na Samhna
+ConamaraCorpusBeag_1092	Is sampla maith é sin
+ConamaraCorpusBeag_1093	Tá sé ag deireadh a shaoil
+ConamaraCorpusBeag_1094	Tá saoirse intinne tábhachtach
+ConamaraCorpusBeag_1095	Ní féidir é a shárú
+ConamaraCorpusBeag_1096	Díolann siad scadáin sa siopa sin
+ConamaraCorpusBeag_1097	Tá mé ag iarraidh na fíricí a scagadh
+ConamaraCorpusBeag_1098	Feicfidh tú é ar an scáileán
+ConamaraCorpusBeag_1099	Fuarthas é istigh faoi scailp ar an sliabh
+ConamaraCorpusBeag_1100	Bhí sé ag scaladh gréine an lá sin
+ConamaraCorpusBeag_1101	Tá sé scamallach faoi láthair
+ConamaraCorpusBeag_1102	Tá sí scanraithe
+ConamaraCorpusBeag_1103	Tá sé sin scanrúil
+ConamaraCorpusBeag_1104	Scaoil amach é
+ConamaraCorpusBeag_1105	Ar scáth a chéile a mhaireann na daoine
+ConamaraCorpusBeag_1106	Bíonn sé ann scaití
+ConamaraCorpusBeag_1107	Féach isteach sa scáthán
+ConamaraCorpusBeag_1108	Níl ann ach sceach i mbéal bearna
+ConamaraCorpusBeag_1109	Is breá leis a bheith ag scéalaíocht
+ConamaraCorpusBeag_1110	Tá siad ag ithe sceallóga
+ConamaraCorpusBeag_1111	Tá sceideal nua tagtha amach
+ConamaraCorpusBeag_1112	Áit álainn sceirdiúil í
+ConamaraCorpusBeag_1113	Bhí eagla orthu go sceithfeadh sé
+ConamaraCorpusBeag_1114	Bhí sciathán an éin briste
+ConamaraCorpusBeag_1115	Cheannaigh sí sciorta deas
+ConamaraCorpusBeag_1116	D’fhág sé go breá sciobthaí
+ConamaraCorpusBeag_1117	Bíonn sí ag sclábhaíocht ó dhubh go dubh
+ConamaraCorpusBeag_1118	Ní raibh an scóip agam
+ConamaraCorpusBeag_1119	Scoláire mór is ea é
+ConamaraCorpusBeag_1120	Scoradh an comhlacht ina dhiaidh sin
+ConamaraCorpusBeag_1121	Tá scoth na Gaeilge aici
+ConamaraCorpusBeag_1122	Scraiste beag gan mhaitheas é
+ConamaraCorpusBeag_1123	Bhí screamh tagtha air
+ConamaraCorpusBeag_1124	Ach níl sé scríofa síos agat
+ConamaraCorpusBeag_1125	Beidh na scrúduithe ag tosú go luath 
+ConamaraCorpusBeag_1126	Bhí scuaine mór ag fanacht
+ConamaraCorpusBeag_1127	D’imigh sé ar seachrán 
+ConamaraCorpusBeag_1128	Bhí seachtain fhada againn
+ConamaraCorpusBeag_1129	Chaith mé seal ann
+ConamaraCorpusBeag_1130	Post sealadach atá ann
+ConamaraCorpusBeag_1131	Caithfidh mé labhairt leat, a Shéamais
+ConamaraCorpusBeag_1132	B’shin é a bhí sa seanchas
+ConamaraCorpusBeag_1133	Tá searrach álainn aici
+ConamaraCorpusBeag_1134	Bíonn an fhírinne searbh
+ConamaraCorpusBeag_1135	Scéal seasc gan dóchas atá ann
+ConamaraCorpusBeag_1136	Bhí seastán acu ann
+ConamaraCorpusBeag_1137	Seo é an séasúr is fear dá leithéid
+ConamaraCorpusBeag_1138	Tá sé seiftiúil thar aon rud eile
+ConamaraCorpusBeag_1139	Tá sé chomh mall le seilmide
+ConamaraCorpusBeag_1140	Tá a phort seinnte
+ConamaraCorpusBeag_1141	Níl ionam ach seirbhíseach
+ConamaraCorpusBeag_1142	Tá litir seolta agam chuige
+ConamaraCorpusBeag_1143	Ní fiú scilling é
+ConamaraCorpusBeag_1144	Tá mé ag dul siar anois
+ConamaraCorpusBeag_1145	Tá sé thiar le tamall
+ConamaraCorpusBeag_1146	Tá corraíl sibhialta ag tosú
+ConamaraCorpusBeag_1147	Tá ticéad singil agam
+ConamaraCorpusBeag_1148	Bhí an áit síochánta go leor
+ConamaraCorpusBeag_1149	Níl sioc ná seabhach le cur isteach air
+ConamaraCorpusBeag_1150	Chroch sé an geata le sceabha air
+ConamaraCorpusBeag_1151	Siombal den síochán atá ann
+ConamaraCorpusBeag_1152	D’imigh siad ó aerfort na Sionainne
+ConamaraCorpusBeag_1153	Suaimhneas síoraí dó
+ConamaraCorpusBeag_1154	Tá slad-mhargadh san áit
+ConamaraCorpusBeag_1155	Fuair siad slám maith airgid
+ConamaraCorpusBeag_1156	Tugadh an tslat dó an lá sin
+ConamaraCorpusBeag_1157	Nach é atá sleamhain!
+ConamaraCorpusBeag_1158	Is as Sligeach é
+ConamaraCorpusBeag_1159	Léigh an sliocht seo dom
+ConamaraCorpusBeag_1160	Féach na sliogáin daite
+ConamaraCorpusBeag_1161	Clúdaíonn an fhoraois slios an tsléibhe
+ConamaraCorpusBeag_1162	Fuair siad poc sleasa ansin
+ConamaraCorpusBeag_1163	Níl ann ach slíomadóir
+ConamaraCorpusBeag_1164	Siobhán is ainm di
+ConamaraCorpusBeag_1165	Níl a fhios agam cén sloinne atá uirthi
+ConamaraCorpusBeag_1166	Níl aon smacht agam air
+ConamaraCorpusBeag_1167	Inniu Lá Fhéile Mhuire gan Smál
+ConamaraCorpusBeag_1168	Smaoiním uirthi gach lá
+ConamaraCorpusBeag_1169	Las sé é le smeachóid ón tine
+ConamaraCorpusBeag_1170	Bhí smugairle róin ar an trá
+ConamaraCorpusBeag_1171	Tá smut den fhírinne ann
+ConamaraCorpusBeag_1172	Chuir sé snaidhm air ansin
+ConamaraCorpusBeag_1173	Snámh in aghaidh easa atá ann
+ConamaraCorpusBeag_1174	Tá sneachta ag titim
+ConamaraCorpusBeag_1175	B’éigean é a shníomh isteach idir na ráillí
+ConamaraCorpusBeag_1176	Tháinig na sócmhainní go luach ard
+ConamaraCorpusBeag_1177	Tá na socruithe déanta anois
+ConamaraCorpusBeag_1178	Ní bheidh a sochraid ann go dtí an Luan 
+ConamaraCorpusBeag_1179	Níl siad ach ag sodar i ndiaidh na n-uasal
+ConamaraCorpusBeag_1180	Ní raibh sé soiléir domsa
+ConamaraCorpusBeag_1181	Caithfidh tú rud éicinnt a sholáthar dó
+ConamaraCorpusBeag_1182	Tá sé chomh glic leis an sionnach
+ConamaraCorpusBeag_1183	Chaill sí a sparán
+ConamaraCorpusBeag_1184	Chaith sí spalla leis
+ConamaraCorpusBeag_1185	Is annamh a d’fheicfeá speal na laethanta seo
+ConamaraCorpusBeag_1186	Is duine speisialta é
+ConamaraCorpusBeag_1187	Bíonn sí sprionlaitheach leis an airgead
+ConamaraCorpusBeag_1188	Chuir sé spreang ar an doras
+ConamaraCorpusBeag_1189	Cén sprioc atá agat?
+ConamaraCorpusBeag_1190	Thaispeáin sí sraith pictiúr dom
+ConamaraCorpusBeag_1191	Shroich mé an áit faoi dheireadh
+ConamaraCorpusBeag_1192	Ní raibh stoca uirthi ná bróg
+ConamaraCorpusBeag_1193	Chonaic mé í ag stad an bhus
+ConamaraCorpusBeag_1194	Beidh stailc ann amárach
+ConamaraCorpusBeag_1195	Bhí stíl nua gruaige aige
+ConamaraCorpusBeag_1196	D’ordaigh muid stéig
+ConamaraCorpusBeag_1197	Chaith sé an lá ag stocaireacht
+ConamaraCorpusBeag_1198	Tá mé strumpaithe leis an bhfuacht
+ConamaraCorpusBeag_1199	Bhí strus uirthi
+ConamaraCorpusBeag_1200	Tá cathaoir súgáin aige
+ConamaraCorpusBeag_1201	Céard é an stuif sin?
+ConamaraCorpusBeag_1202	Beidh suaimhneas acu ar deireadh
+ConamaraCorpusBeag_1203	Níl an tsuim agam ann
+ConamaraCorpusBeag_1204	Bain sult as
+ConamaraCorpusBeag_1205	Bhí sé anseo aimsir na Cásca!
+ConamaraCorpusBeag_1206	Caithfidh mé é a thabhairt duit
+ConamaraCorpusBeag_1207	Ní bhfuair mé tacaíocht ar bith
+ConamaraCorpusBeag_1208	Tuigeann Tadhg Taidhgín, ach ní thuigeann Taidhgín tada
+ConamaraCorpusBeag_1209	Tá táillí arda san áit
+ConamaraCorpusBeag_1210	Ní bhaineann na tailte sin leis an scéim
+ConamaraCorpusBeag_1211	Is breá leo táiplis a imirt
+ConamaraCorpusBeag_1212	Táirgíonn siad treabhsair leathair
+ConamaraCorpusBeag_1213	Tarraingíonn siad daoine isteach
+ConamaraCorpusBeag_1214	Tá an talamh sin naofa
+ConamaraCorpusBeag_1215	Bhí an Tánaiste i láthair
+ConamaraCorpusBeag_1216	Bhí taom croí aige
+ConamaraCorpusBeag_1217	Tá tarbh istigh leis na ba
+ConamaraCorpusBeag_1218	Caithfidh tú é a thástáil ar dtús
+ConamaraCorpusBeag_1219	Is Teachta Dála é
+ConamaraCorpusBeag_1220	Bhí mé i dteagmháil leis
+ConamaraCorpusBeag_1221	Tá teilgeoir i ngach seomra
+ConamaraCorpusBeag_1222	Bhí timpiste agam
+ConamaraCorpusBeag_1223	Níl sé tinn, níl air ach tinneas cinn
+ConamaraCorpusBeag_1224	D’éirigh na tionóntaí buartha
+ConamaraCorpusBeag_1225	Tá tlú in aice na tine
+ConamaraCorpusBeag_1226	Tá sí ag tochailt sa ngarraí
+ConamaraCorpusBeag_1227	Is ag tochas ar a ceirtlín féin atá sí
+ConamaraCorpusBeag_1228	Níl siad toilteanach é a dhéanamh
+ConamaraCorpusBeag_1229	Rinne sé é ar an toirt
+ConamaraCorpusBeag_1230	Tá na tonnta ag briseadh ar na carraigeacha
+ConamaraCorpusBeag_1231	Tá an tranglam tráchta go dona tráthnóna
+ConamaraCorpusBeag_1232	Tá sé níos treise ná mé
+ConamaraCorpusBeag_1233	Bhí an triuch orm nuair a bhí mé óg
+ConamaraCorpusBeag_1234	Tá sé sé troigh ar airde
+ConamaraCorpusBeag_1235	Bhí an tUachtarán i láthair
+ConamaraCorpusBeag_1236	Cruthaíonn uabhar easaontas
+ConamaraCorpusBeag_1237	Níl aon rud eile uaidh
+ConamaraCorpusBeag_1238	Tá sé curtha san uaigh anois
+ConamaraCorpusBeag_1239	Sin ualach eile bainte díom
+ConamaraCorpusBeag_1240	Buaileann uamhan eitilte í gach uair
+ConamaraCorpusBeag_1241	Ní raibh agam ach ubh
+ConamaraCorpusBeag_1242	Tháinig uimhir a dó isteach 
+ConamaraCorpusBeag_1243	Rugadh é i gCúige Uladh
+ConamaraCorpusBeag_1244	Tá sé ansin ar an urlár
+ConamaraCorpusBeag_1245	Níl sé ach ag útamáil timpeall
+ConamaraCorpusBeag_1246	Anois tá mé ag dul ag ól vodca

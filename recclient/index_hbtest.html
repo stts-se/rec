@@ -79,10 +79,12 @@ name audio prompts <utt_id>-prompt.wav in same directory
     <div id="info" class="hidex">
       <!-- TODO get scriptname and user name -->
       <!--      <input type="text" id="scriptname" value="test_corpus_beag_10">-->
-      <select id="scriptname">
+      <select id="scriptname" onchange="changeScript();">
 	<option value="test_corpus_beag_10">test_corpus_beag_10</option>
 	<option value="mumhan_corpus_beag">mumhan_corpus_beag</option>
 	<option value="conamara_corpus_beag">conamara_corpus_beag</option>
+	<option value="mumhan_corpus_an_bheag_20">mumhan_corpus_an_bheag_20</option>
+	<option value="conamara_corpus_an_bheag_20">conamara_corpus_an_bheag_20</option>
       </select>
       <input type="text" id="username" value="defaultUser">
       <div id="recording_id"></div>
@@ -413,6 +415,13 @@ function prev() {
     prev_button.click();
 }
 
+function changeScript() {
+    var num = parseInt(document.getElementById("num").innerText) - 1;
+    document.getElementById("num").innerText = num;
+    getNext();
+    document.getElementById("scriptname").blur();
+
+}
       
 showRecImage();
 showRightArrow();

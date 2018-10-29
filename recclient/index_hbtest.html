@@ -78,7 +78,12 @@ name audio prompts <utt_id>-prompt.wav in same directory
 
     <div id="info" class="hidex">
       <!-- TODO get scriptname and user name -->
-      <input type="text" id="scriptname" value="irish_corpasbeag_10">
+      <!--      <input type="text" id="scriptname" value="test_corpus_beag_10">-->
+      <select id="scriptname">
+	<option value="test_corpus_beag_10">test_corpus_beag_10</option>
+	<option value="mumhan_corpus_beag">mumhan_corpus_beag</option>
+	<option value="conamara_corpus_beag">conamara_corpus_beag</option>
+      </select>
       <input type="text" id="username" value="defaultUser">
       <div id="recording_id"></div>
       </div>
@@ -327,10 +332,11 @@ function switchState() {
 	image_name = "rec_image";
 	stopRecording();
 	console.log("RECORDING STOPPED");
-	if (autoNext === true) { 
+        /*
+        if (autoNext === true) { 
 	    next();
 	}
-
+        */
 	
 
     }

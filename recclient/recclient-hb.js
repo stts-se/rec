@@ -313,7 +313,7 @@ function getNext() {
 
     var num = parseInt(document.getElementById("num").innerText) + 1;
     //var tot = parseInt(document.getElementById("tot").innerText)
-    
+    console.log("getNext: "+num);
     
     //document.getElementById("num").innerHTML = "";
     document.getElementById("message").innerHTML = "";
@@ -345,8 +345,14 @@ function getNext() {
 	    //HB audio-prompt
 	    getAudioPrompt(resp.recording_id);
 	} else {
-	    document.getElementById("text").innerHTML = "All done!";
-	    document.getElementById("num").innerHTML = "11";
+	    //OLD WAY: stop after last sentence
+	    //document.getElementById("text").innerHTML = "All done!";
+	    //document.getElementById("num").innerHTML = "11";
+
+	    //NEW WAY (for oireachtas recordings)
+	    //Loop back to the first sentence
+	    document.getElementById("num").innerHTML = "0";
+	    getNext();
 
 	}
 	
@@ -425,6 +431,15 @@ function sendAndReceiveBlob() {
 	console.log("onLoadEndFunc|RESPONSE : "+ data.target.responseText);
 	if (data.target.status === 200) {
 	    showResponse(data.target.responseText);
+
+	    //HB 181029
+	    if (autoNext === true) { 
+		next();
+	    }
+	    //END HB
+
+	    
+	    
 	} else {
 	    showError(data, document.getElementById("recording_id").innerHTML);
 	}

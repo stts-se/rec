@@ -80,7 +80,8 @@ window.onload = function () {
 
 
     console.log("navigator.mediaDevices:", navigator.mediaDevices);
-    mediaAccess = navigator.mediaDevices.getUserMedia({'audio': true, video: false});
+    //HB 181031 mediaAccess = navigator.mediaDevices.getUserMedia({'audio': true, video: false});
+    mediaAccess = navigator.mediaDevices.getUserMedia({'audio': true, 'sampleRate':44100, video: false});
     console.log("navigator.mediaDevices.getUserMedia:", mediaAccess);
     
     //navigator.mediaDevices.getUserMedia({'audio': true, video: false}).then(function(stream) {

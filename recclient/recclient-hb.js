@@ -380,7 +380,7 @@ function startRecording() {
     recorder.start();
 
     clearResponse();
-    countDown();
+    //countDown();
 }
 function stopRecording() {
     console.log("stopRecording()");
@@ -399,7 +399,7 @@ function stopRecording() {
 var setIntFunc;
 
 function countDown() {
-    var max = 5;
+    var max = 30;
     let tick = 10;
     var dur = 0;
 

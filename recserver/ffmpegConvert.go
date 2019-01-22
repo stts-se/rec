@@ -39,10 +39,10 @@ func ffmpegConvert(inFilePath, outFilePath string, removeInputFile bool) error {
 
 	// '-y' means write over if output file already exists
 	//HB without resampling and conversion to mono
-	cmd := exec.Command(ffmpegCmd, "-y", "-i", inFilePath, outFilePath)
+	//cmd := exec.Command(ffmpegCmd, "-y", "-i", inFilePath, outFilePath)
 	//HB with resampling and conversion to mono
-	//sampleRate := "16000"
-	//cmd := exec.Command(ffmpegCmd, "-y", "-i", inFilePath, "-ac", "1", "-ar", sampleRate, outFilePath)
+	sampleRate := "16000"
+	cmd := exec.Command(ffmpegCmd, "-y", "-i", inFilePath, "-ac", "1", "-ar", sampleRate, outFilePath)
 	var out bytes.Buffer
 	var sterr bytes.Buffer
 	cmd.Stdout = &out

@@ -54,6 +54,10 @@ func indexHBTest(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "../recclient/index_hbtest.html")
 }
 
+func indexIrishASR(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "../recclient/index_irish_asr.html")
+}
+
 const defaultExtension = "wav"
 
 func mimeType(ext string) string {
@@ -670,7 +674,11 @@ func main() {
 
 	//HB
 	r.HandleFunc("/rec/simple_recorder", indexHBTest)
-	docs["/rec/hbtest"] = "simple recorder with utterance list and optional audio prompts"
+	docs["/rec/simple_recorder"] = "simple recorder with utterance list and optional audio prompts"
+
+	r.HandleFunc("/rec/irish_asr", indexIrishASR)
+	docs["/rec/irish_asr"] = "very simple demo of recognition"
+
 
 	// generateDoc is definied in file generateDoc.go
 	r.HandleFunc("/rec/doc/", generateDoc).Methods("GET")

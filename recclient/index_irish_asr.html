@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Rec</title>
+    
+    <style type="text/css">
+    .hide { display: none }
+
+    #text {
+	color:green;
+	font-size: 500%;
+	text-align: center;
+    }
+    #recognition_result {
+	color:green;
+	font-size: 200%;
+	text-align: center;
+    }
+    #utt_nr {
+	color:blue;
+	font-size: 200%;
+	text-align: center;
+    }
+
+      #prev_next { color: blue; font-size: 200% }
+            
+      button {
+      height: 10em;
+      width: 10em;
+      cursor: pointer;
+      border: none;
+      border-radius: 50%;
+      background: white;
+	  outline: none;	  
+      }
+
+    .center {
+	margin: auto;
+	width: 50%;
+	border: none;
+	//border: 1px solid green;
+	padding: 10px;
+    }      
+
+    .img-center {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+    }
+
+    #next_button {
+    float: right;
+    width: 10em;
+    height: 10em;
+    fill:green;
+    }
+    #prev_button {
+    /*float: left;*/
+    width: 10em;
+    height: 10em;
+    fill:green;
+    }
+
+    
+    
+    </style>    
+    
+  </head>
+  <body>
+
+    <!--
+	go run *.go ../config/config-sample-empty.json
+put utterance list in recserver/audio_dir/hb/test_utterances.utt
+name audio prompts <utt_id>-prompt.wav in same directory
+	http://localhost:9993/rec/simple_recorder?username=test
+      -->
+
+    <div id="info" class="hide">
+      <!-- TODO get scriptname and user name -->
+      <!--      <input type="text" id="scriptname" value="test_corpus_beag_10">-->
+      <select id="scriptname" onchange="changeScript();">
+	<option value="test_corpus_beag_10">test_corpus_beag_10</option>
+	<option value="mumhan_corpus_beag">mumhan_corpus_beag</option>
+	<option value="conamara_corpus_beag">conamara_corpus_beag</option>
+	<option value="uladh_corpus_beag">uladh_corpus_beag</option>
+	<option value="mumhan_corpus_an_bheag_20">mumhan_corpus_an_bheag_20</option>
+	<option value="conamara_corpus_an_bheag_20">conamara_corpus_an_bheag_20</option>
+	<option value="uladh_corpus_an_bheag_20">uladh_corpus_an_bheag_20</option>
+      </select>
+      <input type="text" id="username" value="defaultUser">
+      <div id="recording_id" class="hide"></div>
+      </div>
+
+	
+    <div id="utt_nr" class="hide">
+      <span id="num"></span> <span style="color:blue" id="message"></span>
+/
+      <span id="tot"></span> <span style="color:blue" id="message"></span>
+    </div>
+    
+    <div id="text" class="hide center"></div>
+
+    <div id="audio_prompt_wrapper" class="center hide">
+<!--      <audio id="audio_prompt" controls class="img-center" autoplay></audio>-->
+      <audio id="audio_prompt" controls class="img-center"></audio>
+    </div>
+      
+    <div class="wrapper center hide">
+      <canvas class="visualizer img-center" width="640" height="100"></canvas> 
+    </div>
+    
+    <div id="buttons" class="hide center img-center">
+      <button id="rec" class="img-center" type="button" onclick="switchState()">
+      </button>
+    </div>
+
+    
+    <button id="stopandsend" class="hide">stop/send</button>      
+
+    <div id="rec_progress_div" class="hide">
+      <progress id="rec_progress" value="0" max="20"></progress> (arbitrary max recording time, 20 secs)
+    </div>
+
+    <div id="audio_wrapper" class="center hide">
+     <audio id="audio" class="img-center" controls></audio>
+    </div>
+    
+    <div id="prev_next" class="hide center">
+      <button id="prev_button">Prev</button>
+      <button id="next_button">Next</button><br>
+
+      <div class="hide">
+	<span id="num"></span> <span style="color:blue" id="message"></span>
+      </div>
+    </div>
+
+
+    <p style="display:none">
+      <button id="send">send</button>
+      (sends audio to server) <br>
+    </p>
+
+
+    <div id="server_response" class="center">
+      <p>_____________________________________________________________</p>
+      <details open="open">
+	<summary>Server response after send:</summary>
+	<div>
+	  <pre id="response"> </pre>
+	</div>
+      </details>
+      <p>_____________________________________________________________</p>
+      
+      Get audio back from server:
+      <p>
+	<label for="username2">Username</label> <input id="username2" type="text" value="user0001"><br>
+	<label for="recording_id2">Recording ID</label> <input id="recording_id2" type="text" value="rec_0001"><br>
+	<button id="get_audio">Get audio</button>	
+      </p>
+      
+      <div>
+	<audio id="audio_from_server" controls></audio>
+	<div id="js-wavesurfer">
+	  <div id="js-wavesurfer-timeline"></div>
+	  <div id="js-wavesurfer-wav"></div>
+	</div>
+      </div>
+    </div>
+
+
+    <div id="recognition_result" class="hide">...</div>
+
+    <details id="shortcuts">
+      <summary>Shortcuts (alt+s)</summary>
+      <table>
+	<!--	  <tr>
+		  <th>key</th>
+		  <th>description</th>
+	</tr>
+	-->
+	<tr onclick="switchState();">
+	  <td>space</td>
+	  <td>record / stop</td>
+	</tr>
+	<tr onclick="prev();">
+	  <td>left arrow</td>
+	  <td>previous</td>
+	</tr>
+	<tr onclick="next();">
+	  <td>right arrow</td>
+	  <td>next</td>
+	</tr>
+	<tr onclick="autoNext = !autoNext;">
+	  <td>alt+n</td>
+	  <td>automatic next on/off</td>
+	</tr>
+	<tr onclick="toggleShowAudioPlayer()">
+	  <td>alt+a</td>
+	  <td>audio player show/hide</td>
+	</tr>
+	<tr onclick="toggleShowPromptAudioPlayer();">
+	  <td>alt+q</td>
+	  <td>prompt audio player show/hide</td>
+	</tr>
+	<tr onclick="togglePromptAudioAutoplay();">
+	  <td>alt+w</td>
+	  <td>prompt audio autoplay on/off</td>
+	</tr>
+	<tr onclick="var audio = document.getElementById('audio_prompt');audio.play();">
+	  <td>alt+p</td>
+	  <td>play audio prompt</td>
+	</tr>
+	<tr onclick="var audio = document.getElementById('audio');audio.play();">
+	  <td>alt+o</td>
+	  <td>play recorded audio</td>
+	</tr>
+	<tr onclick="toggleShowRecognitionResult();">
+	  <td>alt+r</td>
+	  <td>recognition result show/hide</td>
+	</tr>
+	<tr onclick="toggleShortcuts();">
+	  <td>alt+s</td>
+	  <td>shortcuts show/hide</td>
+	</tr>
+      </table>
+    </details>
+
+    <div id="button_images" class="hide">
+      <div id="rec_image">
+	<svg width="29" height="28" viewBox="0 0 29 28">
+	  <defs>
+	    <path id="mic-path42" d="M9.333 18.667A4.68 4.68 0 0 0 14 14V4.667A4.68 4.68 0 0 0 9.333 0a4.68 4.68 0 0 0-4.666 4.667V14a4.68 4.68 0 0 0 4.666 4.667zM7 4.667a2.34 2.34 0 0 1 2.333-2.334 2.34 2.34 0 0 1 2.334 2.334V14a2.34 2.34 0 0 1-2.334 2.333A2.34 2.34 0 0 1 7 14V4.667zm11.667 7V14c0 4.783-3.617 8.633-8.167 9.217v2.45H14c.7 0 1.167.466 1.167 1.166S14.7 28 14 28H4.667c-.7 0-1.167-.467-1.167-1.167s.467-1.166 1.167-1.166h3.5v-2.45C3.617 22.633 0 18.667 0 14v-2.333c0-.7.467-1.167 1.167-1.167s1.166.467 1.166 1.167V14c0 3.85 3.15 7 7 7s7-3.15 7-7v-2.333c0-.7.467-1.167 1.167-1.167s1.167.467 1.167 1.167z">
+	    </path>
+	  </defs>
+	  <g fill="none" fill-rule="evenodd" transform="translate(5)">
+	    <mask id="mic-mask42" fill="#fff">
+	      <use xlink:href="#mic-path42"></use>
+	    </mask>
+	    <g fill="#FF4F5E" mask="url(#mic-mask42)">
+	      <path d="M-5 0h28v28H-5z"></path>
+	    </g>
+	  </g>
+	</svg>
+      </div>
+      
+      <div id="stop_image">
+	<svg width="28" height="28" viewBox="0 0 28 28">
+	  <defs>
+	    <path id="stop-path2" d="M19.833 0H3.5C1.517 0 0 1.517 0 3.5v16.333c0 1.984 1.517 3.5 3.5 3.5h16.333c1.984 0 3.5-1.516 3.5-3.5V3.5c0-1.983-1.516-3.5-3.5-3.5zM21 19.833c0 .7-.467 1.167-1.167 1.167H3.5c-.7 0-1.167-.467-1.167-1.167V3.5c0-.7.467-1.167 1.167-1.167h16.333c.7 0 1.167.467 1.167 1.167v16.333z"></path>
+	  </defs>
+	  <g fill="none" fill-rule="evenodd" transform="translate(2.333 2.333)">
+	    <mask id="stop-mask2" fill="#fff">
+	      <use xlink:href="#stop-path2"></use>
+	    </mask>
+	    <g fill="#FF4F5E" mask="url(#stop-mask2)">
+	      <path d="M-2.333-2.333h28v28h-28z"></path>
+	    </g>
+	  </g>
+	</svg>
+      </div>
+      
+      <div id="arrow-right">
+	<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 400 400">
+	  <path d="m20,15v31H0v88h20v31l130-75"/>
+	</svg>
+      </div>
+      
+      <div id="arrow-left">
+	<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 400 400">
+	  <path d="m30,90 130-75v31h20v88h-20v31"/>
+	</svg>
+      </div>
+      
+      
+    </div>
+
+  
+  <script src="recclient/audio.js"></script>
+  <script src="recclient/recclient-hb.js"></script>
+  <script src="recclient/vendor/jquery/3.1.0/jquery.min.js"></script>
+
+  <script type="text/javascript">
+
+
+var state = "stopped";
+var showRecResult = false;
+var showAudioPlayer = false;
+var showPromptAudioPlayer = false;
+var promptAudioAutoplay = false;
+var autoNext = true;
+
+function showRecImage() {
+    var image_name = "rec_image"
+    console.log(image_name);
+    
+    var button = document.getElementById("rec");
+    console.log(document.getElementById(image_name));
+    var svg = document.getElementById(image_name).innerHTML;
+    console.log(svg);
+    button.innerHTML = svg;   
+}
+
+function showRightArrow() {
+    var image_name = "arrow-right";
+    var button = document.getElementById("next_button");
+    //console.log(document.getElementById(image_name));
+    var svg = document.getElementById(image_name).innerHTML;
+    //console.log(svg);
+    button.innerHTML = svg;   
+}
+function showLeftArrow() {
+    var image_name = "arrow-left";
+    var button = document.getElementById("prev_button");
+    //console.log(document.getElementById(image_name));
+    var svg = document.getElementById(image_name).innerHTML;
+    //console.log(svg);
+    button.innerHTML = svg;   
+}
+
+function switchState() {
+    console.log("called switchState");
+    var button = document.getElementById("rec");
+    if ( state == "stopped" ) {
+	state = "recording";
+	image_name = "stop_image";
+	startRecording();
+
+	//to reset things set in recclient_old.js
+	button.removeEventListener('click', startRecording);
+	recButton.disabled = false;
+	
+	console.log("RECORDING STARTED");
+    } else {
+	state = "stopped";
+	image_name = "rec_image";
+	stopRecording();
+	console.log("RECORDING STOPPED");
+        /*
+        if (autoNext === true) { 
+	    next();
+	}
+        */
+	
+
+    }
+    console.log(document.getElementById(image_name));
+    var svg = document.getElementById(image_name).innerHTML;
+    //console.log(svg);
+    button.innerHTML = svg;        
+}
+
+function toggleShowRecognitionResult() {
+    if (showRecResult == false) {
+	showRecResult = true;
+	//var div = document.getElementById("server_response");
+	var div = document.getElementById("recognition_result");
+	div.classList.remove("hide");
+    } else {
+	showRecResult = false;
+	//var div = document.getElementById("server_response");
+	var div = document.getElementById("recognition_result");
+	div.classList.add("hide");
+    }
+}
+
+function toggleShowAudioPlayer() {
+    if (showAudioPlayer == false) {
+	showAudioPlayer = true;
+	var div = document.getElementById("audio_wrapper");
+	div.classList.remove("hide");
+    } else {
+	showAudioPlayer = false;
+	var div = document.getElementById("audio_wrapper");
+	div.classList.add("hide");
+    }
+}
+function toggleShowPromptAudioPlayer() {
+    if (showPromptAudioPlayer == false) {
+	showPromptAudioPlayer = true;
+	var div = document.getElementById("audio_prompt_wrapper");
+	div.classList.remove("hide");
+    } else {
+	showPromptAudioPlayer = false;
+	var div = document.getElementById("audio_prompt_wrapper");
+	div.classList.add("hide");
+    }
+}
+function togglePromptAudioAutoplay() {
+    if (promptAudioAutoplay == false) {
+	promptAudioAutoplay = true;
+	var audio = document.getElementById("audio_prompt");
+	audio.setAttribute("autoplay","true");
+    } else {
+	promptAudioAutoplay = false;
+	var audio = document.getElementById("audio_prompt");
+	audio.removeAttribute("autoplay");
+    }
+}
+
+function toggleShortcuts() {
+    var s = document.getElementById("shortcuts");
+    if ( s.hasAttribute("open") ) { 
+	s.removeAttribute("open");
+    } else {
+	s.setAttribute("open","true");
+    }
+}
+
+function next() {
+    var next_button = document.getElementById("next_button");
+    next_button.click();
+}
+
+function prev() {
+    var prev_button = document.getElementById("prev_button");
+    prev_button.click();
+}
+
+function changeScript() {
+    var num = parseInt(document.getElementById("num").innerText) - 1;
+    document.getElementById("num").innerText = num;
+    getNext();
+    document.getElementById("scriptname").blur();
+
+}
+      
+showRecImage();
+showRightArrow();
+showLeftArrow();
+
+document.onkeydown = function(event) {
+    var keyCode = event.which || event.keyCode;
+    if (keyCode==32) {
+	//space to rec/stop
+        event.preventDefault();
+	switchState();
+    }
+    else if (event.altKey && keyCode==82) {
+	//r to toggle recognition result
+        event.preventDefault();
+	toggleShowRecognitionResult();
+    }
+    else if (event.altKey && keyCode==65) {
+	//a to toggle audio player
+        event.preventDefault();
+	toggleShowAudioPlayer();
+    }
+    else if (event.altKey && keyCode==81) {
+	//q to toggle prompt audio player
+        event.preventDefault();
+	toggleShowPromptAudioPlayer();
+    }
+    else if (event.altKey && keyCode==87) {
+	//w to toggle prompt audio autoplay
+        event.preventDefault();
+	togglePromptAudioAutoplay();
+    }
+    else if (event.altKey && keyCode==78) {
+	//n to toggle automatic next
+        event.preventDefault();
+	autoNext = !autoNext;
+    }
+    else if (event.altKey && keyCode==80) {
+	//p to play prompt audio
+        event.preventDefault();
+	var audio = document.getElementById("audio_prompt");
+	audio.play();
+    }
+    else if (event.altKey && keyCode==79) {
+	//o to play recorded audio
+        event.preventDefault();
+	var audio = document.getElementById("audio");
+	audio.play();
+    }
+    else if (event.altKey && keyCode==83) {
+	//s to show/hide shortcuts
+	event.preventDefault();
+	toggleShortcuts();
+    }
+    else if (keyCode==39) {
+	//right arrow for next
+        event.preventDefault();
+	next();
+    }
+    else if (keyCode==37) {
+	//left arrow for prev
+        event.preventDefault();
+	prev();
+    }
+}
+
+    
+
+
+  </script>
+  </body>
+
+</html>
+

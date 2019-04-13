@@ -425,15 +425,29 @@ function countDown() {
 function sendAndReceiveBlob() {
     console.log("sendAndReceiveBlob()");
 
+    var responseDiv = document.getElementById("recognition_result");
+    if ( responseDiv !== null ) {
+	responseDiv.innerText = "...";
+    }
+
     var onLoadEndFunc = function (data) {
 	//console.log("onLoadEndFunc data ", data);
 	clearResponse(); // originally called before sending
 	sendButton.disabled = true; // originally called after sendJSON
 	console.log("onLoadEndFunc|STATUS : "+ data.target.status + "/" + data.target.statusText);
 	console.log("onLoadEndFunc|RESPONSE : "+ data.target.responseText);
+	console.log(data.target);
+	
 	if (data.target.status === 200) {
 	    showResponse(data.target.responseText);
 
+
+	    var responseDiv = document.getElementById("recognition_result");
+	    if ( responseDiv !== null ) {
+		responseDiv.innerText = JSON.parse(data.target.responseText).recognition_result;
+	    }
+
+	    
 	    //HB 181029
 	    if (autoNext === true) { 
 		next();

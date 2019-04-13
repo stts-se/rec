@@ -1,0 +1,12 @@
+{
+    "audio_dir": "audio_dir",
+    "server_port": 9993,
+    "fail_on_recogniser_error": true,
+    "recognisers": [
+	{
+	    "name": "irish",
+	    "type": "pocketsphinx",
+	    "cmd": "http://134.226.98.116:9999/rec?audio_file={wavfile}"
+	}
+    ]
+}

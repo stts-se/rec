@@ -17,6 +17,11 @@
 	font-size: 200%;
 	text-align: center;
     }
+    #asr_result {
+	color:green;
+	font-size: 200%;
+	text-align: center;
+    }
     #utt_nr {
 	color:blue;
 	font-size: 200%;
@@ -111,8 +116,13 @@ name audio prompts <utt_id>-prompt.wav in same directory
     </div>
     
     <div id="buttons" class="hide center img-center">
+      <!-- HB adding text according to Neasa -->
+      <h1 class="center" style="text-align:center">Éist</h1>
+      <h2 class="center" style="text-align:center">Aithint Chainte</h2>
+      <h3 class="center" style="text-align:center">An tSaotharlann Foghraíochta agus Urlabhra, Coláiste na Tríonóide</h3>
       <button id="rec" class="img-center" type="button" onclick="switchState()">
       </button>
+
     </div>
 
     
@@ -142,7 +152,8 @@ name audio prompts <utt_id>-prompt.wav in same directory
     </p>
 
 
-    <div id="server_response" class="center">
+    
+    <div id="server_response" class="center hide">
       <p>_____________________________________________________________</p>
       <details open="open">
 	<summary>Server response after send:</summary>
@@ -169,9 +180,9 @@ name audio prompts <utt_id>-prompt.wav in same directory
     </div>
 
 
-    <div id="recognition_result" class="hide">...</div>
+    <div id="recognition_result" class="xhide">...</div>
 
-    <details id="shortcuts">
+    <details id="shortcuts" class="hide">
       <summary>Shortcuts (alt+s)</summary>
       <table>
 	<!--	  <tr>
@@ -228,7 +239,8 @@ name audio prompts <utt_id>-prompt.wav in same directory
 
     <div id="button_images" class="hide">
       <div id="rec_image">
-	<svg width="29" height="28" viewBox="0 0 29 28">
+<!--	<svg width="29" height="28" viewBox="0 0 29 28">-->
+	<svg viewBox="0 0 29 28">
 	  <defs>
 	    <path id="mic-path42" d="M9.333 18.667A4.68 4.68 0 0 0 14 14V4.667A4.68 4.68 0 0 0 9.333 0a4.68 4.68 0 0 0-4.666 4.667V14a4.68 4.68 0 0 0 4.666 4.667zM7 4.667a2.34 2.34 0 0 1 2.333-2.334 2.34 2.34 0 0 1 2.334 2.334V14a2.34 2.34 0 0 1-2.334 2.333A2.34 2.34 0 0 1 7 14V4.667zm11.667 7V14c0 4.783-3.617 8.633-8.167 9.217v2.45H14c.7 0 1.167.466 1.167 1.166S14.7 28 14 28H4.667c-.7 0-1.167-.467-1.167-1.167s.467-1.166 1.167-1.166h3.5v-2.45C3.617 22.633 0 18.667 0 14v-2.333c0-.7.467-1.167 1.167-1.167s1.166.467 1.166 1.167V14c0 3.85 3.15 7 7 7s7-3.15 7-7v-2.333c0-.7.467-1.167 1.167-1.167s1.167.467 1.167 1.167z">
 	    </path>

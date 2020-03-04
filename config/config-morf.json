@@ -12,11 +12,13 @@
 	{
 	    "name": "elexia_503_20180412",
 	    "type": "tensorflow",
+	    "disabled": true,
 	    "cmd": "http://localhost:8809/rec/elexia_503_20180412?audio_file={wavfile}"
 	},
 	{
 	    "name": "nst_chars_20180410",
 	    "type": "tensorflow",
+	    "disabled": true,
 	    "cmd": "http://localhost:8809/rec/nst_chars_20180410?audio_file={wavfile}",
 	    "weights": {
 		"input:_word_": 0.0
@@ -46,7 +48,7 @@
 	{
 	    "name": "elexia_448",
 	    "type": "pocketsphinx_withfilter",
-	    "cmd": "http://localhost:8000/rec/elexia_448/?audio_file={wavfile}"
+	    "cmd": "http://localhost:8000/rec/elexia_448?audio_file={wavfile}"
 	}
     ]
 }

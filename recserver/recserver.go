@@ -269,6 +269,8 @@ func runRecogniserChan(accres chan recresforchan, rc config.Recogniser, index in
 		res, err = adapters.RunPocketsphinxFromURL(rc, wavFilePath, input)
 	case config.PocketSphinxWithFilter:
 		res, err = adapters.RunPocketsphinxWithFilterFromURL(rc, wavFilePath, input)
+	case config.GoogleSpeechAPI:
+		res, err = adapters.RunGoogleSpeechAPIWithFilter(rc, wavFilePath, input)
 	default:
 		err = fmt.Errorf("unknown recogniser type: %s", rc.Type)
 	}
@@ -679,7 +681,6 @@ func main() {
 	r.HandleFunc("/rec/irish_asr", indexIrishASR)
 	docs["/rec/irish_asr"] = "very simple demo of recognition"
 
-
 	// generateDoc is definied in file generateDoc.go
 	r.HandleFunc("/rec/doc/", generateDoc).Methods("GET")
 
@@ -700,9 +701,9 @@ func main() {
 
 	// Defined in getUtterance.go
 	// TODO remove
-	//r.HandleFunc("/rec/get_next_utterance/{username}", getNextUtterance).Methods("GET")
+	r.HandleFunc("/rec/get_next_utterance/{username}", getNextUtterance).Methods("GET")
 	// TODO remove
-	//r.HandleFunc("/rec/get_previous_utterance/{username}", getPreviousUtterance).Methods("GET")
+	r.HandleFunc("/rec/get_previous_utterance/{username}", getPreviousUtterance).Methods("GET")
 	r.HandleFunc("/rec/get_utterance/{scriptname}/{uttindex}", getUtterance).Methods("GET")
 
 	r.HandleFunc("/rec/admin/ping_recognisers", pingRecognisers).Methods("GET")

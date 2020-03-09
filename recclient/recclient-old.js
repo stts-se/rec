@@ -283,11 +283,13 @@ function sendAndReceiveBlob() {
 	}
     };
 
+    const scriptName = "default";
     AUDIO.sendBlob(currentBlob,
-	     document.getElementById("username").value,
-	     document.getElementById("text").innerHTML,
-	     document.getElementById("recording_id").innerHTML,
-	     onLoadEndFunc);
+		   scriptName,
+		   document.getElementById("username").value,
+		   document.getElementById("text").innerHTML,
+		   document.getElementById("recording_id").innerHTML,
+		   onLoadEndFunc);
 }
 
 function showError(data, recordingId) {

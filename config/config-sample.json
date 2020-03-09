@@ -4,6 +4,17 @@
     "fail_on_recogniser_error": true,
     "recognisers": [
 	{
+	    "name": "google",
+	    "type": "google",
+	    "cmd": "http://localhost:8057/rec/?audio_file={wavfile}",
+	    "weights": {
+		"input:_char_": 1.0,
+		"output:_silence_": 1.0,
+		"output:_other_": 1.0,		
+		"default": 5.0		
+	    }
+	},
+	{
 	    "name": "english",
 	    "type": "kaldigstreamer",
 	    "disabled": true,
@@ -26,7 +37,7 @@
 	    "name": "nst_chars_soundtype_20180411",
 	    "type": "tensorflow",
 	    "disabled": true,
-	    "cmd": "http://localhost:8809/nst_chars_soundtype_20180411(rec?audio_file={wavfile}",
+	    "cmd": "http://localhost:8809/rec/nst_chars_soundtype_20180411?audio_file={wavfile}",
 	    "weights": {
 		"input:_word_": 0.0
 	    }

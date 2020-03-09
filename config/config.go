@@ -16,6 +16,7 @@ var TensorflowCmd = "tensorflow_cmd"
 var PocketSphinx = "pocketsphinx"
 var PocketSphinxWithFilter = "pocketsphinx_withfilter"
 var KaldiGStreamer = "kaldigstreamer"
+var GoogleSpeechAPI = "google"
 
 type Recogniser struct {
 	Name     string             `json:"name"`
@@ -46,6 +47,7 @@ func (cfg Config) test() error {
 		case KaldiGStreamer:
 		case PocketSphinx:
 		case PocketSphinxWithFilter:
+		case GoogleSpeechAPI:
 		default:
 			return fmt.Errorf("invalid recogniser type: %s", rc.Type)
 		}

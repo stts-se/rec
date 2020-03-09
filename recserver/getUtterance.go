@@ -39,10 +39,10 @@ import (
 //}
 
 // TO DO remove:
-//func init() {
-//	loadUtteranceLists(config.MyConfig.AudioDir)
-//	dummyInstantiateUtts()
-//}
+// func init() {
+// 	loadUtteranceLists(config.MyConfig.AudioDir)
+// 	dummyInstantiateUtts()
+// }
 
 // type utt struct {
 // 	uttID string
@@ -228,6 +228,7 @@ func loadUtteranceLists(dirPath string) /*(utteranceLists,*/ error {
 	if err != nil {
 		return fmt.Errorf("loadUtteranceLists: failed to list user *.utt files : %v", err)
 	}
+	//fmt.Printf("dirPath: %s\n", dirPath)
 
 	uttLists.Lock()
 	defer uttLists.Unlock()
